@@ -1,6 +1,6 @@
 <template>
   <div class="relative">
-    <textarea class="box"  :type="type" :rows="rows?rows:5" required></textarea>
+    <textarea @input="getValue" class="box" :type="type?type:'text'" :rows="rows?rows:5" v-model.trim="theValue" required></textarea>
     <span class="bar"></span>
     <label class="label">{{label}}</label>
   </div>
@@ -8,7 +8,18 @@
 
 <script>
 export default {
-props: ['type','label','rows']
+props: ['modelValue','type','label','rows'],
+emits: ['update:modelValue'],
+data(){
+  return {
+    theValue: ''
+  }
+},
+methods:{
+  getValue(){
+    this.$emit('update:modelValue',this.theValue)
+  }
+}
 }
 </script>
 

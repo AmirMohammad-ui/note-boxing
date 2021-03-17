@@ -19,7 +19,7 @@
         </transition>
       </div>
       <div class="flex items-center justify-between header--linkbox box">
-        <div class="header--logo">Note Boxing</div>
+        <div @click="$router.push('/')" class="cursor-pointer header--logo">Note Boxing</div>
         <div class="flex items-center">
           <ul class="items-center hidden space-x-4 font-light lg:flex">
             <li class="">
@@ -81,7 +81,7 @@
             <li v-if="navIsOpen">
               <router-link
                 class=""
-                to="/hoeem"
+                to="/plans"
               >
               <base-button class="flex items-center" bgColor="#777" color="#cdcdcd">
                 <svg class="" width="13" height="14" viewBox="0 0 13 14">
@@ -210,6 +210,7 @@ header {
 .mobile-nav {
   bottom: -130px;
   left: 0;
+  z-index: 10;
 }
 .mobile--nav__link {
   background: #777;
