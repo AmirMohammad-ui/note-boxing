@@ -1,5 +1,14 @@
 <template>
-  <button :type="type" :style="{backgroundColor: outlined?color+'1a':color,'--theColor': color+'b0',border: outlined?'1px solid '+color:'none',color: outlined?color:'#fff'}" class="flex space-x-2 box outlined">
+  <button
+    :type="type"
+    :style="{
+      backgroundColor: outlined ? bgColor + '1a' : bgColor,
+      '--theColor': bgColor + 'b0',
+      border: outlined ? '1px solid ' + color : 'none',
+      color,
+    }"
+    :class="['flex transform space-x-2 box outlined focus:outline-none focus:scale-95',{'hover-effect':hover}]"
+  >
     <slot></slot>
   </button>
 </template>
@@ -7,24 +16,28 @@
 <script>
 export default {
   props: {
-    type:{
-      type:String,
-      default: "button"
+    type: {
+      type: String,
+      default: "button",
     },
-    color:{
-      type:String,
-      default: "#fff"
+    color: {
+      type: String,
+      default: "#fff",
     },
-    outlined:{
+    outlined: {
+      type: Boolean,
+      default: false,
+    },
+    bgColor:{
+      type: String,
+      default: "#404040"
+    },
+    hover:{
       type: Boolean,
       default: false
-    },
-    block: {
-      type:Boolean,
-      default:false
     }
   },
-}
+};
 </script>
 <style lang="scss" scoped>
 button {
@@ -32,8 +45,9 @@ button {
   color: white;
   border-radius: 3px;
   font-weight: lighter;
+  transition: all .2s;
 }
-button:hover {
+.hover-effect:hover {
   background-color: var(--theColor) !important;
   color: white !important;
 }

@@ -1,11 +1,13 @@
 const express = require("express")
-const core = require("core-js")
+const cors = require("cors")
 const app = express()
 
 app.use(express.json())
-app.use(core())
+app.use(cors())
 
 
 // app.all("*",(req,res,next)=>{
 //   res.status(200).sendFile(path.join(__dirname,"../client/"))
 // })
+
+module.exports = app
