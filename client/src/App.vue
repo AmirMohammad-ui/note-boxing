@@ -47,4 +47,14 @@ button:focus {
 body{
   background: #F5F6FA;
 }
+@media (min-width:1024px ) {
+  html {
+    font-size: 12px;
+  }
+}
+@media (min-width:1280px ) {
+  html {
+    font-size: 14px;
+  }
+}
 </style>

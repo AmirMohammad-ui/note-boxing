@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div :class="['my-container',{'pl-3':borderLeft,'pr-3':borderRight}]">
     <div v-if="borderLeft" class="left-border"></div>
     <div v-if="borderRight" class="right-border"></div>
     <slot></slot>
@@ -25,7 +25,7 @@ data(){
 </script>
 
 <style lang="scss" scoped>
-.container {
+.my-container {
   position: relative;
   width: 100%;
   margin: 1rem auto;
@@ -49,5 +49,27 @@ data(){
   height: 100%;
   margin-right: 1rem;
   border-radius: 3px; 
+}
+@media (min-width: 768px) {
+  .my-container {
+    padding: 0 2rem;
+  }
+  .left-border{ 
+    left: -10px;
+  }
+  .right-border{ 
+    left: -10px;
+  }
+}
+@media (min-width: 1024px) {
+  .my-container {
+    padding: 0 4rem;
+  }
+  .left-border{ 
+    left: 17px;
+  }
+  .right-border{ 
+    left: 17px;
+  }
 }
 </style>

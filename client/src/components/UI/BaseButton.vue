@@ -1,5 +1,22 @@
 <template>
+  <button 
+    v-if="icon"
+    :type="type"
+    :style="{
+      backgroundColor: outlined ? bgColor + '1a' : bgColor,
+      '--theColor': bgColor + 'b0',
+      border: outlined ? '1px solid ' + color : 'none',
+      color,
+      width: w?w:'3rem',
+      height: w?w:'3rem',
+      padding: '0'
+    }"
+    class="relative icon-button box"
+    >
+    <slot class="icon-position"></slot>
+  </button>
   <button
+    v-else
     :type="type"
     :style="{
       backgroundColor: outlined ? bgColor + '1a' : bgColor,
@@ -8,7 +25,7 @@
       color,
     }"
     :class="[
-      'flex transform space-x-2 box outlined focus:outline-none focus:scale-95',
+      'flex relative transform space-x-2 box items-center outlined focus:outline-none focus:scale-95',
       {
         'hover-effect': hover,
         'justify-center': textCenter,
@@ -56,6 +73,13 @@ export default {
       type: Boolean,
       default: false,
     },
+    icon: {
+      type:Boolean,
+      default: false
+    },
+    w:{
+      type:String,
+    }
   },
 };
 </script>
@@ -71,4 +95,12 @@ button {
   background-color: var(--theColor) !important;
   color: white !important;
 }
+.icon-button{
+  @apply flex items-center justify-center text-center relative focus:outline-none;
+  border-radius: 1000px;
+}
+.icon-position {
+  @apply absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2;
+}
+
 </style>
