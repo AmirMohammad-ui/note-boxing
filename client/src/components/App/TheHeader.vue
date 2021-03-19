@@ -1,7 +1,11 @@
 <template>
   <div>
     <header class="relative">
-      <div v-if="navIsOpen" @click="openNav" class="fixed top-0 left-0 w-full h-full"></div>
+      <div
+        v-if="navIsOpen"
+        @click="openNav"
+        class="fixed top-0 left-0 w-full h-full"
+      ></div>
       <div @click="openNav" class="header--ham lg:hidden box">
         <transition name="fade" mode="out-in">
           <svg v-if="!navIsOpen" width="25" height="19" viewBox="0 0 25 19">
@@ -19,7 +23,9 @@
         </transition>
       </div>
       <div class="flex items-center justify-between header--linkbox box">
-        <div @click="$router.push('/')" class="cursor-pointer header--logo">Note Boxing</div>
+        <div @click="$router.push('/')" class="cursor-pointer header--logo">
+          Note Boxing
+        </div>
         <div class="flex items-center">
           <ul class="items-center hidden space-x-4 font-light lg:flex">
             <li class="">
@@ -54,7 +60,7 @@
               </div>
             </li>
             <li>
-              <base-button bgColor="#00CEC9">
+              <base-button @click="showModal" bgColor="#00CEC9">
                 <svg width="22" height="22" viewBox="0 0 24 24">
                   <path
                     d="M12 0C5.373 0 0 5.373 0 12C0 18.627 5.373 24 12 24C18.627 24 24 18.627 24 12C24 5.373 18.627 0 12 0ZM18 13H13V18C13 18.553 12.552 19 12 19C11.448 19 11 18.553 11 18V13H6C5.448 13 5 12.553 5 12C5 11.447 5.448 11 6 11H11V6C11 5.447 11.448 5 12 5C12.552 5 13 5.447 13 6V11H18C18.552 11 19 11.447 19 12C19 12.553 18.552 13 18 13Z"
@@ -79,21 +85,16 @@
         <ul class="flex-col items-center space-y-4 font-light lg:hidden">
           <transition name="fade-in">
             <li v-if="navIsOpen">
-              <router-link
-                class=""
-                to="/plans"
-              >
-              <base-button class="flex items-center" bgColor="#777" color="#cdcdcd">
-                <svg class="" width="13" height="14" viewBox="0 0 13 14">
-                  <path
-                    d="M0.5 0H12.5V2H0.5V0ZM1.5 6H11.5V8H1.5V6ZM0 12H13V14H0"
-                    fill="#cdcdcd"
-                  />
-                </svg>
-                <span>
-                  Take A Look At Your Plans
-                </span>
-              </base-button>
+              <router-link class="" to="/plans">
+                <base-button class="flex items-center" bgColor="#777" color="#cdcdcd">
+                  <svg class="" width="13" height="14" viewBox="0 0 13 14">
+                    <path
+                      d="M0.5 0H12.5V2H0.5V0ZM1.5 6H11.5V8H1.5V6ZM0 12H13V14H0"
+                      fill="#cdcdcd"
+                    />
+                  </svg>
+                  <span> Take A Look At Your Plans </span>
+                </base-button>
               </router-link>
             </li>
           </transition>
@@ -121,7 +122,7 @@
           </transition>
           <transition name="fade-in">
             <li v-if="navIsOpen">
-              <base-button class="w-full" bgColor="#777" color="#cdcdcd">
+              <base-button @click="showModal" class="w-full" bgColor="#777" color="#cdcdcd">
                 <svg width="22" height="22" viewBox="0 0 24 24">
                   <path
                     d="M12 0C5.373 0 0 5.373 0 12C0 18.627 5.373 24 12 24C18.627 24 24 18.627 24 12C24 5.373 18.627 0 12 0ZM18 13H13V18C13 18.553 12.552 19 12 19C11.448 19 11 18.553 11 18V13H6C5.448 13 5 12.553 5 12C5 11.447 5.448 11 6 11H11V6C11 5.447 11.448 5 12 5C12.552 5 13 5.447 13 6V11H18C18.552 11 19 11.447 19 12C19 12.553 18.552 13 18 13Z"
@@ -135,19 +136,32 @@
         </ul>
       </div>
     </header>
+    <new-plan @close-modal="closeModal" :is-backdrop-open="isBackdropOpen" :is-dialog-open="isDialogOpen"/>
   </div>
 </template>
 
 <script>
+import NewPlan from "./NewPlan.vue";
 export default {
+  components: { NewPlan },
   data() {
     return {
       navIsOpen: false,
+      isBackdropOpen: false,
+      isDialogOpen: false,
     };
   },
   methods: {
     openNav() {
       this.navIsOpen = !this.navIsOpen;
+    },
+    showModal() {
+      this.isBackdropOpen = true;
+      this.isDialogOpen = true;
+    },
+    closeModal() {
+      this.isBackdropOpen = false;
+      this.isDialogOpen = false;
     },
   },
 };

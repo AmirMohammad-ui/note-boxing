@@ -4,6 +4,7 @@
     class="relative"
     :style="{
       backgroundColor: bgColor?bgColor:'#fff',
+      zIndex:zIndex?zIndex:10
     }">
     <input
       class="box readonly-input"
@@ -17,11 +18,65 @@
     <label style="color: #777;" class="readonly-label">{{ label }}</label>
   </div>
   <div 
+    v-else-if="type==='date'" 
+    class="relative"
+    :style="{
+      backgroundColor: bgColor?bgColor:'#fff',
+      zIndex:zIndex?zIndex:10
+    }">
+    <input
+      class="box readonly-input"
+      :type="type ? type : 'text'"
+      @input="getValue"
+      :style="{color: color?color:'#777'}"
+      v-model.trim="theValue"
+    />
+    <span class="bar"></span>
+    <label style="color: #777;" class="readonly-label">{{ label }}</label>
+  </div>
+  <div 
+    v-else-if="type==='file'" 
+    class="relative"
+    :style="{
+      backgroundColor: bgColor?bgColor:'#fff',
+      zIndex:zIndex?zIndex:10
+    }">
+    <input
+      class="box readonly-input"
+      type="file"
+      :multiple="multipleFile?true:false"
+      @change="getFile"
+      :style="{color: color?color:'#777'}"
+    />
+    <span class="bar"></span>
+    <label style="color: #777;" class="readonly-label">{{ label }}</label>
+  </div>
+  <div 
+    v-else-if="type === 'options'" 
+    class="relative box input multichoice"
+    :style="{
+      backgroundColor: bgColor?bgColor:'#fff',
+      color: color?color:'#777',
+      zIndex:zIndex?zIndex:10
+    }">
+    <div class="w-full h-full " @click="showOptions">
+      <svg class="float-right mt-3" width="13" height="10" viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6.5 10L0.870835 0.25L12.1292 0.250001L6.5 10Z" fill="#777777"/>
+      </svg>
+    </div>
+      <div v-if="isOptionsVisible" class="options box">
+        <div class="option" v-for="option in options" :value="option" :key="option" @click="selectedOption(option)">{{option}}</div>
+      </div>
+    <label :class="['label',{'multichoice-label':isOptionsVisible}]">{{ selectedValue !== ''?selectedValue:label }}</label>
+      <div v-if="isOptionsBackdropActive" @click="isOptionsVisible = false;isOptionsBackdropActive = false" class="options-backdrop"></div>
+  </div>
+  <div 
     v-else 
     class="relative"
     :style="{
       backgroundColor: bgColor?bgColor:'#fff',
-      color: color?color:'#777'
+      color: color?color:'#777',
+      zIndex:zIndex?zIndex:10
     }">
     <input
       class="box input"
@@ -40,31 +95,86 @@ export default {
   props: {
     readonly: { type: Boolean, default: false },
     modelValue: { type: String },
-    label: {type: String,required:true},
+    label: {type: String},
     type: {type:String},
     value: {type:String,default: ''},
     bgColor: {type:String},
-    color: {type:String}
+    color: {type:String},
+    options: {type: Array,default(){return ['No Option Is Set Yet.']}},
+    zIndex: {type:Number},
+    multipleFile: {type:Boolean},
   },
   emits: ["update:modelValue"],
   data() {
     return {
       theValue: this.value,
+      isOptionsVisible: false,
+      isOptionsBackdropActive: false,
+      theFile: null,
+      selectedValue: this.modelValue,
     };
   },
   methods: {
+    getFile(e){
+      this.$emit('get-file',e.target.files)
+    },
     getValue() {
       this.$emit("update:modelValue", this.theValue);
     },
+    selectedOption(val){
+      this.selectedValue = val
+      this.$emit("update:modelValue",val)
+      this.isOptionsVisible = false
+      this.isOptionsBackdropActive = false
+    },
+    showOptions(){
+      this.selectedValue = ''
+      this.isOptionsVisible = true
+      this.isOptionsBackdropActive = true
+    }
   },
 };
 </script>
 
 <style lang="scss" scoped>
-
+.option{
+  padding: 5px 10px;
+  &:hover {
+    background: #cdcdcda9;
+    color: #404040;
+  }
+}
+.options-backdrop{
+  @apply fixed top-0 left-0 w-full h-full;
+  z-index: 0;
+}
+.options {
+  background: #fff;
+  padding: 5px 0;
+  position: absolute;
+  top: 0;
+  left: -4px;
+  width: 102%;
+  z-index: 20;
+}
+.multichoice:nth-child(2){
+  z-index: 10 !important;
+}
+.multichoice-label {
+  font-size: 1.1rem !important;
+  position: absolute !important;
+  top: -.7rem !important;
+  left: 3px !important;
+  color: #777 !important;
+}
+.dropdown-arrow{
+  position: absolute;
+  top: 0;
+  right: 0;
+  // transform: translateY(-50%)
+}
 div {
   @apply font-light;
-  margin-top: 1.7rem;
   z-index: 0;
 }
 input {
@@ -75,8 +185,8 @@ input {
   padding: 5px 12px 6.5px 12px;
   font-size: 1.6rem;
   width: 100%;
-  z-index: 5;
   transition: all 0.3s;
+  z-index: 5;
 }
 .bar {
   background: #00cec9;
@@ -94,9 +204,9 @@ input {
 }
 .input:focus ~ .label,
 .input:valid ~ .label {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   position: absolute;
-  top: -.8rem;
+  top: -.7rem;
   left: 3px;
   color: #777 !important;
 }
@@ -109,8 +219,8 @@ input {
 }
 .readonly-label {
   position: absolute;
-  font-size: 1.3rem;
-  top: -.8rem;
+  font-size: 1.1rem;
+  top: -.7rem;
   left: 3px;
   transform: translateY(-50%);
   // transition: all 0.3s;
@@ -124,5 +234,9 @@ input {
   transform: translateY(-50%);
   transition: all 0.3s;
   z-index: -1;
+}
+input[type="date"]::-webkit-calendar-picker-indicator:focus {
+  border: none;
+  outline: none;
 }
 </style>

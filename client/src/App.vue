@@ -57,4 +57,8 @@ body{
     font-size: 14px;
   }
 }
+img {
+  object-fit: cover;
+  object-position: center;
+}
 </style>

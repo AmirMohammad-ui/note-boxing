@@ -6,6 +6,8 @@ import BaseTextarea from "./components/UI/BaseTextarea.vue"
 import BaseButton from "./components/UI/BaseButton.vue"
 import Container from "./components/UI/Container.vue"
 import Seperator from "./components/UI/Seperator.vue"
+import BaseModal from "./components/UI/BaseModal.vue"
+import BaseAlert from "./components/UI/BaseAlert.vue"
 import "./tailwind.css"
 
 const app = createApp(App)
@@ -14,5 +16,7 @@ app.component("base-button",BaseButton)
 app.component("base-textarea",BaseTextarea)
 app.component("container",Container)
 app.component("seperator",Seperator)
+app.component("base-modal",BaseModal)
+app.component("base-alert",BaseAlert)
 app.use(router)
 app.mount("#app")

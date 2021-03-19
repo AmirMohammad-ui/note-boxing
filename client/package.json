@@ -10,6 +10,7 @@
     "postcss:build": "postcss build ./src/tailwind.css -o ./public/css/tailwind.css"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"

@@ -3,15 +3,14 @@
     v-if="icon"
     :type="type"
     :style="{
-      backgroundColor: outlined ? bgColor + '1a' : bgColor,
+      backgroundColor: outlined ? '#fff' : bgColor,
       '--theColor': bgColor + 'b0',
       border: outlined ? '1px solid ' + color : 'none',
       color,
       width: w?w:'3rem',
       height: w?w:'3rem',
-      padding: '0'
     }"
-    class="relative icon-button box"
+    class="relative pb-1 icon-button box hover-effect"
     >
     <slot class="icon-position"></slot>
   </button>
@@ -19,13 +18,13 @@
     v-else
     :type="type"
     :style="{
-      backgroundColor: outlined ? bgColor + '1a' : bgColor,
-      '--theColor': bgColor + 'b0',
+      backgroundColor: outlined ? '#fff' : bgColor,
+      '--theColor': outlined?bgColor:bgColor + 'b0',
       border: outlined ? '1px solid ' + color : 'none',
       color,
     }"
     :class="[
-      'flex relative transform space-x-2 box items-center outlined focus:outline-none focus:scale-95',
+      'flex relative transform space-x-2 pb-1 box items-center outlined focus:outline-none focus:scale-95',
       {
         'hover-effect': hover,
         'justify-center': textCenter,
@@ -85,6 +84,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 button {
+  @apply capitalize;
   padding: 5px 10px;
   color: white;
   border-radius: 3px;

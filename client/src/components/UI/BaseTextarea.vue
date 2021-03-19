@@ -41,8 +41,9 @@ export default {
   props: {
     modelValue: { type: String },
     value: { type: String, default: "" },
-    label: { type: String, required: true },
-    rows: { type: Number },
+    label: { type: String },
+    rows: { type: String },
+    type: {type:String},
     color: { type: String },
     bgColor: { type: String },
     readonly: {type:Boolean,default: false}
@@ -71,7 +72,7 @@ textarea::-webkit-scrollbar-thumb {
 .bar {
   background: #00cec9;
   position: absolute;
-  bottom: 5px;
+  bottom: 3px;
   left: 50%;
   width: 0px;
   height: 2px;
@@ -80,12 +81,11 @@ textarea::-webkit-scrollbar-thumb {
 }
 
 div {
-  @apply font-light;
-  margin-top: 1.7rem;
+  @apply font-light capitalize;
   z-index: 0;
 }
 textarea {
-  @apply font-light;
+  @apply font-light capitalize;
 }
 .textarea {
   background: transparent;

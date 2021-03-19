@@ -5,9 +5,9 @@
         'seperator',
       ]"
     >
-      <div v-if="right" class="mr-4 seperator-right"><slot name="right"></slot></div>
+      <div v-if="left" class="mr-4 seperator-right"><slot name="left"></slot></div>
       <div v-if="center" class="seperator-center"><slot name="center"></slot></div>
-      <div v-if="left" class="ml-4 seperator-left"><slot name="left"></slot></div>
+      <div v-if="right" class="ml-4 seperator-left"><slot name="right"></slot></div>
       <div class="seperator-divider"></div>
     </div>
   </div>
