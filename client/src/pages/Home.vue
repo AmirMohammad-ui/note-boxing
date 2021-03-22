@@ -108,13 +108,34 @@
         </div>
       </div>
     </container>
+    <container class="flex-col space-y-4 text-2xl font-light">
+      <div class="flex space-x-4">
+        <base-button @click="activeTable = 'daily'" :bg-color="activeTable === 'daily'?'#0984E3':'#fff'" :color="activeTable === 'daily'?'#fff':'#0984E3'">
+          Daily
+        </base-button>
+        <base-button @click="activeTable = 'monthly'" :bg-color="activeTable === 'monthly'?'#0984E3':'#fff'" :color="activeTable === 'monthly'?'#fff':'#0984E3'">
+          Monthly
+        </base-button>
+        <base-button @click="activeTable = 'yearly'" :bg-color="activeTable === 'yearly'?'#0984E3':'#fff'" :color="activeTable === 'yearly'?'#fff':'#0984E3'">
+          Yearly
+        </base-button>
+      </div>
+      <div class="">
+        <the-table :daily="activeTable === 'daily'? true:false"/>
+        <the-table :monthly="activeTable === 'monthly'? true:false"/>
+        <the-table :yearly="activeTable === 'yearly'? true:false"/>
+      </div>
+    </container>
   </div>
 </template>
 
 <script>
+import TheTable from "@/components/App/TheTable.vue"
 export default {
+  components: {TheTable},
   data() {
     return {
+      activeTable: 'daily'
     };
   },
   methods: {},

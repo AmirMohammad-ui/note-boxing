@@ -33,7 +33,7 @@
       },
     ]"
   >
-    <slot></slot>
+    <slot class=""></slot>
   </button>
 </template>
 

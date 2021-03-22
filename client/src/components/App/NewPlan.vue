@@ -17,16 +17,11 @@
                 <base-textarea v-model="description" rows="8" label="Description"/>
               </div>
               <div class="flex-col w-full space-y-7 half-on-md">
-                <div class="flex space-x-3">
-                <base-input label="Cover Image" @get-file="getUploadedFiles" type="file" :z-index="58"/>
-                <base-button bg-color="#00CEC9" color="#fff">
-                <span class="pb-1 text-2xl">Pick</span>
-                </base-button>
-                </div>
+                <base-input label="Cover Image" id="image" class="w-full" @get-file="getUploadedFiles" type="file" :z-index="58"/>
                 <div class="flex space-x-3">
                 <base-input label="Category" v-model="optionType" :z-index="60" type="options" :options="categories"/>
-                  <base-button bg-color="#00CEC9" color="#fff">
-                    <span class="pb-1 text-2xl">New</span>
+                  <base-button bg-color="#00CEC9" class="w-1/5" color="#fff">
+                    <span class="pb-1 mx-auto text-2xl">New</span>
                   </base-button>
                 </div>
               <div class="flex w-full space-x-4">
