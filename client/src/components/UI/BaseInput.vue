@@ -111,10 +111,7 @@
     }}</label>
     <div
       v-if="isOptionsBackdropActive"
-      @click="
-        isOptionsVisible = false;
-        isOptionsBackdropActive = false;
-      "
+      @click="deactivateBackdrop"
       class="options-backdrop"
     ></div>
   </div>
@@ -172,6 +169,11 @@ export default {
     };
   },
   methods: {
+    deactivateBackdrop(){
+      this.isOptionsVisible = false;
+      this.isOptionsBackdropActive = false;
+      this.$emit("update:modelValue", '');
+    },
     openTheFileSelection() {
       const actualInput = document.getElementById(this.id);
       actualInput.click();

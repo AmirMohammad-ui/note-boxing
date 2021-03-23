@@ -156,12 +156,12 @@ export default {
       this.navIsOpen = !this.navIsOpen;
     },
     showModal() {
-      this.isBackdropOpen = true;
-      this.isDialogOpen = true;
+      this.isBackdropOpen = !this.isBackdropOpen;
+      this.isDialogOpen = !this.isDialogOpen;
     },
     closeModal() {
-      this.isBackdropOpen = false;
-      this.isDialogOpen = false;
+      this.isBackdropOpen = !this.isBackdropOpen;
+      this.isDialogOpen = !this.isDialogOpen;
     },
   },
 };

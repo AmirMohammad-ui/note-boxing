@@ -24,7 +24,7 @@
       color,
     }"
     :class="[
-      'flex relative transform space-x-2 pb-1 box items-center outlined focus:outline-none focus:scale-95',
+      'box button-primary outlined',
       {
         'hover-effect': hover,
         'justify-center': textCenter,
@@ -83,6 +83,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.button-primary {
+  @apply flex relative transform space-x-2 pb-1 items-center focus:outline-none focus:scale-95;
+}
 button {
   @apply capitalize;
   padding: 5px 10px;

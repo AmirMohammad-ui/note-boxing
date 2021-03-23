@@ -56,9 +56,9 @@
     <container border-left> 
       <div class="flex-col items-center content-center space-y-4">
         <div class="flex items-center m-0 mt-10 space-x-4">
-          <base-input class="w-44" label="From" value="2021/02/23" readonly />
-          <base-input class="w-44" label="To" value="2021/02/23" readonly />
-          <base-input class="w-44" label="Status" bg-color="#00CEC9" color="#fff" value="In Progress" readonly />
+          <base-input :z-index="-10" class="w-44" label="From" value="2021/02/23" readonly />
+          <base-input :z-index="-10" class="w-44" label="To" value="2021/02/23" readonly />
+          <base-input :z-index="-10" class="w-44" label="Status" bg-color="#00CEC9" color="#fff" value="In Progress" readonly />
         </div>
         <div class="items-start space-y-4 sm:space-y-0 sm:space-x-4 todays-plan-display">
           <div class="relative todays-image-container">
@@ -111,13 +111,19 @@
     <container class="flex-col space-y-4 text-2xl font-light">
       <div class="flex space-x-4">
         <base-button @click="activeTable = 'daily'" :bg-color="activeTable === 'daily'?'#0984E3':'#fff'" :color="activeTable === 'daily'?'#fff':'#0984E3'">
-          Daily
+          <span class="pb-1">
+            Daily
+          </span>
         </base-button>
         <base-button @click="activeTable = 'monthly'" :bg-color="activeTable === 'monthly'?'#0984E3':'#fff'" :color="activeTable === 'monthly'?'#fff':'#0984E3'">
-          Monthly
+          <span class="pb-1">
+            Monthly
+          </span>
         </base-button>
         <base-button @click="activeTable = 'yearly'" :bg-color="activeTable === 'yearly'?'#0984E3':'#fff'" :color="activeTable === 'yearly'?'#fff':'#0984E3'">
-          Yearly
+          <span class="pb-1">
+            Yearly
+          </span>
         </base-button>
       </div>
       <div class="">
