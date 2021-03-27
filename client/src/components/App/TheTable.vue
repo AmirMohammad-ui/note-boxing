@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-if="daily">
-
       <table class="w-full box">
         <tr>
           <th>Weekdays</th>
@@ -76,7 +75,7 @@
     <div v-else-if="monthly">
       <table class="w-full box">
         <tr>
-          <th>Months</th>
+          <th class="w-2/12">Months</th>
           <th>Note</th>
         </tr>
         <tr v-for="{m_name,m_plan,m_menu} in thisMonth" :key="m_name">
@@ -128,8 +127,8 @@
     <div v-else-if="yearly">
       <table class="w-full box">
         <tr>
-          <th>Years</th>
-          <th>Note</th>
+          <th class="w-1/12">Years</th>
+          <th>Plans</th>
         </tr>
         <tr v-for="{y_number,y_plan,y_menu} in tenYearsAhead" :key="y_number">
           <td class="relative">
