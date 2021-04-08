@@ -8,7 +8,7 @@
 <script>
 import TheHeader from "@/components/App/TheHeader.vue"
 export default {
-components:{TheHeader}
+components:{TheHeader},
 }
 </script>
 
@@ -60,5 +60,8 @@ body{
 img {
   object-fit: cover;
   object-position: center;
+}
+.rounded-small {
+  border-radius: 3px;
 }
 </style>

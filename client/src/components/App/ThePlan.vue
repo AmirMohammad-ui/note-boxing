@@ -55,7 +55,7 @@
   </container>
   <container border-left> 
     <div class="flex-col items-center content-center space-y-4">
-      <div class="flex items-center m-0 mt-10 space-x-4">
+      <div class="flex items-center m-0 mt-10 space-x-4 text-2xl">
         <base-input :z-index="-10" class="w-44" label="From" value="2021/02/23" readonly />
         <base-input :z-index="-10" class="w-44" label="To" value="2021/02/23" readonly />
         <base-input :z-index="-10" class="w-44" label="Status" bg-color="#00CEC9" color="#fff" value="In Progress" readonly />
@@ -102,7 +102,7 @@
           </div>
         </div>
         <div class="flex-col m-0 space-y-4 todays-plan-info">
-          <base-input value="Finishing The Vue Course" readonly/>
+          <base-input classes="text-2xl" value="Finishing The Vue Course" readonly/>
           <base-textarea rows="6" value="You Must Finish the vue.js fully undrestand and have everything needed already in mind" readonly />
         </div>
       </div>

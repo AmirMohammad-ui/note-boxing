@@ -28,7 +28,7 @@
                 <base-input class="w-1/2" :z-index="59" v-model="category" type="options" :options="typeOptions" label="Type" />
                 <base-input class="w-1/2" :z-index="57" v-model="priority" type="Number" label="Priority" />
               </div>
-              <div class="flex-col w-full space-y-7">
+              <div class="flex-col w-full text-2xl space-y-7">
                 <base-input class="w-full uppercase" v-model="startDate" :z-index="56" type="date" label="Start" />
                 <base-input class="w-full" type="date" :z-index="55" v-model="endDate" label="End" />
               </div>

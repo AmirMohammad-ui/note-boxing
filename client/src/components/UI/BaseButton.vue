@@ -10,7 +10,8 @@
       width: w?w:'3rem',
       height: w?w:'3rem',
     }"
-    class="relative pb-1 icon-button box hover-effect"
+    class="relative pb-1 icon-button box"
+    :class="{'hover-effect':hover}"
     >
     <slot class="icon-position"></slot>
   </button>

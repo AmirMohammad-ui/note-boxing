@@ -1,9 +1,8 @@
 <template>
   <div>
     <div
-      :class="[
-        'seperator',
-      ]"
+      class="seperator"
+      :class="classes"
     >
       <div v-if="left" class="mr-4 seperator-right"><slot name="left"></slot></div>
       <div v-if="center" class="seperator-center"><slot name="center"></slot></div>
@@ -28,6 +27,9 @@ export default {
       type: Boolean,
       default: false,
     },
+    classes: {
+      type:String
+    }
   },
 };
 </script>

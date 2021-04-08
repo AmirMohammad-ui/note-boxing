@@ -8,10 +8,11 @@
     <plan-category 
       left-seperator-text="New Category Created"/>
   </div>
+  
 </template>
 
 <script>
-import PlanCategory from "@/components/App/PlanCategory.vue"
+import PlanCategory from "@/components/App/PlanCategories/PlanCategory.vue"
 export default {
   components: {PlanCategory}
 };

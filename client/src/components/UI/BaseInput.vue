@@ -2,6 +2,7 @@
   <div
     v-if="readonly"
     class="relative"
+    :class="classes"
     :style="{
       backgroundColor: bgColor ? bgColor : '#fff',
       zIndex: zIndex ? zIndex : 10,
@@ -9,6 +10,7 @@
   >
     <input
       class="box readonly-input"
+      :class="inputClasses"
       :type="type ? type : 'text'"
       :readonly="readonly"
       @input="getValue"
@@ -21,6 +23,7 @@
   <div
     v-else-if="type === 'date'"
     class="relative"
+    :class="classes"
     :style="{
       backgroundColor: bgColor ? bgColor : '#fff',
       zIndex: zIndex ? zIndex : 10,
@@ -28,6 +31,7 @@
   >
     <input
       class="box readonly-input"
+      :class="inputClasses"
       :type="type ? type : 'text'"
       @input="getValue"
       :style="{ color: color ? color : '#777' }"
@@ -39,6 +43,7 @@
   <div
     v-else-if="type === 'file'"
     class="relative flex w-full space-x-4"
+    :class="classes"
     :style="{
       backgroundColor: bgColor ? bgColor : '#fff',
       zIndex: zIndex ? zIndex : 10,
@@ -46,6 +51,7 @@
   >
     <input
       class=""
+      :class="inputClasses"
       type="file"
       :id="id"
       hidden
@@ -77,6 +83,7 @@
   <div
     v-else-if="type === 'options'"
     class="relative box input multichoice"
+    :class="classes"
     :style="{
       backgroundColor: bgColor ? bgColor : '#fff',
       color: color ? color : '#777',
@@ -116,6 +123,7 @@
   <div
     v-else
     class="relative"
+    :class="classes"
     :style="{
       backgroundColor: bgColor ? bgColor : '#fff',
       color: color ? color : '#777',
@@ -124,6 +132,7 @@
   >
     <input
       class="box input"
+      :class="inputClasses"
       :type="type ? type : 'text'"
       @input="getValue"
       v-model.trim="theValue"
@@ -153,7 +162,9 @@ export default {
     zIndex: { type: Number },
     multipleFile: { type: Boolean },
     fileButtonName: { type: String, default: "Pick" },
-    id: {type:String}
+    id: {type:String},
+    classes: {type:String},
+    inputClasses: {type:String}
   },
   emits: ["update:modelValue"],
   data() {
@@ -280,7 +291,6 @@ input {
 .readonly-input {
   background: transparent;
   padding: 5px 12px 6.5px 12px;
-  font-size: 1.6rem;
   width: 100%;
   z-index: 5;
 }
