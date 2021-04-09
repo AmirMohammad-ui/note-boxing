@@ -6,14 +6,14 @@
         :z-index="-10"
         readonly
         lable="from"
-        value="2021/03/12"
+        :value="planItemData.startDate"
       />
       <base-input
         inputClasses="text-center"
         :z-index="-10"
         readonly
         lable="to"
-        value="2021/03/12"
+        :value="planItemData.finishDate"
       />
       <base-input
         inputClasses="text-center "
@@ -21,15 +21,15 @@
         readonly
         :z-index="-10"
         lable="status"
-        :value="isFinished ? 'Finished' : 'In Progress'"
-        :bg-color="isFinished ? '#D63031' : '#00CEC9'"
+        :value="planItemData.isFinished ? 'Finished' : 'In Progress'"
+        :bg-color="planItemData.isFinished ? '#D63031' : '#00CEC9'"
         color="#fff"
       />
     </div>
     <div class="relative">
       <img
         class="rounded-small box"
-        src="../../../assets/annie-spratt-Zxl_m4KVZDs-unsplash.jpg"
+        :src="imgSrc"
         alt=""
       />
       <div class="category-plan-controls">
@@ -62,16 +62,21 @@
         </base-button>
       </div>
     </div>
-    <div class="category-plan-title box">Finishing Javascript Course</div>
+    <div class="category-plan-title box">{{planItemData.title}}</div>
   </div>
 </template>
 
 <script>
 export default {
+  props: ['planItemData'],
   data() {
     return {
-      isFinished: false,
     };
+  },
+  computed: {
+    imgSrc() {
+      return require('../../../assets/'+this.planItemData.img+'.jpg') 
+    }
   },
 };
 </script>
@@ -85,6 +90,10 @@ export default {
   button {
     padding: 2px;
   }
+}
+img {
+  max-height: 160px;
+  width: 100%;
 }
 .category-plan-container {
   @apply pr-3 flex flex-col space-y-2;

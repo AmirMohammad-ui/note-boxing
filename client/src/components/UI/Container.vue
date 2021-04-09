@@ -1,5 +1,5 @@
 <template>
-  <div :class="['my-container',{'pl-3':borderLeft,'pr-3':borderRight}]">
+  <div class="my-container" :class="[classes,{'pl-3':borderLeft,'pr-3':borderRight}]">
     <div v-if="borderLeft" class="left-border"></div>
     <div v-if="borderRight" class="right-border"></div>
     <slot></slot>
@@ -16,6 +16,9 @@ props:{
   borderRight: {
     type: Boolean,
     default: false
+  },
+  classes: {
+    type: String
   }
 },
 data(){

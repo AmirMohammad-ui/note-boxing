@@ -35,16 +35,10 @@
     </container>
     <container border-left>
       <div :id="planItemsId" class="plan-items">
-        <category-plan-item />
-        <category-plan-item />
-        <category-plan-item />
-        <category-plan-item />
-        <category-plan-item />
-        <category-plan-item />
-        <category-plan-item />
-        <category-plan-item />
-        <category-plan-item />
-        <category-plan-item />
+        <category-plan-item 
+          v-for="category in planCategoriesData" 
+          :key="category.id"
+          :plan-item-data="category" />
       </div>
     </container>
   </div>
@@ -56,6 +50,13 @@ export default {
   props: ['centerSeperatorText','leftSeperatorText'],
   data(){
     return {
+      planCategoriesData: [
+        {id: 'p1',startDate: '2020/04/05',finishDate: '2021/04/25',isFinished: false,img: 'img-1',title: 'Finishing the Vue.js course and master it.'},
+        {id: 'p2',startDate: '2020/04/05',finishDate: '2021/04/25', isFinished: false,img: 'img-2',title: 'Finishing the JS course and master it.'},
+        {id: 'p3',startDate: '2020/04/05',finishDate: '2021/04/25', isFinished: true,img: 'img-3',title: 'Finishing the React.js course and master it.'},
+        {id: 'p4',startDate: '2020/04/05',finishDate: '2021/04/25', isFinished: false,img: 'img-4',title: 'Finishing the React.js course and master it.'},
+        {id: 'p5',startDate: '2020/04/05',finishDate: '2021/04/25', isFinished: true,img: 'img-5',title: 'Finishing the React.js course and master it.'},
+      ]
     }
   },
   computed: {
