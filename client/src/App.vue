@@ -24,6 +24,16 @@ html {
   font-family: 'Montserrat', sans-serif;
   font-size: 10px;
 }
+::-webkit-scrollbar {
+  width: 5px;
+  transition: all .3s;
+  &:hover {
+    width: 10px;
+  }
+}
+::-webkit-scrollbar-thumb {
+  background: #cdcdcd;
+}
 ul {
   list-style: none;
 }

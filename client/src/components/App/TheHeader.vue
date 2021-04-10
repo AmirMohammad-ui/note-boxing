@@ -71,9 +71,15 @@
               </base-button>
             </li>
           </ul>
-          <div class="flex items-center mr-2 space-x-2 lg:hidden">
+          <div class="profile-container-ondesktop">
             <img class="profile" src="../../assets/prifile-pic.png" alt="" />
             <span class="hidden font-light xs:block">AmirMuhammad</span>
+            <div class="auth-menu box">
+              <ul class="flex-col">
+                <li class="p-3 cursor-pointer">Profile</li>
+                <li class="p-3 cursor-pointer">Submit / Login</li>
+              </ul>
+            </div>  
           </div>
         </div>
       </div>
@@ -168,6 +174,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.profile-container-ondesktop {
+  @apply relative flex items-center mr-2 space-x-2 lg:hidden;
+  &:hover .auth-menu{
+    display: block;
+  }
+}
+.auth-menu {
+  @apply absolute bottom-0 font-light w-full transform translate-y-full left-0 bg-white;
+  display: none;
+  background-image: url("../../assets/auth.svg");
+  background-repeat: no-repeat;
+  background-position: top -25px right -35px;
+  z-index: 1;
+  color: #777;
+  li:hover {
+    background-color: #dfdfdf7c;
+  }
+  li:first-child:hover {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+  li:last-child:hover {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+}
 header {
   @apply flex items-center;
   font-size: 1.5rem;

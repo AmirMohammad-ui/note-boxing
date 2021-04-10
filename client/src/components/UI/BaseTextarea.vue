@@ -5,6 +5,7 @@
       class="box readonly-textarea"
       :style="{
         backgroundColor: bgColor ? bgColor : '#fff',
+        color: color? color: 'black'
       }"
       :type="type ? type : 'text'"
       :rows="rows ? rows : 5"

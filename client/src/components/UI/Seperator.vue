@@ -42,7 +42,7 @@ export default {
   position: absolute;
   top: 55%;
   left: 0;
-  background: #777;
+  background: #cdcdcd;
   height: 1px;
   width: 100%;
   z-index: -1;
