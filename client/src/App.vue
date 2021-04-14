@@ -74,4 +74,7 @@ img {
 .rounded-small {
   border-radius: 3px;
 }
+.backdrop {
+  background: rgba(0, 0, 0, 0.2);
+}
 </style>

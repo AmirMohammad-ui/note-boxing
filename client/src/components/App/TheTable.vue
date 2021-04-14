@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-28">
+  <div>
     <div v-if="daily">
       <daily :data="thisWeek" @toggle-options="toggleMenu"/>
     </div>
@@ -73,7 +73,6 @@ data:()=>({
 }),
 methods:{
   toggleMenu(data,dmy){
-    console.log(data,dmy)
     if(dmy === 'daily') {
       this.thisWeek.forEach((wd,inx) => {
         if(wd.wd_date === data)

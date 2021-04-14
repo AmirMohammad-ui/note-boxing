@@ -1,5 +1,5 @@
 <template>
-  <div class=" category-plan-container">
+  <div class="category-plan-container">
     <div class="flex space-x-2 text-sm">
       <base-input
         inputClasses="text-center"
@@ -26,15 +26,42 @@
         color="#fff"
       />
     </div>
-    <div class="relative">
-      <img
-        class="rounded-small box"
-        :src="imgSrc"
-        alt=""
-      />
+    <div class="relative overflow-hidden box">
+      <div class="realative category-plan-image__container">
+        <img class="rounded-small" :src="imgSrc" alt="" />
+      </div>
+      <div class="category-plan-description rounded-small"
+        :class="{'category-plan-description__show':isDescriptionShowing}">
+        <p>
+          {{planItemData.description}}
+        </p>
+      </div>
       <div class="category-plan-controls">
-        <base-button class="button" w="30px" icon bg-color="white">
-          <span class="font-sans text-2xl font-semibold description-button">!</span>
+        <base-button
+          v-if="!isDescriptionShowing"
+          @click="showDescription"
+          class="button"
+          w="30px"
+          icon
+          bg-color="white"
+        >
+          <span class="description-button">!</span>
+          <div class="tooltip box">Description</div>
+        </base-button>
+        <base-button
+          v-else
+          @click="hideDescription"
+          class="button"
+          w="30px"
+          icon
+          bg-color="white"
+        >
+          <svg width="12" height="12" viewBox="0 0 21 21">
+            <path
+              d="M1.47706 0L0 1.47706L9.02294 10.5L0 19.5229L1.47706 21L10.5 11.9771L19.5229 21L21 19.5229L11.9771 10.5L21 1.47706L19.5229 0L10.5 9.02294L1.47706 0Z"
+              fill="#777"
+            />
+          </svg>
           <div class="tooltip box">Description</div>
         </base-button>
         <base-button class="button" w="30px" icon bg-color="white">
@@ -66,31 +93,52 @@
         </base-button>
       </div>
     </div>
-    <div class="category-plan-title box">{{planItemData.title}}</div>
+    <div class="category-plan-title box">{{ planItemData.title }}</div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['planItemData'],
+  props: ["planItemData"],
   data() {
     return {
+      isDescriptionShowing: false,
     };
   },
   computed: {
     imgSrc() {
-      return require('../../../assets/'+this.planItemData.img+'.jpg') 
-    }
+      return require("../../../assets/" + this.planItemData.img + ".jpg");
+    },
   },
   methods: {
-    showTitle(title){
-      console.log(title)
-    }
-  }
+    showTitle(title) {
+      console.log(title);
+    },
+    showDescription() {
+      this.isDescriptionShowing = true;
+    },
+    hideDescription() {
+      this.isDescriptionShowing = false;
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+.category-plan-description {
+  @apply absolute top-0 left-0 w-full h-full p-2 bg-gray-100;
+  padding-right: 45px;
+  p {
+    @apply text-lg;
+    color: #505050;
+    text-align: justify;
+  }
+  transform: translateY(-100%);
+  transition: all .3s;
+}
+.category-plan-description__show {
+  transform: translateY(0);
+}
 .tooltip {
   @apply absolute px-2 py-1 transform -translate-x-full -translate-y-1/2 bg-gray-200 top-1/2 -left-2;
   display: none;
@@ -102,6 +150,7 @@ export default {
   }
 }
 .description-button {
+  @apply font-sans text-2xl font-semibold;
   color: #777;
 }
 .category-plan-controls {
@@ -110,9 +159,15 @@ export default {
     padding: 2px;
   }
 }
-img {
+img,.category-plan-image__container,.category-plan-description {
   max-height: 160px;
   width: 100%;
+}
+.category-plan-description {
+  overflow: scroll;
+}
+.category-plan-description::-webkit-scrollbar {
+  width: 1px;
 }
 .category-plan-container {
   @apply pr-3 flex flex-col space-y-2;

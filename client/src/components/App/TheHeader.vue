@@ -29,7 +29,10 @@
         <div class="flex items-center">
           <ul class="items-center hidden space-x-4 font-light lg:flex">
             <li class="">
-              <router-link class="flex items-center justify-center header-link" to="/plans">
+              <router-link
+                class="flex items-center justify-center header-link"
+                to="/plans"
+              >
                 <svg class="icon" width="13" height="14" viewBox="0 0 13 14">
                   <path
                     d="M0.5 0H12.5V2H0.5V0ZM1.5 6H11.5V8H1.5V6ZM0 12H13V14H0"
@@ -60,7 +63,7 @@
               </div>
             </li>
             <li>
-              <base-button class="mr-1" @click="showModal" bgColor="#00CEC9">
+              <base-button class="mr-1" @click="showModal_newPlan" bgColor="#00CEC9">
                 <svg width="22" height="22" viewBox="0 0 24 24">
                   <path
                     d="M12 0C5.373 0 0 5.373 0 12C0 18.627 5.373 24 12 24C18.627 24 24 18.627 24 12C24 5.373 18.627 0 12 0ZM18 13H13V18C13 18.553 12.552 19 12 19C11.448 19 11 18.553 11 18V13H6C5.448 13 5 12.553 5 12C5 11.447 5.448 11 6 11H11V6C11 5.447 11.448 5 12 5C12.552 5 13 5.447 13 6V11H18C18.552 11 19 11.447 19 12C19 12.553 18.552 13 18 13Z"
@@ -77,15 +80,51 @@
             <div class="auth-menu box">
               <ul class="flex-col">
                 <li class="p-3 cursor-pointer">Profile</li>
-                <li class="p-3 cursor-pointer">Submit / Login</li>
+                <li @click="showModal_auth" class="p-3 cursor-pointer">
+                  Sign Up / Login
+                </li>
+                <li
+                  class="flex items-center p-3 space-x-3 text-red-500 bg-red-300 cursor-pointer logout"
+                >
+                  <svg
+                    width="17"
+                    height="17"
+                    viewBox="0 0 21 21"
+                  >
+                    <path
+                      d="M0 0V20C2.65169e-05 20.2652 0.105392 20.5195 0.292922 20.7071C0.480453 20.8946 0.734792 21 1 21H20C20.2652 21 20.5195 20.8946 20.7071 20.7071C20.8946 20.5195 21 20.2652 21 20V14H19V19H2V0H0ZM15.9893 0.490234C15.7904 0.490481 15.5961 0.549999 15.4313 0.661187C15.2664 0.772375 15.1385 0.930185 15.0637 1.11446C14.989 1.29873 14.9709 1.5011 15.0117 1.69571C15.0525 1.89032 15.1505 2.06834 15.293 2.20703L16.5859 3.5H16.0244C10.9885 3.37467 7.8093 4.15773 5.97656 6.36328C4.14382 8.56883 3.91566 11.7563 4 16.0195C4.00518 16.2847 4.1155 16.537 4.3067 16.7209C4.4979 16.9048 4.75431 17.0052 5.01953 17C5.28475 16.9948 5.53704 16.8845 5.72092 16.6933C5.90479 16.5021 6.00518 16.2457 6 15.9805C5.91784 11.8271 6.26689 9.1422 7.51465 7.64062C8.76241 6.13905 11.167 5.38033 15.9756 5.5H15.9873H16.5859L15.293 6.79297C15.197 6.88511 15.1204 6.99548 15.0676 7.11761C15.0148 7.23974 14.9869 7.37117 14.9856 7.50422C14.9842 7.63726 15.0094 7.76923 15.0597 7.89241C15.11 8.01559 15.1844 8.12749 15.2784 8.22157C15.3725 8.31565 15.4844 8.39001 15.6076 8.4403C15.7308 8.49059 15.8627 8.5158 15.9958 8.51444C16.1288 8.51309 16.2603 8.4852 16.3824 8.43242C16.5045 8.37963 16.6149 8.30301 16.707 8.20703L19.6182 5.2959C19.6903 5.24107 19.7547 5.17667 19.8096 5.10449L20.4141 4.5L19.8096 3.89551C19.7538 3.82168 19.6881 3.75595 19.6143 3.7002L16.707 0.792969C16.6137 0.697057 16.5021 0.620843 16.3788 0.568843C16.2555 0.516842 16.1231 0.490112 15.9893 0.490234Z"
+                      fill="#ef4444"
+                    />
+                  </svg>
+                  <span>Logout</span>
+                </li>
               </ul>
-            </div>  
+            </div>
           </div>
         </div>
       </div>
-      <div class="items-center hidden mx-4 mr-12 space-x-2 lg:flex">
+      <div class="profile-container-onmobile">
         <img class="profile" src="../../assets/prifile-pic.png" alt="" />
         <span class="hidden font-light xs:block">AmirMuhammad</span>
+        <div class="auth-menu-mobile box">
+          <ul class="flex-col">
+            <li class="p-3 cursor-pointer">Profile</li>
+            <li @click="showModal_auth" class="p-3 cursor-pointer">Sign Up / Login</li>
+            <li class="flex items-center p-3 space-x-3 text-red-500 bg-red-300 cursor-pointer logout">
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 21 21"
+              >
+                <path
+                  d="M0 0V20C2.65169e-05 20.2652 0.105392 20.5195 0.292922 20.7071C0.480453 20.8946 0.734792 21 1 21H20C20.2652 21 20.5195 20.8946 20.7071 20.7071C20.8946 20.5195 21 20.2652 21 20V14H19V19H2V0H0ZM15.9893 0.490234C15.7904 0.490481 15.5961 0.549999 15.4313 0.661187C15.2664 0.772375 15.1385 0.930185 15.0637 1.11446C14.989 1.29873 14.9709 1.5011 15.0117 1.69571C15.0525 1.89032 15.1505 2.06834 15.293 2.20703L16.5859 3.5H16.0244C10.9885 3.37467 7.8093 4.15773 5.97656 6.36328C4.14382 8.56883 3.91566 11.7563 4 16.0195C4.00518 16.2847 4.1155 16.537 4.3067 16.7209C4.4979 16.9048 4.75431 17.0052 5.01953 17C5.28475 16.9948 5.53704 16.8845 5.72092 16.6933C5.90479 16.5021 6.00518 16.2457 6 15.9805C5.91784 11.8271 6.26689 9.1422 7.51465 7.64062C8.76241 6.13905 11.167 5.38033 15.9756 5.5H15.9873H16.5859L15.293 6.79297C15.197 6.88511 15.1204 6.99548 15.0676 7.11761C15.0148 7.23974 14.9869 7.37117 14.9856 7.50422C14.9842 7.63726 15.0094 7.76923 15.0597 7.89241C15.11 8.01559 15.1844 8.12749 15.2784 8.22157C15.3725 8.31565 15.4844 8.39001 15.6076 8.4403C15.7308 8.49059 15.8627 8.5158 15.9958 8.51444C16.1288 8.51309 16.2603 8.4852 16.3824 8.43242C16.5045 8.37963 16.6149 8.30301 16.707 8.20703L19.6182 5.2959C19.6903 5.24107 19.7547 5.17667 19.8096 5.10449L20.4141 4.5L19.8096 3.89551C19.7538 3.82168 19.6881 3.75595 19.6143 3.7002L16.707 0.792969C16.6137 0.697057 16.5021 0.620843 16.3788 0.568843C16.2555 0.516842 16.1231 0.490112 15.9893 0.490234Z"
+                  fill="#ef4444"
+                />
+              </svg>
+              <span>Logout</span>
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="absolute mobile-nav">
         <ul class="flex-col items-center space-y-4 font-light lg:hidden">
@@ -116,8 +155,7 @@
                   class="absolute search-icon-position"
                   width="25"
                   height="25"
-                  viewBox="0 0 28 28"
-                >
+                  viewBox="0 0 28 28">
                   <path
                     d="M11.271 0C5.06 0 0 5.06 0 11.271C0 17.482 5.06 22.542 11.271 22.542C13.9576 22.542 16.4274 21.5929 18.367 20.0157L25.9928 27.6415C26.1002 27.7534 26.2289 27.8428 26.3713 27.9043C26.5137 27.9659 26.667 27.9984 26.8221 27.9999C26.9772 28.0015 27.1311 27.9721 27.2747 27.9135C27.4183 27.8549 27.5488 27.7682 27.6585 27.6585C27.7682 27.5488 27.8549 27.4183 27.9135 27.2747C27.9721 27.1311 28.0015 26.9772 27.9999 26.8221C27.9984 26.667 27.9659 26.5137 27.9043 26.3713C27.8428 26.2289 27.7534 26.1002 27.6415 25.9928L20.0157 18.367C21.5929 16.4274 22.542 13.9576 22.542 11.271C22.542 5.06 17.482 0 11.271 0ZM11.271 2.33193C16.2217 2.33193 20.21 6.32027 20.21 11.271C20.21 13.6827 19.2588 15.8615 17.7157 17.4667C17.6205 17.5366 17.5366 17.6205 17.4667 17.7157C15.8615 19.2588 13.6827 20.21 11.271 20.21C6.32026 20.21 2.33193 16.2217 2.33193 11.271C2.33193 6.32027 6.32026 2.33193 11.271 2.33193Z"
                     fill="#999"
@@ -128,7 +166,12 @@
           </transition>
           <transition name="fade-in">
             <li v-if="navIsOpen">
-              <base-button @click="showModal" class="w-full pb-1" bgColor="#777" color="#cdcdcd">
+              <base-button
+                @click="showModal_newPlan"
+                class="w-full pb-1"
+                bgColor="#777"
+                color="#cdcdcd"
+              >
                 <svg class="pt-1" width="22" height="22" viewBox="0 0 24 24">
                   <path
                     d="M12 0C5.373 0 0 5.373 0 12C0 18.627 5.373 24 12 24C18.627 24 24 18.627 24 12C24 5.373 18.627 0 12 0ZM18 13H13V18C13 18.553 12.552 19 12 19C11.448 19 11 18.553 11 18V13H6C5.448 13 5 12.553 5 12C5 11.447 5.448 11 6 11H11V6C11 5.447 11.448 5 12 5C12.552 5 13 5.447 13 6V11H18C18.552 11 19 11.447 19 12C19 12.553 18.552 13 18 13Z"
@@ -142,32 +185,52 @@
         </ul>
       </div>
     </header>
-    <new-plan @close-modal="closeModal" :is-backdrop-open="isBackdropOpen" :is-dialog-open="isDialogOpen"/>
+    <new-plan
+      @close-modal="closeModal_newPlan"
+      :is-backdrop-open="isBackdropOpen_newPlan"
+      :is-dialog-open="isDialogOpen_newPlan"
+    />
+    <auth-modal
+      @close-modal="closeModal_auth"
+      :is-backdrop-open="isBackdropOpen_auth"
+      :is-dialog-open="isDialogOpen_auth"
+    />
   </div>
 </template>
 
 <script>
 import NewPlan from "./NewPlan.vue";
+import AuthModal from "./Auth/TheAuth.vue";
 export default {
-  components: { NewPlan },
+  components: { NewPlan, AuthModal },
   data() {
     return {
       navIsOpen: false,
-      isBackdropOpen: false,
-      isDialogOpen: false,
+      isBackdropOpen_newPlan: false,
+      isDialogOpen_newPlan: false,
+      isBackdropOpen_auth: false,
+      isDialogOpen_auth: false,
     };
   },
   methods: {
     openNav() {
       this.navIsOpen = !this.navIsOpen;
     },
-    showModal() {
+    showModal_newPlan() {
       this.isBackdropOpen = !this.isBackdropOpen;
       this.isDialogOpen = !this.isDialogOpen;
     },
-    closeModal() {
+    closeModal_newPlan() {
       this.isBackdropOpen = !this.isBackdropOpen;
       this.isDialogOpen = !this.isDialogOpen;
+    },
+    showModal_auth() {
+      this.isBackdropOpen_auth = !this.isBackdropOpen_auth;
+      this.isDialogOpen_auth = !this.isDialogOpen_auth;
+    },
+    closeModal_auth() {
+      this.isBackdropOpen_auth = !this.isBackdropOpen_auth;
+      this.isDialogOpen_auth = !this.isDialogOpen_auth;
     },
   },
 };
@@ -176,8 +239,40 @@ export default {
 <style lang="scss" scoped>
 .profile-container-ondesktop {
   @apply relative flex items-center mr-2 space-x-2 lg:hidden;
-  &:hover .auth-menu{
+  &:hover .auth-menu {
     display: block;
+  }
+}
+.profile-container-onmobile {
+  @apply relative items-center hidden mx-4 mr-12 space-x-2 lg:flex;
+  &:hover .auth-menu-mobile {
+    display: block;
+  }
+}
+
+.auth-menu-mobile {
+  @apply font-light w-full bg-white;
+  display: none;
+  background-image: url("../../assets/auth.svg");
+  background-repeat: no-repeat;
+  background-position: top -25px right -35px;
+  color: #777;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transform: translateY(100%);
+  z-index: 1;
+  li:hover {
+    background-color: #dfdfdf7c;
+  }
+  li:first-child:hover {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+  li:last-child:hover {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
   }
 }
 .auth-menu {
@@ -198,6 +293,9 @@ export default {
   li:last-child:hover {
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
+  }
+  .logout:hover {
+    background-color: #ebaaaa;
   }
 }
 header {

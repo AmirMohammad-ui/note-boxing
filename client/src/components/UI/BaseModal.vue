@@ -35,9 +35,6 @@ export default {
 .base-modal {
   z-index: 20;
 }
-.backdrop {
-  background: rgba(0, 0, 0, 0.2);
-}
 dialog {
   position: fixed;
   width: 75%;

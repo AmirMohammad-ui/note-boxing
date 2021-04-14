@@ -18,29 +18,31 @@
           </span>
         </base-button>
       </div>
-      <div class="mb-10">
+      <div class="mb-28">
         <the-table :daily="activeTable === 'daily'? true:false"/>
         <the-table :monthly="activeTable === 'monthly'? true:false"/>
         <the-table :yearly="activeTable === 'yearly'? true:false"/>
       </div>
     </container>
-    <the-plan 
-      left-seperator-text="Today's Plan"
-      right-seperator-text="2021/02/21"
-      :data="todaysPlan"
-    />
-    <the-plan 
-      left-seperator-text="Current Month Plan"
-      right-seperator-text="March"
-      :data="currentMonthPlan"
-      class="mb-10"
-    />
-    <the-plan 
-      left-seperator-text="Current Year Plan"
-      right-seperator-text="2021"
-      :data="currentYearPlan"
-      class="mb-10"
-    />
+    <div class="mt-28">
+      <the-plan 
+        left-seperator-text="Today's Plan"
+        right-seperator-text="2021/02/21"
+        :data="todaysPlan"
+      />
+      <the-plan 
+        left-seperator-text="Current Month Plan"
+        right-seperator-text="March"
+        :data="currentMonthPlan"
+        class="mb-10"
+      />
+      <the-plan 
+        left-seperator-text="Current Year Plan"
+        right-seperator-text="2021"
+        :data="currentYearPlan"
+        class="mb-10"
+      />
+    </div>
   </div>
 </template>
 
