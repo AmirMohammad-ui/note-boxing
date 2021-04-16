@@ -6,7 +6,10 @@
         <th>Date</th>
         <th class="w-4/5">Plan</th>
       </tr>
-      <tr v-for="{ wd_name, wd_date, wd_plan, wd_menu } in data" :key="wd_name">
+      <tr 
+        v-for="{ wd_name, wd_date, wd_plan, wd_menu } in MonthsDailyPlan" 
+        :key="wd_date" 
+        :style="{backgroundColor: wd_name === 'Sunday'? '#e2e2e2': ''}">
         <td class="relative">
           <div :class="{ current: wd_date === currentDate }"></div>
           {{ wd_name }}
@@ -14,7 +17,7 @@
         <td>{{ wd_date }}</td>
         <td class="relative">
           {{ wd_plan }}
-          <div class="absolute top-0 right-0">
+          <div v-if="wd_plan" class="absolute top-0 right-0">
             <div
               @click="$emit('toggle-options',wd_date, 'daily')"
               class="absolute"
@@ -114,11 +117,44 @@
 <script>
 export default {
   props: ['data'],
+  data() {
+    return {
+      MonthsDailyPlan: [],
+    }
+  },
   computed: {
     currentDate(){
       const date = new Date()
       return date.getDate()
     },
+    thisMonthLength() {
+      const date = new Date();
+      return parseInt(new Date(date.setDate(-1)).toLocaleString("en-US",{day:"numeric"}));
+    },
+  },
+  methods: {
+    getWeekday(d){
+      const date = new Date();
+      const day = new Date(date.setDate(d)).toLocaleString("en-US",{weekday:"long"});
+      return day;
+    },
+    getDays() {
+      for(let day=1;day<=this.thisMonthLength;day++) {
+        const plan = {wd_menu: false};
+        plan.wd_name = this.getWeekday(day);
+        plan.wd_date = day;
+        plan.wd_menu = false;
+        this.data.forEach(p => {
+          if(+p.wd_date===day){
+            plan.wd_plan = p.wd_date&&+p.wd_date === day?p.wd_plan:'';
+          }
+        })
+        this.MonthsDailyPlan.push(plan);
+      }
+    }
+  },
+  mounted(){
+    this.getDays();
   }
 }
 </script>

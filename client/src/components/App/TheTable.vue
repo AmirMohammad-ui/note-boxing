@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="daily">
-      <daily :data="thisWeek" @toggle-options="toggleMenu"/>
+      <daily :data="dailyPlans" @toggle-options="toggleMenu"/>
     </div>
     <div v-else-if="monthly">
       <monthly :data="thisMonth" @toggle-options="toggleMenu"/>
@@ -35,14 +35,19 @@ props:{
   }
 },
 data:()=>({
-  thisWeek: [
-    {wd_name: 'monday',wd_date: 23,wd_plan:'Finishing the Vue.js Course.',wd_menu: false},
-    {wd_name: 'tuesday',wd_date: 24,wd_plan:'Finishing the React.js Course.',wd_menu: false},
-    {wd_name: 'wednesday',wd_date: 25,wd_plan:'Finishing the Angular.js Course.',wd_menu: false},
-    {wd_name: 'thursday',wd_date: 26,wd_plan:'Finishing the Javascript Course. ',wd_menu: false},
-    {wd_name: 'friday',wd_date: 27,wd_plan:'Finishing the GraphQL Course.',wd_menu: false},
-    {wd_name: 'saturday',wd_date: 28,wd_plan:'Finishing the NodeJS Course.',wd_menu: false},
-    {wd_name: 'sunday',wd_date: 29,wd_plan:'Finishing the MongoDB Course.',wd_menu: false},
+  dailyPlans: [
+    {wd_date: 1,wd_plan:'Finishing the Vue.js Course.',wd_menu: false},
+    {wd_date: 13,wd_plan:'Finishing the React.js Course.',wd_menu:false},
+    {wd_date: 14,wd_plan:'Finishing the Angular.js Course.',wd_menu:false},
+    {wd_date: 15,wd_plan:'Finishing the Javascript Course. ',wd_menu:false},
+    {wd_date: 16,wd_plan:'Finishing the GraphQL Course.',wd_menu: false},
+    {wd_date: 17,wd_plan:'Finishing the NodeJS Course.',wd_menu: false},
+    {wd_date: 18,wd_plan:'Finishing the TypeScript Course.',wd_menu: false},
+    {wd_date: 19,wd_plan:'Finishing the PHP Course.',wd_menu: false},
+    {wd_date: 20,wd_plan:'Finishing the CSS Course.',wd_menu: false},
+    {wd_date: 21,wd_plan:'Finishing the MySQL Course.',wd_menu: false},
+    {wd_date: 22,wd_plan:'Finishing the PgSQL Course.',wd_menu: false},
+    {wd_date: 23,wd_plan:'Finishing the Meteor.js Course.',wd_menu:false},
   ],
   thisMonth: [
     {m_number: 1,m_name: 'January',m_plan:'Finishing the Vue.js Course.',m_menu: false},
@@ -74,9 +79,9 @@ data:()=>({
 methods:{
   toggleMenu(data,dmy){
     if(dmy === 'daily') {
-      this.thisWeek.forEach((wd,inx) => {
+      this.dailyPlans.forEach((wd,inx) => {
         if(wd.wd_date === data)
-          this.thisWeek.splice(inx,1,{
+          this.dailyPlans.splice(inx,1,{
             ...wd,
             wd_menu: !wd.wd_menu,
           })
@@ -100,15 +105,15 @@ methods:{
         }
       })
     }
-  }
-}
+  },
+},
 }
 </script>
 
 <style lang="scss" scpoed>
 tr:first-child{
   background: #0984E3;
-  color: white;
+  color: #fff;
   border-top-right-radius: 3px;
   border-top-left-radius: 3px;
 }

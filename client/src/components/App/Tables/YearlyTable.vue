@@ -47,35 +47,6 @@
         </td>
       </tr>
     </table>
-    <div class="month-controller">
-      <base-button bg-color="#fff">
-        <svg
-          class="my-2"
-          width="15"
-          height="17"
-          viewBox="0 0 15 17"
-        >
-          <path
-            d="M-4.15258e-07 8.5L14.25 0.272758L14.25 16.7272L-4.15258e-07 8.5Z"
-            fill="#0984E3"
-          />
-        </svg>
-      </base-button>
-      <div class="px-5 py-3 box text-blue">
-        <span class="font-light">Year: </span>
-        <span class="font-bold">2021</span>
-      </div>
-      <base-button bg-color="#fff">
-        <svg
-          class="my-2"
-          width="15"
-          height="17"
-          viewBox="0 0 15 17"
-        >
-          <path d="M15 8.5L0.749999 16.7272L0.75 0.272758L15 8.5Z" fill="#0984E3" />
-        </svg>
-      </base-button>
-    </div>
   </div>
 </template>
 <script>

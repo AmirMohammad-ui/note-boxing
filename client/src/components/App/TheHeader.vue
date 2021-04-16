@@ -4,7 +4,7 @@
       <div
         v-if="navIsOpen"
         @click="openNav"
-        class="fixed top-0 left-0 w-full h-full"
+        class="fixed top-0 left-0 z-10 w-full h-full"
       ></div>
       <div @click="openNav" class="header--ham lg:hidden box">
         <transition name="fade" mode="out-in">
@@ -138,7 +138,7 @@
                       fill="#cdcdcd"
                     />
                   </svg>
-                  <span> Take A Look At Your Plans </span>
+                  <span class="pb-1"> Take A Look At Your Plans </span>
                 </base-button>
               </router-link>
             </li>
@@ -168,17 +168,17 @@
             <li v-if="navIsOpen">
               <base-button
                 @click="showModal_newPlan"
-                class="w-full pb-1"
+                class="w-full"
                 bgColor="#777"
                 color="#cdcdcd"
               >
-                <svg class="pt-1" width="22" height="22" viewBox="0 0 24 24">
+                <svg width="22" height="22" viewBox="0 0 24 24">
                   <path
                     d="M12 0C5.373 0 0 5.373 0 12C0 18.627 5.373 24 12 24C18.627 24 24 18.627 24 12C24 5.373 18.627 0 12 0ZM18 13H13V18C13 18.553 12.552 19 12 19C11.448 19 11 18.553 11 18V13H6C5.448 13 5 12.553 5 12C5 11.447 5.448 11 6 11H11V6C11 5.447 11.448 5 12 5C12.552 5 13 5.447 13 6V11H18C18.552 11 19 11.447 19 12C19 12.553 18.552 13 18 13Z"
                     fill="#cdcdcd"
                   />
                 </svg>
-                <span> New Plan </span>
+                <span class="pb-1"> New Plan </span>
               </base-button>
             </li>
           </transition>

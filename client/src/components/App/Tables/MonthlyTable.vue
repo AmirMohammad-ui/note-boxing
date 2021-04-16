@@ -63,7 +63,7 @@
       </base-button>
       <div class="px-5 py-3 box text-blue">
         <span class="font-light">Year: </span>
-        <span class="font-bold">2021</span>
+        <span class="font-bold">{{currentYear}}</span>
       </div>
       <base-button bg-color="#fff">
         <svg
@@ -81,10 +81,22 @@
 <script>
 export default {
   props: ["data"],
+  watch:{
+    today(value){
+        console.log(value)
+      // const date = new Date();
+      // if(value !== date.getDate()) {
+      // }
+    }
+  },
   computed: {
+    today() {
+      const date = new Date();
+      return date.getDate();
+    },
     currentMonth(){
-      const date = new Date()
-      let currentMonth
+      let date = new Date()
+      let currentMonth;
       const currentMonth_Number = date.getMonth()+1
       this.data.forEach(m => {
         if(m.m_number === currentMonth_Number) {
@@ -94,6 +106,11 @@ export default {
       })
       return currentMonth
     },
+    currentYear() {
+      const date = new Date();
+      const currentYear = date.getFullYear();
+      return currentYear;
+    }
   }
 }
 </script>

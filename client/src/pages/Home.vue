@@ -1,5 +1,30 @@
 <template>
   <div class="m-4 -zind-1">
+    <div class="mt-10">
+      <the-plan 
+        left-seperator-text="Today's Plan"
+        right-seperator-text="2021/02/21"
+        :data="todaysPlan"
+      />
+      <the-plan 
+        left-seperator-text="Current Month Plan"
+        right-seperator-text="March"
+        :data="currentMonthPlan"
+        class="mb-10"
+      />
+      <the-plan 
+        left-seperator-text="Current Year Plan"
+        right-seperator-text="2021"
+        :data="currentYearPlan"
+        class="mb-10"
+      />
+    </div>
+    <container>
+      <div class="relative banner">
+        <p class="banner-text">Plan It Before Doing Enything</p>
+        <img class="box" src="../assets/img-5.jpg" alt="Plan-box">
+      </div>
+    </container>
     <container class="table-section">
       <div class="flex mt-10 space-x-4">
         <base-button @click="activeTable = 'daily'" :bg-color="activeTable === 'daily'?'#0984E3':'#fff'" :color="activeTable === 'daily'?'#fff':'#0984E3'">
@@ -24,25 +49,6 @@
         <the-table :yearly="activeTable === 'yearly'? true:false"/>
       </div>
     </container>
-    <div class="mt-28">
-      <the-plan 
-        left-seperator-text="Today's Plan"
-        right-seperator-text="2021/02/21"
-        :data="todaysPlan"
-      />
-      <the-plan 
-        left-seperator-text="Current Month Plan"
-        right-seperator-text="March"
-        :data="currentMonthPlan"
-        class="mb-10"
-      />
-      <the-plan 
-        left-seperator-text="Current Year Plan"
-        right-seperator-text="2021"
-        :data="currentYearPlan"
-        class="mb-10"
-      />
-    </div>
   </div>
 </template>
 
@@ -67,5 +73,17 @@ export default {
 }
 .-zind-1 {
   z-index: -1;
+}
+.banner {
+  width: 100%;
+  height: 10rem;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+  .banner-text{ 
+    @apply absolute w-full text-6xl font-extrabold text-center text-white transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2;
+    text-shadow: 0 0 20px #404040;
+  }
 }
 </style>
