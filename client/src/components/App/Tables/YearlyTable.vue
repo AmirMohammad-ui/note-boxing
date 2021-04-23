@@ -79,7 +79,6 @@ export default {
       const date = new Date()
       for(let year = 0;year<10;year++){
         const y = +(new Date(date.setFullYear(date.getFullYear())).toLocaleString("en-US",{year:'numeric'})) + (year === 0?0:year)
-        console.log(y)
         const newYear = {
           y_number: y,
           y_menu: false,

@@ -1,13 +1,13 @@
 <template>
   <div>
     <div v-if="daily">
-      <daily :data="dailyPlans" @toggle-options="toggleMenu"/>
+      <daily :data="dailyPlans"/>
     </div>
     <div v-else-if="monthly">
-      <monthly :data="thisMonth" @toggle-options="toggleMenu"/>
+      <monthly :data="thisMonth"/>
     </div>
     <div v-else-if="yearly">
-      <yearly :data="tenYearsAhead" @toggle-options="toggleMenu"/>
+      <yearly :data="tenYearsAhead"/>
     </div>
   </div>
 </template>
