@@ -5,16 +5,16 @@
         <th class="w-2/12">Months</th>
         <th>Note</th>
       </tr>
-      <tr v-for="{ m_name, m_plan, m_menu } in data" :key="m_name">
+      <tr v-for="{ m_name, m_plan, m_menu } in everyMonthPlan" :key="m_name">
         <td class="relative">
           <div :class="{ current: m_name === currentMonth }"></div>
           {{ m_name }}
         </td>
         <td class="relative">
           {{ m_plan }}
-          <div class="absolute top-0 right-0">
+          <div v-if="m_plan" class="absolute top-0 right-0">
             <div
-              @click="$emit('toggle-options',m_name, 'monthly')"
+              @click="toggleMenu(m_name)"
               class="absolute"
               :class="{ 'info-button': !m_menu, 'info-button-close': m_menu }"
             >
@@ -81,6 +81,11 @@
 <script>
 export default {
   props: ["data"],
+  data(){
+    return {
+      everyMonthPlan: []
+    }
+  },
   watch:{
     today(value){
         console.log(value)
@@ -96,7 +101,7 @@ export default {
     },
     currentMonth(){
       let date = new Date()
-      let currentMonth;
+      let currentMonth
       const currentMonth_Number = date.getMonth()+1
       this.data.forEach(m => {
         if(m.m_number === currentMonth_Number) {
@@ -107,10 +112,42 @@ export default {
       return currentMonth
     },
     currentYear() {
-      const date = new Date();
-      const currentYear = date.getFullYear();
-      return currentYear;
+      const date = new Date()
+      const currentYear = date.getFullYear()
+      return currentYear
     }
+  },
+  methods: {
+    toggleMenu(month) {
+      this.everyMonthPlan.forEach((m,inx) => {
+        if(m.m_name === month) {
+          this.everyMonthPlan.splice(inx,1,{
+            ...m,
+            m_menu: !m.m_menu,
+          })
+        }
+      })
+    },
+    getMonths() {
+      const date = new Date();
+      for (let monthNumber = 0;monthNumber < 12;monthNumber++) {
+        const month = new Date(date.setMonth(monthNumber)).toLocaleString("en-US",{month: 'long'})
+        const monthObj = {
+          m_name: month,
+          m_number: monthNumber+1,
+          m_menu: false
+        }
+        this.data.forEach(p => {
+          if(p.m_number===monthNumber+1) {
+            monthObj.m_plan = p.m_plan
+          }
+        })
+        this.everyMonthPlan.push(monthObj)
+      }
+    }
+  },
+  mounted() {
+    this.getMonths()
   }
 }
 </script>

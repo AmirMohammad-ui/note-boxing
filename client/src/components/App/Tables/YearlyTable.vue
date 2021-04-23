@@ -1,20 +1,20 @@
 <template>
-  <div>
+  <div class="mb-14">
     <table class="w-full box">
       <tr>
         <th class="w-1/12">Years</th>
         <th>Plans</th>
       </tr>
-      <tr v-for="{ y_number, y_plan, y_menu } in data" :key="y_number">
+      <tr v-for="{ y_number, y_plan, y_menu } in tenYearsAhead" :key="y_number">
         <td class="relative">
           <div :class="{ current: y_number === currentYear }"></div>
           {{ y_number }}
         </td>
         <td class="relative">
           {{ y_plan }}
-          <div class="absolute top-0 right-0">
+          <div v-if="y_plan" class="absolute top-0 right-0">
             <div
-              @click="$emit('toggle-options',y_number, 'yearly')"
+              @click="toggleMenu(y_number)"
               class="absolute"
               :class="{ 'info-button': !y_menu, 'info-button-close': y_menu }"
             >
@@ -52,16 +52,49 @@
 <script>
 export default {
   props: ["data"],
+  data(){
+    return {
+      tenYearsAhead: []
+    }
+  },
   computed: {
     currentYear(){
       const date = new Date()
       const currentYear = date.getFullYear() 
       return currentYear
     }
+  },
+  methods: {
+    toggleMenu(year) {
+      this.tenYearsAhead.forEach((y,inx) => {
+        if(y.y_number === year) {
+          this.tenYearsAhead.splice(inx,1,{
+            ...y,
+            y_menu: !y.y_menu,
+          })
+        }
+      })
+    },
+    getTenYearsAhead() {
+      const date = new Date()
+      for(let year = 0;year<10;year++){
+        const y = +(new Date(date.setFullYear(date.getFullYear())).toLocaleString("en-US",{year:'numeric'})) + (year === 0?0:year)
+        console.log(y)
+        const newYear = {
+          y_number: y,
+          y_menu: false,
+        }
+        this.data.forEach(p=>{
+          if(p.y_number === y){
+            newYear.y_plan = p.y_plan
+          }
+        })
+        this.tenYearsAhead.push(newYear)
+      }
+    }
+  },
+  mounted() {
+    this.getTenYearsAhead()
   }
 }
 </script>
-
-<style>
-
-</style>

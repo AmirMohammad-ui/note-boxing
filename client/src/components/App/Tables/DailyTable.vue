@@ -19,7 +19,7 @@
           {{ wd_plan }}
           <div v-if="wd_plan" class="absolute top-0 right-0">
             <div
-              @click="$emit('toggle-options',wd_date, 'daily')"
+              @click="toggleMenu(wd_date)"
               class="absolute"
               :class="{ 'info-button': !wd_menu, 'info-button-close': wd_menu }"
             >
@@ -123,6 +123,9 @@ export default {
     }
   },
   computed: {
+    dailyPlans() {
+      return this.data
+    },
     currentDate(){
       const date = new Date()
       return date.getDate()
@@ -133,6 +136,16 @@ export default {
     },
   },
   methods: {
+    toggleMenu(date) {
+      this.MonthsDailyPlan.forEach((wd,inx) => {
+        if(wd.wd_date === date){
+          this.MonthsDailyPlan.splice(inx,1,{
+            ...wd,
+            wd_menu: !wd.wd_menu,
+          })
+        }
+      })
+    },
     getWeekday(d){
       const date = new Date();
       const day = new Date(date.setDate(d)).toLocaleString("en-US",{weekday:"long"});

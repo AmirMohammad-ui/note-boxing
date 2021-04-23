@@ -36,7 +36,7 @@ props:{
 },
 data:()=>({
   dailyPlans: [
-    {wd_date: 1,wd_plan:'Finishing the Vue.js Course.',wd_menu: false},
+    {wd_date: 7,wd_plan:'Finishing the Vue.js Course.',wd_menu: false},
     {wd_date: 13,wd_plan:'Finishing the React.js Course.',wd_menu:false},
     {wd_date: 14,wd_plan:'Finishing the Angular.js Course.',wd_menu:false},
     {wd_date: 15,wd_plan:'Finishing the Javascript Course. ',wd_menu:false},
@@ -50,63 +50,22 @@ data:()=>({
     {wd_date: 23,wd_plan:'Finishing the Meteor.js Course.',wd_menu:false},
   ],
   thisMonth: [
-    {m_number: 1,m_name: 'January',m_plan:'Finishing the Vue.js Course.',m_menu: false},
     {m_number: 2,m_name: 'February',m_plan:'Finishing the Vue.js Course.',m_menu: false},
     {m_number: 3,m_name: 'March',m_plan:'Finishing the Vue.js Course.',m_menu: false},
     {m_number: 4,m_name: 'April',m_plan:'Finishing the Vue.js Course.',m_menu: false},
-    {m_number: 5,m_name: 'May',m_plan:'Finishing the Vue.js Course.',m_menu: false},
-    {m_number: 6,m_name: 'June',m_plan:'Finishing the Vue.js Course.',m_menu: false},
     {m_number: 7,m_name: 'July',m_plan:'Finishing the Vue.js Course.',m_menu: false},
     {m_number: 8,m_name: 'August',m_plan:'Finishing the Vue.js Course.',m_menu: false},
-    {m_number: 9,m_name: 'September',m_plan:'Finishing the Vue.js Course.',m_menu: false},
-    {m_number: 10,m_name: 'Novermber',m_plan:'Finishing the Vue.js Course.',m_menu: false},
-    {m_number: 11,m_name: 'October',m_plan:'Finishing the Vue.js Course.',m_menu: false},
     {m_number: 12,m_name: 'December',m_plan:'Finishing the Vue.js Course.',m_menu: false},
   ],
   tenYearsAhead: [
     {y_number: 2021,y_plan:'Finishing the Vue.js Course.',y_menu: false},
     {y_number: 2022,y_plan:'Finishing the Vue.js Course.',y_menu: false},
-    {y_number: 2022,y_plan:'Finishing the Vue.js Course.',y_menu: false},
     {y_number: 2023,y_plan:'Finishing the Vue.js Course.',y_menu: false},
-    {y_number: 2024,y_plan:'Finishing the Vue.js Course.',y_menu: false},
     {y_number: 2025,y_plan:'Finishing the Vue.js Course.',y_menu: false},
     {y_number: 2026,y_plan:'Finishing the Vue.js Course.',y_menu: false},
     {y_number: 2027,y_plan:'Finishing the Vue.js Course.',y_menu: false},
-    {y_number: 2028,y_plan:'Finishing the Vue.js Course.',y_menu: false},
-    {y_number: 2029,y_plan:'Finishing the Vue.js Course.',y_menu: false},
   ]
 }),
-methods:{
-  toggleMenu(data,dmy){
-    if(dmy === 'daily') {
-      this.dailyPlans.forEach((wd,inx) => {
-        if(wd.wd_date === data)
-          this.dailyPlans.splice(inx,1,{
-            ...wd,
-            wd_menu: !wd.wd_menu,
-          })
-      })
-    } else if (dmy === 'monthly'){
-      this.thisMonth.forEach((m,inx) => {
-        if(m.m_name === data) {
-          this.thisMonth.splice(inx,1,{
-            ...m,
-            m_menu: !m.m_menu,
-          })
-        }
-      })
-    } else if (dmy === 'yearly'){
-      this.tenYearsAhead.forEach((y,inx) => {
-        if(y.y_number === data) {
-          this.tenYearsAhead.splice(inx,1,{
-            ...y,
-            y_menu: !y.y_menu,
-          })
-        }
-      })
-    }
-  },
-},
 }
 </script>
 
