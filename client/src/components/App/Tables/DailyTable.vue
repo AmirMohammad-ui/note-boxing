@@ -7,11 +7,11 @@
         <th class="w-4/5">Plan</th>
       </tr>
       <tr 
-        v-for="{ wd_name, wd_date, wd_plan, wd_menu } in MonthsDailyPlan" 
+        v-for="{ wd_name, wd_date, wd_plan, wd_menu, _id } in MonthsDailyPlan" 
         :key="wd_date" 
         :style="{backgroundColor: wd_name === 'Sunday'? '#e2e2e2': ''}">
         <td class="relative">
-          <div :class="{ current: wd_date === currentDate }"></div>
+          <div :class="{ 'current': wd_date === currentDate }"></div>
           {{ wd_name }}
         </td>
         <td>{{ wd_date }}</td>
@@ -37,13 +37,13 @@
             </div>
             <div v-if="wd_menu" class="plan-info">
               <div class="flex items-center space-x-2">
-                <base-button bg-color="#777" color="#fff"
+                <base-button @click="editPlan(_id)" bg-color="#777" color="#fff"
                   ><span class="pb-1 text-sm">Edit</span></base-button
                 >
-                <base-button bg-color="#00745D" color="#fff"
+                <base-button @click="finishedPlan(_id)" bg-color="#00745D" color="#fff"
                   ><span class="pb-1 text-sm">Done</span></base-button
                 >
-                <base-button bg-color="#D63031" color="#fff"
+                <base-button @click="deletePlan(_id)" bg-color="#D63031" color="#fff"
                   ><span class="pb-1 text-sm">Delete</span></base-button
                 >
               </div>
@@ -69,7 +69,7 @@
         </base-button>
         <div class="px-5 py-3 box text-blue">
           <span class="font-light">Month: </span>
-          <span class="font-bold">January</span>
+          <span class="font-bold">{{currentMonth}}</span>
         </div>
         <base-button bg-color="#fff">
           <svg
@@ -83,7 +83,7 @@
         </base-button>
       </div>
       <div class="flex items-center space-x-4">
-        <base-button bg-color="#fff">
+        <base-button @click="goToNextMonth" bg-color="#fff">
           <svg
             class="my-2"
             width="15"
@@ -98,9 +98,9 @@
         </base-button>
         <div class="px-5 py-3 box text-blue">
           <span class="font-light">Year: </span>
-          <span class="font-bold">2021</span>
+          <span class="font-bold">{{currentYear}}</span>
         </div>
-        <base-button bg-color="#fff">
+        <base-button @click="goToNextYear" bg-color="#fff">
           <svg
             class="my-2"
             width="15"
@@ -115,27 +115,43 @@
   </div>
 </template>
 <script>
+import planControls from "@/mixins/planControls.js"
 export default {
+  mixins: [planControls],
   props: ['data'],
   data() {
     return {
       MonthsDailyPlan: [],
+      date: new Date()
     }
   },
   computed: {
+    currentMonthNumber() {
+      return new Date().getMonth()
+    },
+    currentYear() {
+      const date = new Date()
+      const currentYear = date.getFullYear()
+      return currentYear
+    },
+    currentMonth() {
+      return new Date(this.date.setMonth(this.currentMonthNumber)).toLocaleString("en-US",{month:"long"})
+    },
     dailyPlans() {
       return this.data
     },
     currentDate(){
-      const date = new Date()
-      return date.getDate()
+      return new Date().getDate()
     },
     thisMonthLength() {
-      const date = new Date();
-      return parseInt(new Date(date.setDate(-1)).toLocaleString("en-US",{day:"numeric"}));
+      return +(new Date(this.date.setDate(-1)).toLocaleString("en-US",{day:"numeric"}));
     },
   },
   methods: {
+    goToNextYear() {},
+    goToPreviousYear() {},
+    goToNextMonth() {},
+    goToPreviousMonth() {},
     toggleMenu(date) {
       this.MonthsDailyPlan.forEach((wd,inx) => {
         if(wd.wd_date === date){
@@ -147,8 +163,7 @@ export default {
       })
     },
     getWeekday(d){
-      const date = new Date();
-      const day = new Date(date.setDate(d)).toLocaleString("en-US",{weekday:"long"});
+      const day = new Date(this.date.setDate(d)).toLocaleString("en-US",{weekday:"long"});
       return day;
     },
     getDays() {
@@ -159,7 +174,8 @@ export default {
         plan.wd_menu = false;
         this.data.forEach(p => {
           if(+p.wd_date===day){
-            plan.wd_plan = p.wd_date&&+p.wd_date === day?p.wd_plan:'';
+            plan.wd_plan = p.wd_date&&+p.wd_date === day?p.wd_plan:''
+            plan._id = p._id
           }
         })
         this.MonthsDailyPlan.push(plan);

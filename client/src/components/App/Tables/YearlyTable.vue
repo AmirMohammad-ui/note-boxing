@@ -5,7 +5,7 @@
         <th class="w-1/12">Years</th>
         <th>Plans</th>
       </tr>
-      <tr v-for="{ y_number, y_plan, y_menu } in tenYearsAhead" :key="y_number">
+      <tr v-for="{ y_number, y_plan, y_menu, _id } in tenYearsAhead" :key="y_number">
         <td class="relative">
           <div :class="{ current: y_number === currentYear }"></div>
           {{ y_number }}
@@ -32,13 +32,13 @@
             </div>
             <div v-if="y_menu" class="plan-info">
               <div class="flex items-center space-x-2">
-                <base-button bg-color="#777" color="#fff"
+                <base-button  @click="editPlan(_id)" bg-color="#777" color="#fff"
                   ><span class="pb-1 text-sm">Edit</span></base-button
                 >
-                <base-button bg-color="#00745D" color="#fff"
+                <base-button @click="finishedPlan(_id)" bg-color="#00745D" color="#fff"
                   ><span class="pb-1 text-sm">Done</span></base-button
                 >
-                <base-button bg-color="#D63031" color="#fff"
+                <base-button @click="deletePlan(_id)" bg-color="#D63031" color="#fff"
                   ><span class="pb-1 text-sm">Delete</span></base-button
                 >
               </div>
@@ -50,7 +50,9 @@
   </div>
 </template>
 <script>
+import planControls from "@/mixins/planControls.js"
 export default {
+  mixins: [planControls],
   props: ["data"],
   data(){
     return {
@@ -86,6 +88,7 @@ export default {
         this.data.forEach(p=>{
           if(p.y_number === y){
             newYear.y_plan = p.y_plan
+            newYear._id = p._id
           }
         })
         this.tenYearsAhead.push(newYear)

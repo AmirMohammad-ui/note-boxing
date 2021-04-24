@@ -5,7 +5,7 @@
         <th class="w-2/12">Months</th>
         <th>Note</th>
       </tr>
-      <tr v-for="{ m_name, m_plan, m_menu } in everyMonthPlan" :key="m_name">
+      <tr v-for="{ m_name, m_plan, m_menu, _id } in everyMonthPlan" :key="m_name">
         <td class="relative">
           <div :class="{ current: m_name === currentMonth }"></div>
           {{ m_name }}
@@ -32,13 +32,13 @@
             </div>
             <div v-if="m_menu" class="plan-info">
               <div class="flex items-center space-x-2">
-                <base-button bg-color="#777" color="#fff"
+                <base-button @click="editPlan(_id)" bg-color="#777" color="#fff"
                   ><span class="pb-1 text-sm">Edit</span></base-button
                 >
-                <base-button bg-color="#00745D" color="#fff"
+                <base-button @click="finishedPlan(_id)" bg-color="#00745D" color="#fff"
                   ><span class="pb-1 text-sm">Done</span></base-button
                 >
-                <base-button bg-color="#D63031" color="#fff"
+                <base-button @click="deletePlan(_id)" bg-color="#D63031" color="#fff"
                   ><span class="pb-1 text-sm">Delete</span></base-button
                 >
               </div>
@@ -48,7 +48,7 @@
       </tr>
     </table>
     <div class="month-controller">
-      <base-button bg-color="#fff">
+      <base-button @click="goToPreviousYear" bg-color="#fff">
         <svg
           class="my-2"
           width="15"
@@ -65,7 +65,7 @@
         <span class="font-light">Year: </span>
         <span class="font-bold">{{currentYear}}</span>
       </div>
-      <base-button bg-color="#fff">
+      <base-button @click="goToNextYear" bg-color="#fff">
         <svg
           class="my-2"
           width="15"
@@ -79,7 +79,9 @@
   </div>
 </template>
 <script>
+import planControls from "@/mixins/planControls.js"
 export default {
+  mixins: [planControls],
   props: ["data"],
   data(){
     return {
@@ -89,9 +91,6 @@ export default {
   watch:{
     today(value){
         console.log(value)
-      // const date = new Date();
-      // if(value !== date.getDate()) {
-      // }
     }
   },
   computed: {
@@ -118,6 +117,8 @@ export default {
     }
   },
   methods: {
+    goToNextYear() {},
+    goToPreviousYear() {},
     toggleMenu(month) {
       this.everyMonthPlan.forEach((m,inx) => {
         if(m.m_name === month) {
@@ -140,6 +141,7 @@ export default {
         this.data.forEach(p => {
           if(p.m_number===monthNumber+1) {
             monthObj.m_plan = p.m_plan
+            monthObj._id = p._id
           }
         })
         this.everyMonthPlan.push(monthObj)
