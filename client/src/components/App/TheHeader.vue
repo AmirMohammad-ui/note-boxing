@@ -84,7 +84,7 @@
                   Sign Up / Login
                 </li>
                 <li
-                  class="flex items-center p-3 space-x-3 text-red-500 bg-red-300 cursor-pointer logout"
+                  class="flex items-center p-3 space-x-3 text-red-500 bg-red-100 cursor-pointer logout"
                 >
                   <svg
                     width="17"
@@ -110,7 +110,7 @@
           <ul class="flex-col">
             <li class="p-3 cursor-pointer">Profile</li>
             <li @click="showModal_auth" class="p-3 cursor-pointer">Sign Up / Login</li>
-            <li class="flex items-center p-3 space-x-3 text-red-500 bg-red-300 cursor-pointer logout">
+            <li class="flex items-center p-3 space-x-3 text-red-500 bg-red-100 cursor-pointer logout">
               <svg
                 width="17"
                 height="17"
@@ -264,7 +264,7 @@ export default {
   transform: translateY(100%);
   z-index: 1;
   li:hover {
-    background-color: #dfdfdf7c;
+    background-color: #ffffff60;
   }
   li:first-child:hover {
     border-top-left-radius: 3px;
@@ -295,7 +295,7 @@ export default {
     border-bottom-right-radius: 3px;
   }
   .logout:hover {
-    background-color: #ebaaaa;
+    background-color: #e6c9c9;
   }
 }
 header {
