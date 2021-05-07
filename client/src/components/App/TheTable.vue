@@ -16,6 +16,7 @@
 import Daily from "./Tables/DailyTable.vue"
 import Monthly from "./Tables/MonthlyTable.vue"
 import Yearly from "./Tables/YearlyTable.vue"
+import axios from "axios"
 export default {
   components: {
     Daily,Monthly,Yearly
@@ -66,6 +67,13 @@ data:()=>({
     {_id: '2lkw2262kln',y_number: 2027,y_plan:'Finishing the Vue.js Course.',y_menu: false},
   ]
 }),
+mounted() {
+  axios.get("http://localhost:3400/")
+    .then(data => {
+      console.log(data)
+    }) 
+    .catch(err => console.error(err))
+}
 }
 </script>
 
