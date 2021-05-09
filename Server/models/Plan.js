@@ -14,9 +14,17 @@ const schema = new Schema({
     type: Date,
     required: [true, 'StartDate is required.']
   },
-  finishDate: {
+  endDate: {
     type: Date,
     required: [true, 'FisnishDate is required.']
+  },
+  category: {
+    type: String,
+    required: true
+  },
+  type: {
+    type: String,
+    required: true
   },
   status: {
     type: String,

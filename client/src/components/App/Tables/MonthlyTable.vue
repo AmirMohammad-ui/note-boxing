@@ -115,16 +115,7 @@ export default {
       return date.getDate();
     },
     currentMonth(){
-      let date = new Date()
-      let currentMonth
-      const currentMonth_Number = date.getMonth()+1
-      this.data.forEach(m => {
-        if(m.m_number === currentMonth_Number) {
-          currentMonth = m.m_name
-          return
-        }
-      })
-      return currentMonth
+      return new Date().toLocaleString("en-US",{month:'long'})
     },
   },
   methods: {

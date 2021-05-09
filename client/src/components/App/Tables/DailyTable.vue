@@ -53,58 +53,64 @@
         </td>
       </tr>
     </table>
-    <div class="date-controller">
-      <div class="flex items-center space-x-4">
-        <base-button @click="fetchNewMonthPlan('prev')" bg-color="#fff">
-          <svg class="my-2" width="15" height="17" viewBox="0 0 15 17">
-            <path
-              d="M-4.15258e-07 8.5L14.25 0.272758L14.25 16.7272L-4.15258e-07 8.5Z"
-              fill="#0984E3"
-            />
-          </svg>
-        </base-button>
-        <div class="px-5 py-3 box text-blue">
-          <span class="font-light">Month: </span>
-          <span class="font-bold">{{ currentMonth }}</span>
+    <div class="w-full date-controller">
+      <div class="flex flex-col items-center space-x-0 space-y-6 sm:space-x-6 sm:justify-end sm:space-y-0 sm:flex-row">
+        <div class="flex flex-col items-center justify-center space-x-0 space-y-6 sm:space-x-10 sm:flex-row sm:space-y-0 sm:justify-end">
+          <div class="flex items-center space-x-4">
+            <base-button @click="fetchNewMonthPlan('prev')" bg-color="#fff">
+              <svg class="my-2" width="15" height="17" viewBox="0 0 15 17">
+                <path
+                  d="M-4.15258e-07 8.5L14.25 0.272758L14.25 16.7272L-4.15258e-07 8.5Z"
+                  fill="#0984E3"
+                />
+              </svg>
+            </base-button>
+            <div class="px-5 py-3 box text-blue">
+              <span class="font-light">Month: </span>
+              <span class="font-bold">{{ currentMonth }}</span>
+            </div>
+            <base-button @click="fetchNewMonthPlan('next')" bg-color="#fff">
+              <svg class="my-2" width="15" height="17" viewBox="0 0 15 17">
+                <path d="M15 8.5L0.749999 16.7272L0.75 0.272758L15 8.5Z" fill="#0984E3" />
+              </svg>
+            </base-button>
+          </div>
+          <div class="flex items-center space-x-4">
+            <base-button @click="fetchNewYearPlans('prev')" bg-color="#fff">
+              <svg class="my-2" width="15" height="17" viewBox="0 0 15 17">
+                <path
+                  d="M-4.15258e-07 8.5L14.25 0.272758L14.25 16.7272L-4.15258e-07 8.5Z"
+                  fill="#0984E3"
+                />
+              </svg>
+            </base-button>
+            <div class="px-5 py-3 box text-blue">
+              <span class="font-light">Year: </span>
+              <span class="font-bold">{{ currentYear }}</span>
+            </div>
+            <base-button @click="fetchNewYearPlans('next')" bg-color="#fff">
+              <svg class="my-2" width="15" height="17" viewBox="0 0 15 17">
+                <path d="M15 8.5L0.749999 16.7272L0.75 0.272758L15 8.5Z" fill="#0984E3" />
+              </svg>
+            </base-button>
+          </div>
         </div>
-        <base-button @click="fetchNewMonthPlan('next')" bg-color="#fff">
-          <svg class="my-2" width="15" height="17" viewBox="0 0 15 17">
-            <path d="M15 8.5L0.749999 16.7272L0.75 0.272758L15 8.5Z" fill="#0984E3" />
-          </svg>
-        </base-button>
-      </div>
-      <div class="flex items-center space-x-4">
-        <base-button @click="fetchNewYearPlans('prev')" bg-color="#fff">
-          <svg class="my-2" width="15" height="17" viewBox="0 0 15 17">
-            <path
-              d="M-4.15258e-07 8.5L14.25 0.272758L14.25 16.7272L-4.15258e-07 8.5Z"
-              fill="#0984E3"
-            />
-          </svg>
-        </base-button>
-        <div class="px-5 py-3 box text-blue">
-          <span class="font-light">Year: </span>
-          <span class="font-bold">{{ currentYear }}</span>
+        <div>
+          <base-button
+            v-if="isGoToCurrentButton"
+            color="#fff"
+            @click="goToCurrentMonthAndYear"
+            bg-color="#0984E3"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path
+                d="M12 0.000100007C11.8675 -0.00177404 11.7359 0.0227073 11.613 0.072121C11.49 0.121535 11.3781 0.194895 11.2837 0.28794C11.1893 0.380984 11.1144 0.491857 11.0632 0.614114C11.0121 0.736371 10.9858 0.867575 10.9858 1.0001C10.9858 1.13263 11.0121 1.26383 11.0632 1.38609C11.1144 1.50834 11.1893 1.61922 11.2837 1.71226C11.3781 1.8053 11.49 1.87867 11.613 1.92808C11.7359 1.97749 11.8675 2.00197 12 2.0001C17.5345 2.0001 22 6.46557 22 12.0001C22 17.5346 17.5345 22.0001 12 22.0001C6.46547 22.0001 2 17.5346 2 12.0001C2 9.65034 2.80854 7.49693 4.16016 5.79307L6 8.0001L8 1.0001L1 2.0001L2.86719 4.24033C1.08667 6.33517 0 9.04189 0 12.0001C0 18.6156 5.38453 24.0001 12 24.0001C18.6155 24.0001 24 18.6156 24 12.0001C24 5.38463 18.6155 0.000100007 12 0.000100007Z"
+                fill="#fff"
+              />
+            </svg>
+            <span class="pt-1 pb-2 font-semibold">Current Month</span>
+          </base-button>
         </div>
-        <base-button @click="fetchNewYearPlans('next')" bg-color="#fff">
-          <svg class="my-2" width="15" height="17" viewBox="0 0 15 17">
-            <path d="M15 8.5L0.749999 16.7272L0.75 0.272758L15 8.5Z" fill="#0984E3" />
-          </svg>
-        </base-button>
-        <base-button
-          v-if="isGoToCurrentButton"
-          color="#fff"
-          @click="goToCurrentMonthAndYear"
-          bg-color="#0984E3"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24">
-            <path
-              d="M12 0.000100007C11.8675 -0.00177404 11.7359 0.0227073 11.613 0.072121C11.49 0.121535 11.3781 0.194895 11.2837 0.28794C11.1893 0.380984 11.1144 0.491857 11.0632 0.614114C11.0121 0.736371 10.9858 0.867575 10.9858 1.0001C10.9858 1.13263 11.0121 1.26383 11.0632 1.38609C11.1144 1.50834 11.1893 1.61922 11.2837 1.71226C11.3781 1.8053 11.49 1.87867 11.613 1.92808C11.7359 1.97749 11.8675 2.00197 12 2.0001C17.5345 2.0001 22 6.46557 22 12.0001C22 17.5346 17.5345 22.0001 12 22.0001C6.46547 22.0001 2 17.5346 2 12.0001C2 9.65034 2.80854 7.49693 4.16016 5.79307L6 8.0001L8 1.0001L1 2.0001L2.86719 4.24033C1.08667 6.33517 0 9.04189 0 12.0001C0 18.6156 5.38453 24.0001 12 24.0001C18.6155 24.0001 24 18.6156 24 12.0001C24 5.38463 18.6155 0.000100007 12 0.000100007Z"
-              fill="#fff"
-            />
-          </svg>
-          <span class="pt-1 pb-2 font-semibold">Current Month</span>
-        </base-button>
       </div>
     </div>
   </div>
@@ -151,7 +157,7 @@ export default {
     },
     goToCurrentMonthAndYear() {
       /* Fetch current date data here and call this.getDaty() */
-      console.log('Fetching...')
+      console.log("Fetching...");
       // Reseting month and year
       this.currentMonthNumber = new Date().getMonth();
       this.currentYear = new Date().getFullYear();
@@ -159,7 +165,7 @@ export default {
     },
     fetchNewYearPlans(nextOrPrev) {
       /* Fetch current date data here and call this.getDaty() */
-      console.log("Fetching...")
+      console.log("Fetching...");
       if (nextOrPrev === "next") {
         this.currentYear += 1;
       } else if (nextOrPrev === "prev") {
@@ -167,8 +173,8 @@ export default {
       }
       this.watchMonthAndYear();
       if (
-        !this.isGoToCurrentButton &&
-        this.currentMonthNumber !== new Date().getMonth() ||
+        (!this.isGoToCurrentButton &&
+          this.currentMonthNumber !== new Date().getMonth()) ||
         this.currentYear !== new Date().getFullYear()
       ) {
         this.isGoToCurrentButton = true;
@@ -176,7 +182,7 @@ export default {
     },
     fetchNewMonthPlan(nextOrPrev) {
       /* Fetch current date data here and call this.getDaty() */
-      console.log("Fetching...")
+      console.log("Fetching...");
       if (nextOrPrev === "next") {
         if (this.currentMonthNumber > 11) {
           this.currentMonthNumber = 0;
@@ -192,8 +198,8 @@ export default {
       }
       this.watchMonthAndYear();
       if (
-        !this.isGoToCurrentButton &&
-        this.currentMonthNumber !== new Date().getMonth() ||
+        (!this.isGoToCurrentButton &&
+          this.currentMonthNumber !== new Date().getMonth()) ||
         this.currentYear !== new Date().getFullYear()
       ) {
         this.isGoToCurrentButton = true;

@@ -18,7 +18,7 @@
               </div>
               <div class="flex-col w-full space-y-7 half-on-md">
                 <base-input label="Cover Image" id="image" class="w-full" @get-file="getUploadedFiles" type="file" :z-index="58"/>
-                <div class="flex space-x-3">
+                <div class="flex space-x-4">
                 <base-input label="Category" v-model="optionType" :z-index="60" type="options" :options="categories"/>
                   <base-button bg-color="#00CEC9" class="w-1/5" color="#fff">
                     <span class="pb-1 mx-auto text-2xl">New</span>
@@ -26,7 +26,7 @@
                 </div>
               <div class="flex w-full space-x-4">
                 <base-input class="w-1/2" :z-index="59" v-model="category" type="options" :options="typeOptions" label="Type" />
-                <base-input class="w-1/2" :z-index="57" v-model="priority" type="Number" label="Priority" />
+                <base-input class="w-1/2" :z-index="57" v-model="priority" type="number" label="Priority" />
               </div>
               <div class="flex-col w-full text-2xl space-y-7">
                 <base-input class="w-full uppercase" v-model="startDate" :z-index="56" type="date" label="Start" />
@@ -36,7 +36,7 @@
             </div>
           </div>
           <div class="flex items-center p-4 space-x-4 text-2xl">
-            <base-button bg-color="#D63031" hover color="#fff">
+            <base-button @click="sendData" bg-color="#D63031" hover color="#fff">
               <span class="px-5 pb-1">Register</span>
             </base-button>
             <base-button
@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import axios from "axios"
 export default {
   props: ["is-backdrop-open", "is-dialog-open"],
   emits: ["close-modal"],
@@ -80,8 +81,29 @@ export default {
     },
     getUploadedFiles(files){
       this.image = files[0]
-      console.log(files)
-      console.log(this.image)
+    },
+    sendData() {
+      const data = new FormData()
+      data.append("title", this.planName)
+      data.append("image", this.image)
+      data.append("description", this.description)
+      data.append("startDate", this.startDate)
+      data.append("endDate", this.endDate)
+      data.append("priority", this.priority)
+      data.append("category", this.category)
+      data.append("option", this.optionType)
+      data.forEach(val => {
+        console.log(val)
+      })
+      axios.post("http://localhost:3400/new-plan",data, {
+        headers: {
+          "Content-Type":"multipart/form-data"
+        }
+      })
+        .then(res => {
+          console.log(res.data.message)
+        }) 
+        .catch(err=> console.error(err))
     }
   }
 };

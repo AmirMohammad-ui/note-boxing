@@ -111,9 +111,10 @@
         {{ option }}
       </div>
     </div>
-    <label :class="['label', { 'multichoice-label': isOptionsVisible }]">{{
-      selectedValue !== "" ? selectedValue : label
+    <label class="label multichoice-label">{{
+      label
     }}</label>
+    <span class="label">{{selectedValue}}</span>
     <div
       v-if="isOptionsBackdropActive"
       @click="deactivateBackdrop"
@@ -173,7 +174,7 @@ export default {
       isOptionsVisible: false,
       isOptionsBackdropActive: false,
       theFile: null,
-      selectedValue: this.modelValue,
+      selectedValue: this.options.length > 1 ? this.options[0]:'',
       fileName: "",
     };
   },
@@ -188,7 +189,7 @@ export default {
       actualInput.click();
     },
     getFile(e) {
-      this.$emit("get-file", e.target.files);
+      this.$emit("getFile", e.target.files);
       this.fileName = e.target.files.length > 1 ? `${e.target.files[0].name} and ${e.target.files.length-1} more`:e.target.files[0].name
     },
     getValue() {
@@ -201,11 +202,15 @@ export default {
       this.isOptionsBackdropActive = false;
     },
     showOptions() {
-      this.selectedValue = "";
       this.isOptionsVisible = true;
       this.isOptionsBackdropActive = true;
     },
   },
+  mounted() {
+    if(this.selectedValue) {
+      this.$emit("update:modelValue", this.selectedValue);
+    }
+  }
 };
 </script>
 

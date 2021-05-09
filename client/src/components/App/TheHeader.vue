@@ -217,12 +217,12 @@ export default {
       this.navIsOpen = !this.navIsOpen;
     },
     showModal_newPlan() {
-      this.isBackdropOpen = !this.isBackdropOpen;
-      this.isDialogOpen = !this.isDialogOpen;
+      this.isBackdropOpen_newPlan = !this.isBackdropOpen_newPlan;
+      this.isDialogOpen_newPlan = !this.isDialogOpen_newPlan;
     },
     closeModal_newPlan() {
-      this.isBackdropOpen = !this.isBackdropOpen;
-      this.isDialogOpen = !this.isDialogOpen;
+      this.isBackdropOpen_newPlan = !this.isBackdropOpen_newPlan;
+      this.isDialogOpen_newPlan = !this.isDialogOpen_newPlan;
     },
     showModal_auth() {
       this.isBackdropOpen_auth = !this.isBackdropOpen_auth;
