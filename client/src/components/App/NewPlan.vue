@@ -56,9 +56,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import axios from "axios"
-export default {
+import {defineComponent} from "vue"
+export default defineComponent({
   props: ["is-backdrop-open", "is-dialog-open"],
   emits: ["close-modal"],
   data(){
@@ -106,7 +107,7 @@ export default {
         .catch(err=> console.error(err))
     }
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

@@ -198,10 +198,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import NewPlan from "./NewPlan.vue";
 import AuthModal from "./Auth/TheAuth.vue";
-export default {
+import {defineComponent} from "vue"
+export default defineComponent({
   components: { NewPlan, AuthModal },
   data() {
     return {
@@ -233,7 +234,7 @@ export default {
       this.isDialogOpen_auth = !this.isDialogOpen_auth;
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

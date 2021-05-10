@@ -144,8 +144,9 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import {defineComponent} from "vue"
+export default defineComponent({
   props: {
     readonly: { type: Boolean, default: false },
     modelValue: { type: String },
@@ -211,7 +212,7 @@ export default {
       this.$emit("update:modelValue", this.selectedValue);
     }
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

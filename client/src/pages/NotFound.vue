@@ -6,14 +6,15 @@
     </base-button>
   </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+import {defineComponent} from "vue"
+export default defineComponent({
   methods: {
     goHome() {
       this.$router.push("/")
     }
   }
-}
+})
 </script>
 <style lang="scss" scoped>
 div {

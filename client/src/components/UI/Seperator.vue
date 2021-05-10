@@ -12,8 +12,9 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import {defineComponent} from "vue"
+export default defineComponent({
   props: {
     right: {
       type: Boolean,
@@ -31,7 +32,7 @@ export default {
       type:String
     }
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

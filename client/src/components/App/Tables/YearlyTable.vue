@@ -50,8 +50,9 @@
   </div>
 </template>
 <script>
-import planControls from "@/mixins/planControls.js"
-export default {
+import planControls from "../../../mixins/planControls"
+import {defineComponent} from "vue"
+export default defineComponent({
   mixins: [planControls],
   props: ["data"],
   data(){
@@ -98,5 +99,5 @@ export default {
   mounted() {
     this.getTenYearsAhead()
   }
-}
+})
 </script>

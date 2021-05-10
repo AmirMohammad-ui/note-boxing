@@ -32,10 +32,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import TheLogin from "./TheLogin.vue"
 import TheSubmit from "./TheSubmit.vue"
-export default {
+import {defineComponent} from "vue"
+export default defineComponent({
   components: {TheLogin,TheSubmit},
   props: ["is-backdrop-open", "is-dialog-open"],
   emits: ["close-modal"],
@@ -54,7 +55,7 @@ export default {
       this.currentOpenTab = tab
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>

@@ -115,9 +115,10 @@
     </div>
   </div>
 </template>
-<script>
-import planControls from "@/mixins/planControls.js";
-export default {
+<script lang="ts">
+import planControls from "../../../mixins/planControls";
+import {defineComponent} from "vue"
+export default defineComponent({
   mixins: [planControls],
   props: ["data"],
   data() {
@@ -240,5 +241,5 @@ export default {
   mounted() {
     this.getDays();
   },
-};
+})
 </script>

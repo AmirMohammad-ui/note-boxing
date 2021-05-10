@@ -127,14 +127,15 @@
   </div>
 </template>
 <script>
-export default {
+import {defineComponent} from "vue"
+export default defineComponent({
   props: ["leftSeperatorText", "rightSeperatorText", "data","classes",'no-border',"container-style"],
   computed: {
     imgSrc() {
       return require(`../../assets/${this.data.img}.jpg`)
     }
   }
-};
+});
 </script>
 <style lang="scss" scoped>
 .tooltip {

@@ -43,9 +43,10 @@
     </container>
   </div>
 </template>
-<script>
+<script lang="ts">
 import CategoryPlanItem from "./CategoryPlanItem.vue"
-export default {
+import {defineComponent} from "vue"
+export default defineComponent({
   components: {CategoryPlanItem},
   props: ['centerSeperatorText','leftSeperatorText'],
   data(){
@@ -74,7 +75,7 @@ export default {
       planItems.scrollBy({behavior:'smooth',left: 250})
     },
   },
-}
+})
 </script>
 <style lang="scss" scoped>
 .plan-items {

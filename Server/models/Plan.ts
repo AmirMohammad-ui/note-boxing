@@ -1,6 +1,17 @@
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
+export interface PlanSchema {
+  title: string,
+  description: string,
+  startDate: Date,
+  endDate: Date,
+  category: string,
+  type: string,
+  status: string,
+  image: string,
+  dateCreated: Date
+}
 const schema = new Schema({
   title: {
     type: String,
@@ -47,4 +58,4 @@ const schema = new Schema({
 const Plan = mongoose.model("plan", schema)
 
 
-module.exports = Plan
+export default Plan

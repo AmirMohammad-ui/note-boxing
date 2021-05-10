@@ -3,9 +3,10 @@ process.on("uncaughtException",(err)=>{
   console.log("UNHANDLED EXCEPTION",err)
   process.exit(1)
 })
+
 // MODULES -------------------------------------------
-const mongoose = require("mongoose")
-const app = require("./app")
+import * as mongoose from "mongoose"
+import app from "./app"
 // ---------------------------------------------------
 const log = console.log
 const error = console.error
@@ -30,8 +31,10 @@ mongoose
 
 const server = app.listen(PORT,()=>log(`Server is running on port ${PORT}`)) 
 // HANDLING UNHANDLED PROMISE REJECTION --------------
-process.on("unhandledRejection" ,(err)=>{
+process.on("unhandledRejection" ,(err: Error)=>{
   log("UNHANDLED REJECTION",err.message)
-  process.exit(1)
+  server.close(err => {
+    process.exit(1)
+  })
 })
 //  ---------------------------------------------------

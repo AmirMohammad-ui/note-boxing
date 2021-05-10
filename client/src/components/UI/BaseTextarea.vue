@@ -37,8 +37,9 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import {defineComponent} from "vue"
+export default defineComponent({
   props: {
     modelValue: { type: String },
     value: { type: String, default: "" },
@@ -60,7 +61,7 @@ export default {
       this.$emit("update:modelValue", this.theValue);
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

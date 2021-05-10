@@ -54,7 +54,7 @@
     </ul>
   </container>
 </template>
-<script>
+<script lang="ts">
 import ThePlan from "../components/App/ThePlan.vue"
 export default {
   components: {ThePlan},

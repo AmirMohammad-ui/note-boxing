@@ -6,25 +6,26 @@
   </div>
 </template>
 
-<script>
-export default {
-props:{
-  borderLeft: {
-    type: Boolean,
-    default: false
+<script lang="ts">
+import {defineComponent} from "vue"
+export default defineComponent({
+  props:{
+    borderLeft: {
+      type: Boolean,
+      default: false
+    },
+    borderRight: {
+      type: Boolean,
+      default: false
+    },
+    classes: {
+      type: String
+    }
   },
-  borderRight: {
-    type: Boolean,
-    default: false
-  },
-  classes: {
-    type: String
+  data(){
+    return {}
   }
-},
-data(){
-  return {}
-}
-}
+})
 </script>
 
 <style lang="scss" scoped>

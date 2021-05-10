@@ -97,8 +97,9 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import {defineComponent} from "vue"
+export default defineComponent({
   props: ["planItemData"],
   data() {
     return {
@@ -121,7 +122,7 @@ export default {
       this.isDescriptionShowing = false;
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

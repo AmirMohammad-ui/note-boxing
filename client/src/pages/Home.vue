@@ -52,10 +52,11 @@
   </div>
 </template>
 
-<script>
-import TheTable from "@/components/App/TheTable.vue"
-import ThePlan from "@/components/App/ThePlan.vue"
-export default {
+<script lang="ts">
+import {defineComponent} from "vue"
+import TheTable from "../components/App/TheTable.vue"
+import ThePlan from "../components/App/ThePlan.vue"
+export default defineComponent({
   components: {TheTable,ThePlan},
   data() {
     return {
@@ -65,7 +66,7 @@ export default {
       currentYearPlan: {id: 'p3',startDate: '2020/04/05',finishDate: '2021/04/25',isFinished: false,img: 'img-3',title: 'Finishing the Vue.js course and master it.',description: "Finishing the Vue.js and reading the whole documentaion in vue.js official website and in that way I'll master it."},
     };
   },
-};
+});
 </script>
 <style lang="scss" scoped>
 .table-section {

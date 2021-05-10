@@ -1,0 +1,14 @@
+{
+  "include": [
+    "./Server/*"
+  ],
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "moduleResolution": "Node",
+    "module": "CommonJS",
+    "allowJs": true,
+    "target": "ES6"
+  }
+}

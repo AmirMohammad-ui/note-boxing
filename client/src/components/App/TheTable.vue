@@ -12,12 +12,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Daily from "./Tables/DailyTable.vue"
 import Monthly from "./Tables/MonthlyTable.vue"
 import Yearly from "./Tables/YearlyTable.vue"
 // import axios from "axios"
-export default {
+import {defineComponent} from "vue"
+export default defineComponent({
   components: {
     Daily,Monthly,Yearly
   },
@@ -74,7 +75,7 @@ data:()=>({
 //     }) 
 //     .catch(err => console.error(err))
 // }
-}
+})
 </script>
 
 <style lang="scss" scpoed>

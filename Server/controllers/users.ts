@@ -1,4 +1,4 @@
-exports.signUp = (req,res) => {
+export const signUp = (req,res) => {
   console.log(req.headers)
   res.end();
 }

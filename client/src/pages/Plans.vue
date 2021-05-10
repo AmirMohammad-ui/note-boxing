@@ -11,11 +11,12 @@
   
 </template>
 
-<script>
-import PlanCategory from "@/components/App/PlanCategories/PlanCategory.vue"
-export default {
+<script lang="ts">
+import PlanCategory from "../components/App/PlanCategories/PlanCategory.vue"
+import {defineComponent} from "vue"
+export default defineComponent({
   components: {PlanCategory}
-};
+});
 </script>
 
 <style lang="scss" scoped></style>
