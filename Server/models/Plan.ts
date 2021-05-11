@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+import * as mongoose from "mongoose"
 const Schema = mongoose.Schema
 
 export interface PlanSchema {
@@ -12,6 +12,7 @@ export interface PlanSchema {
   image: string,
   dateCreated: Date
 }
+
 const schema = new Schema({
   title: {
     type: String,

@@ -34,7 +34,7 @@
       </seperator>
     </container>
     <container border-left>
-      <div :id="planItemsId" class="plan-items">
+      <div ref="category-plan-items-container" class="plan-items">
         <category-plan-item 
           v-for="category in planCategoriesData" 
           :key="category.id"
@@ -60,18 +60,13 @@ export default defineComponent({
       ]
     }
   },
-  computed: {
-    planItemsId(){ 
-      return `${this.leftSeperatorText.split(" ").join("-")}-id`
-    }
-  },
   methods: {
     scrollLeft() {
-      const planItems = document.getElementById(this.planItemsId)
+      const planItems = this.$refs['category-plan-items-container']! as HTMLElement
       planItems.scrollBy({behavior:'smooth',left: -250})
     },
     scrollRight() {
-      const planItems = document.getElementById(this.planItemsId)
+      const planItems = this.$refs['category-plan-items-container']! as HTMLElement
       planItems.scrollBy({behavior:'smooth',left: 250})
     },
   },

@@ -107,12 +107,12 @@ export default defineComponent({
     };
   },
   computed: {
-    imgSrc() {
+    imgSrc():any {
       return require("../../../assets/" + this.planItemData.img + ".jpg");
     },
   },
   methods: {
-    showTitle(title) {
+    showTitle(title: string) {
       console.log(title);
     },
     showDescription() {

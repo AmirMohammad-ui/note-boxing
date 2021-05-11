@@ -8,7 +8,13 @@ import plan from "./apis/plan"
 
 app.use(express.json())
 app.use(cors())
-app.use(fileUpload())
+app.use(fileUpload({
+  limits: {
+    fileSize: 1*1024*1024
+  },
+  useTempFiles: true,
+  tempFileDir: "./temp/"
+}))
 
 app.use("/",users)
 app.use("/",plan)

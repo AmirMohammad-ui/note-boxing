@@ -5,7 +5,7 @@
   "main": "Server/index.js",
   "scripts": {
     "start": "set NODE_ENV=production && tsc",
-    "dev": "set NODE_ENV=development && tsc && ts-node ./Server/index.ts"
+    "dev": "set NODE_ENV=development && tsc && ts-node-dev ./Server/index.ts --watch"
   },
   "repository": {
     "type": "git",
@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.10",
+    "@types/express-fileupload": "^1.1.6",
     "ts-node": "^9.1.1",
     "ts-node-dev": "^1.1.6",
     "typescript": "^4.2.4"

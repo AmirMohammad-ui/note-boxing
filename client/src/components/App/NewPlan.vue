@@ -17,7 +17,7 @@
                 <base-textarea v-model="description" rows="8" label="Description"/>
               </div>
               <div class="flex-col w-full space-y-7 half-on-md">
-                <base-input label="Cover Image" id="image" class="w-full" @get-file="getUploadedFiles" type="file" :z-index="58"/>
+                <base-input label="Cover Image" class="w-full" @get-file="getUploadedFiles" type="file" :z-index="58"/>
                 <div class="flex space-x-4">
                 <base-input label="Category" v-model="optionType" :z-index="60" type="options" :options="categories"/>
                   <base-button bg-color="#00CEC9" class="w-1/5" color="#fff">
@@ -57,11 +57,10 @@
 </template>
 
 <script lang="ts">
-import axios from "axios"
 import {defineComponent} from "vue"
 export default defineComponent({
   props: ["is-backdrop-open", "is-dialog-open"],
-  emits: ["close-modal"],
+  emits: ["close-modal","get-file"],
   data(){
     return {
       optionType: '',
@@ -69,7 +68,7 @@ export default defineComponent({
       priority: '',
       startDate: '',
       endDate: '',
-      image: null,
+      image: '',
       planName: '',
       description: '',
       typeOptions: ['Sport','Course','University','Life',"Long Term Goals"],
@@ -80,7 +79,7 @@ export default defineComponent({
     logValues(){
       console.log(this.optionType,this.category ,this.startDate,this.endDate,this.image,this.description,this.planName,this.priority)
     },
-    getUploadedFiles(files){
+    getUploadedFiles(files:any){
       this.image = files[0]
     },
     sendData() {
@@ -96,7 +95,7 @@ export default defineComponent({
       data.forEach(val => {
         console.log(val)
       })
-      axios.post("http://localhost:3400/new-plan",data, {
+      this.$axios.post("/new-plan",data, {
         headers: {
           "Content-Type":"multipart/form-data"
         }

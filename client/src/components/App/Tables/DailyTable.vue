@@ -116,14 +116,22 @@
   </div>
 </template>
 <script lang="ts">
+interface DailyPlan {
+  _id: string; 
+  wd_name: string;
+  wd_date: number; 
+  wd_plan: string; 
+  wd_menu: boolean;
+}
 import planControls from "../../../mixins/planControls";
+
 import {defineComponent} from "vue"
 export default defineComponent({
   mixins: [planControls],
   props: ["data"],
   data() {
     return {
-      MonthsDailyPlan: [],
+      MonthsDailyPlan: [] as DailyPlan[],
       date: new Date(),
       currentMonthNumber: new Date().getMonth(),
       isGoToCurrentButton: false,
@@ -131,19 +139,19 @@ export default defineComponent({
     };
   },
   computed: {
-    currentMonth() {
+    currentMonth(): string {
       return new Date(this.date.setMonth(this.currentMonthNumber)).toLocaleString(
         "en-US",
         { month: "long" }
       );
     },
-    dailyPlans() {
+    dailyPlans(): DailyPlan[] {
       return this.data;
     },
-    currentDate() {
+    currentDate(): number {
       return new Date().getDate();
     },
-    thisMonthLength() {
+    thisMonthLength():number {
       return +new Date(this.date.setDate(-1)).toLocaleString("en-US", { day: "numeric" });
     },
   },
@@ -164,7 +172,7 @@ export default defineComponent({
       this.currentYear = new Date().getFullYear();
       this.watchMonthAndYear();
     },
-    fetchNewYearPlans(nextOrPrev) {
+    fetchNewYearPlans(nextOrPrev:string) {
       /* Fetch current date data here and call this.getDaty() */
       console.log("Fetching...");
       if (nextOrPrev === "next") {
@@ -181,7 +189,7 @@ export default defineComponent({
         this.isGoToCurrentButton = true;
       }
     },
-    fetchNewMonthPlan(nextOrPrev) {
+    fetchNewMonthPlan(nextOrPrev:string) {
       /* Fetch current date data here and call this.getDaty() */
       console.log("Fetching...");
       if (nextOrPrev === "next") {
@@ -206,17 +214,17 @@ export default defineComponent({
         this.isGoToCurrentButton = true;
       }
     },
-    toggleMenu(date) {
-      this.MonthsDailyPlan.forEach((wd, inx) => {
+    toggleMenu(date: number) {
+      this.MonthsDailyPlan.forEach((wd:DailyPlan, inx:number) => {
         if (wd.wd_date === date) {
           this.MonthsDailyPlan.splice(inx, 1, {
             ...wd,
-            wd_menu: !wd.wd_menu,
+            wd_menu: !wd.wd_menu as boolean,
           });
         }
       });
     },
-    getWeekday(d) {
+    getWeekday(d:number):string {
       const day = new Date(this.date.setDate(d)).toLocaleString("en-US", {
         weekday: "long",
       });
@@ -224,11 +232,11 @@ export default defineComponent({
     },
     getDays() {
       for (let day = 1; day <= this.thisMonthLength; day++) {
-        const plan = { wd_menu: false };
+        const plan = { wd_menu: false } as DailyPlan;
         plan.wd_name = this.getWeekday(day);
         plan.wd_date = day;
         plan.wd_menu = false;
-        this.data.forEach((p) => {
+        this.data.forEach((p: DailyPlan) => {
           if (+p.wd_date === day) {
             plan.wd_plan = p.wd_date && +p.wd_date === day ? p.wd_plan : "";
             plan._id = p._id;

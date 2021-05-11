@@ -53,12 +53,12 @@
       class=""
       :class="inputClasses"
       type="file"
-      :id="id"
+      ref="fileInput"
       hidden
       :multiple="multipleFile ? true : false"
       @change="getFile"
     />
-    <div :style="{ color: color ? color : '#777' }" class="box readonly-input">
+    <div :style="{ color: color ? color : '#777',fontSize: '1.5rem' }" class="box readonly-input">
       {{ fileName }}
     </div>
     <base-button
@@ -164,7 +164,6 @@ export default defineComponent({
     zIndex: { type: Number },
     multipleFile: { type: Boolean },
     fileButtonName: { type: String, default: "Pick" },
-    id: {type:String},
     classes: {type:String},
     inputClasses: {type:String}
   },
@@ -186,17 +185,17 @@ export default defineComponent({
       this.$emit("update:modelValue", '');
     },
     openTheFileSelection() {
-      const actualInput = document.getElementById(this.id);
+      const actualInput = this.$refs.fileInput as HTMLInputElement;
       actualInput.click();
     },
-    getFile(e) {
-      this.$emit("getFile", e.target.files);
+    getFile(e:any) {
+      this.$emit("get-file", e.target.files);
       this.fileName = e.target.files.length > 1 ? `${e.target.files[0].name} and ${e.target.files.length-1} more`:e.target.files[0].name
     },
     getValue() {
       this.$emit("update:modelValue", this.theValue);
     },
-    selectedOption(val) {
+    selectedOption(val:string) {
       this.selectedValue = val;
       this.$emit("update:modelValue", val);
       this.isOptionsVisible = false;

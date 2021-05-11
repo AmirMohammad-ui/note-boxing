@@ -46,12 +46,12 @@ export default defineComponent({
     }
   },
   computed: {
-    activeComponent() {
+    activeComponent():string {
       return `the-${this.currentOpenTab}`
     }
   },
   methods: {
-    openTab(tab) {
+    openTab(tab:string):void {
       this.currentOpenTab = tab
     }
   }

@@ -93,6 +93,13 @@
   </div>
 </template>
 <script lang="ts">
+interface MonthlyPlan {
+  _id: string; 
+  m_number: number; 
+  m_name: string; 
+  m_plan: string; 
+  m_menu: boolean;
+}
 import planControls from "../../../mixins/planControls"
 import {defineComponent} from "vue"
 export default defineComponent({
@@ -100,7 +107,7 @@ export default defineComponent({
   props: ["data"],
   data(){
     return {
-      everyMonthPlan: [],
+      everyMonthPlan: [] as MonthlyPlan[],
       currentYear: new Date().getFullYear(),
       isGoToCurrentButton: false
     }
@@ -111,11 +118,11 @@ export default defineComponent({
     }
   },
   computed: {
-    today() {
+    today():number {
       const date = new Date();
       return date.getDate();
     },
-    currentMonth(){
+    currentMonth():string {
       return new Date().toLocaleString("en-US",{month:'long'})
     },
   },
@@ -133,7 +140,7 @@ export default defineComponent({
         this.isGoToCurrentButton = false;
       }
     },
-    fetchNewYearPlans(nextOrPrev) {
+    fetchNewYearPlans(nextOrPrev:string) {
       /* Fetch current date data here and call this.getMonths() */
       console.log('Fetching...')
       if (nextOrPrev === "next") {
@@ -149,8 +156,8 @@ export default defineComponent({
         this.isGoToCurrentButton = true;
       }
     },
-    toggleMenu(month) {
-      this.everyMonthPlan.forEach((m,inx) => {
+    toggleMenu(month:string) {
+      this.everyMonthPlan.forEach((m:MonthlyPlan,inx:number) => {
         if(m.m_name === month) {
           this.everyMonthPlan.splice(inx,1,{
             ...m,
@@ -167,8 +174,8 @@ export default defineComponent({
           m_name: month,
           m_number: monthNumber+1,
           m_menu: false
-        }
-        this.data.forEach(p => {
+        } as MonthlyPlan
+        this.data.forEach((p:MonthlyPlan) => {
           if(p.m_number===monthNumber+1) {
             monthObj.m_plan = p.m_plan
             monthObj._id = p._id
