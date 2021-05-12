@@ -18,7 +18,7 @@ const schema = new Schema ({
       required: true
     },
     phoneNumber: {
-      type:Number,
+      type:String,
       required: true
     },
     password: {
@@ -34,10 +34,10 @@ const schema = new Schema ({
       maxLength: 255
     }
   },
-  plans: [{
-    type: mongoose.Types.ObjectId,
+  plans: {
+    type: [mongoose.Types.ObjectId],
     default: []
-  }]
+  }
 })
 
 const Users = mongoose.model("user",schema)

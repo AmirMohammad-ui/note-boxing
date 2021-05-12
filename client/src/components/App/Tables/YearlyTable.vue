@@ -49,7 +49,13 @@
     </table>
   </div>
 </template>
-<script>
+<script lang="ts">
+interface YearlyPlan {
+  _id: string; 
+  y_number: number; 
+  y_plan: string; 
+  y_menu: boolean;
+}
 import planControls from "../../../mixins/planControls"
 import {defineComponent} from "vue"
 export default defineComponent({
@@ -57,19 +63,19 @@ export default defineComponent({
   props: ["data"],
   data(){
     return {
-      tenYearsAhead: []
+      tenYearsAhead: [] as YearlyPlan[]
     }
   },
   computed: {
-    currentYear(){
+    currentYear():number{
       const date = new Date()
       const currentYear = date.getFullYear() 
       return currentYear
     }
   },
   methods: {
-    toggleMenu(year) {
-      this.tenYearsAhead.forEach((y,inx) => {
+    toggleMenu(year:number) {
+      this.tenYearsAhead.forEach((y:YearlyPlan,inx:number) => {
         if(y.y_number === year) {
           this.tenYearsAhead.splice(inx,1,{
             ...y,
@@ -85,8 +91,8 @@ export default defineComponent({
         const newYear = {
           y_number: y,
           y_menu: false,
-        }
-        this.data.forEach(p=>{
+        } as YearlyPlan
+        this.data.forEach((p:YearlyPlan) => {
           if(p.y_number === y){
             newYear.y_plan = p.y_plan
             newYear._id = p._id
