@@ -167,7 +167,7 @@ export default defineComponent({
     classes: {type:String},
     inputClasses: {type:String}
   },
-  emits: ["update:modelValue"],
+  emits: ["update:modelValue","get-file"],
   data() {
     return {
       theValue: this.value,

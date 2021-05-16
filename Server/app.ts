@@ -1,6 +1,9 @@
 import * as express from "express"
+import * as morgan from "morgan"
 import * as cors from "cors"
 import * as fileUpload from "express-fileupload"
+import errors from "./middlewares/ErrorHandler"
+import ErrorHandler from "./utilities/ErrorHandler"
 const app = express()
 
 import users from "./apis/users" 
@@ -15,11 +18,15 @@ app.use(fileUpload({
   useTempFiles: true,
   tempFileDir: "./temp/"
 }))
+app.use(morgan("dev"))
 
-app.use("/",users)
-app.use("/",plan)
+app.use("/api",users,plan)
+// app.use("/api",plan)
 
-
+app.all("/api/*", (req,_,next)=> {
+  return next(new ErrorHandler(`NOT FOUND: ${req.originalUrl}`,404))
+})
+app.use(errors)
 // app.all("*",(_,res)=>{
 //   res.status(200).sendFile(path.join(__dirname,"../client/"))
 // })

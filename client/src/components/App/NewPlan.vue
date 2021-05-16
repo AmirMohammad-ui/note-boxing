@@ -60,7 +60,7 @@
 import {defineComponent} from "vue"
 export default defineComponent({
   props: ["is-backdrop-open", "is-dialog-open"],
-  emits: ["close-modal","get-file"],
+  emits: ["close-modal"],
   data(){
     return {
       optionType: '',
@@ -95,7 +95,7 @@ export default defineComponent({
       data.forEach(val => {
         console.log(val)
       })
-      this.$axios.post("/new-plan",data, {
+      this.$axios.post("/api/new-plan",data, {
         headers: {
           "Content-Type":"multipart/form-data"
         }
