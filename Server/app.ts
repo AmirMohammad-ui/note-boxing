@@ -24,7 +24,7 @@ app.use(morgan("dev"))
 app.use("/api",users)
 app.use("/api",plan)
 
-app.all("/api/*", (req,_,next)=> {
+app.all("*", (req,_,next)=> {
   next(new ErrorHandler(`NOT FOUND: ${req.originalUrl}`,404))
 })
 app.use(errors)

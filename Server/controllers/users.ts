@@ -11,7 +11,7 @@ interface UserData {
   plans: string[];
   phoneNumber: string
 }
-export const signUp = async (req : Request, res : Response,next: NextFunction) => {
+export const signUp = async (req : Request, res : Response,next) => {
   const {
     fname,
     lname,
@@ -19,20 +19,14 @@ export const signUp = async (req : Request, res : Response,next: NextFunction) =
     password,
     confirmPassword,
     plans,
-    phoneNumber
   } : UserData = req.body
 
-  const doesUserExist = await Users.findOne().or([
-    {
+  const doesUserExist = await Users.findOne({
       "cridentials.email": email
-    }, {
-      "cridentials.phoneNumber": phoneNumber
-    }
-  ])
+    })
 
-  if (doesUserExist) {
-    return next(new ErrorHandler("This Email/Phone-Nubmer already signed up. Please log in or register with another Email/Phone-Number.", 400))
-  }
+  if (doesUserExist) return next(new ErrorHandler("This Email already signed up. Please log in or register with another Email.", 400))
+  
   const user = await Users.create({
     info: {
       fname,
@@ -42,7 +36,6 @@ export const signUp = async (req : Request, res : Response,next: NextFunction) =
       email,
       password,
       confirmPassword,
-      phoneNumber
     },
     plans
   })

@@ -5,6 +5,7 @@ process.on("uncaughtException",(err)=>{
 })
 
 // MODULES -------------------------------------------
+import * as chalk from "chalk"
 import * as mongoose from "mongoose"
 import app from "./app"
 // ---------------------------------------------------
@@ -23,16 +24,16 @@ const DB_OPTION = {
 
 mongoose
   .connect(DB,DB_OPTION)
-  .then(()=> log("Connected to mongodb."))
+  .then(()=> log(chalk.greenBright("Connected to mongodb ...")))
   .catch(err=>{
-    error(err)
+    error(chalk.red(err))
     process.exit(1)
   })
 
-const server = app.listen(PORT,()=>log(`Server is running on port ${PORT}`)) 
+const server = app.listen(PORT,()=>log(chalk.greenBright(`Server is running on port ${PORT}`))) 
 // HANDLING UNHANDLED PROMISE REJECTION --------------
 process.on("unhandledRejection" ,(err: Error)=>{
-  log("UNHANDLED REJECTION",err.message)
+  log(chalk.red("UNHANDLED REJECTION",err.message))
   server.close(err => {
     process.exit(1)
   })

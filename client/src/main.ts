@@ -15,7 +15,7 @@ const app = createApp(App)
 declare module "@vue/runtime-core" {
   export interface ComponentCustomProperties { $axios: typeof axios; }
 }
-axios.defaults.baseURL = "http://localhost:3400"
+axios.defaults.baseURL = "http://localhost:3400/api"
 app.config.globalProperties.$axios = axios
 app.component("base-input", BaseInput)
 app.component("base-button", BaseButton)

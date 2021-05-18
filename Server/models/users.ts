@@ -1,3 +1,4 @@
+import * as chalk from "chalk"
 import * as mongoose from "mongoose"
 const Schema = mongoose.Schema
 
@@ -17,10 +18,6 @@ const schema = new Schema ({
       type: String,
       required: true
     },
-    phoneNumber: {
-      type:String,
-      required: true
-    },
     password: {
       type: String,
       required: true,
@@ -38,6 +35,9 @@ const schema = new Schema ({
     type: [mongoose.Types.ObjectId],
     default: []
   }
+})
+schema.pre("save",next => {
+  next()
 })
 
 const Users = mongoose.model("user",schema)
