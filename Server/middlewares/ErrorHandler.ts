@@ -1,25 +1,16 @@
+// import ErrorHandler from "../utilities/ErrorHandler"
+import * as chalk from "chalk"
 
-import { Response } from "express"
-import ErrorHandler from "../utilities/ErrorHandler"
-
-const notFound=(req,res,next,err:ErrorHandler) => {
+export default function(err,_,res,next) {
+  console.log(chalk.red(err.status))
+  console.log(chalk.magenta(err.message))
+  console.log(chalk.cyan(err.name))
   res.status(404).json({
     success: 0,
-    status: err.message,
+    status: err.status,
     statusCode: err.statusCode,
     message: err.message,
-    stack: err.stack,
-    name: err.name
+    name: err.name,
+    stack: err.stack
   })
-}
-const serverError = (req,res,next,err: ErrorHandler) => {
-  res.status(500).json({
-
-  })
-}
-export default function(req,res:Response,next,err) {
-  if(err.statusCode === 404) {
-    return notFound(req,res,next,err)
-  }
-  return serverError(req,res,next,err)
 }

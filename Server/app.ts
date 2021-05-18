@@ -20,11 +20,12 @@ app.use(fileUpload({
 }))
 app.use(morgan("dev"))
 
-app.use("/api",users,plan)
-// app.use("/api",plan)
+// app.use("/api",users,plan)
+app.use("/api",users)
+app.use("/api",plan)
 
 app.all("/api/*", (req,_,next)=> {
-  return next(new ErrorHandler(`NOT FOUND: ${req.originalUrl}`,404))
+  next(new ErrorHandler(`NOT FOUND: ${req.originalUrl}`,404))
 })
 app.use(errors)
 // app.all("*",(_,res)=>{
