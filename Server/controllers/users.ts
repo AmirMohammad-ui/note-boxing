@@ -11,6 +11,25 @@ interface UserData {
   plans: string[];
   phoneNumber: string
 }
+function isDefined(data):{isValid: boolean, errors: string[]} {
+  let errors: string[] = []
+  for(const key in data) {
+    if(!data[key]) {
+    errors.push(key)      
+    }
+  }
+  if(errors.length > 0){
+    return {
+      isValid: false,
+      errors
+    }
+  } else {
+    return {
+      isValid: true,
+      errors: []
+    }
+  }
+}
 export const signUp = async (req : Request, res : Response,next) => {
   const {
     fname,
@@ -20,6 +39,8 @@ export const signUp = async (req : Request, res : Response,next) => {
     confirmPassword,
     plans,
   } : UserData = req.body
+  const hasError = isDefined(req.body)
+  if(!hasError.isValid) return next(new ErrorHandler(`${hasError.errors.join(", ")} are required.`,400))
 
   const doesUserExist = await Users.findOne({
       "cridentials.email": email
@@ -42,7 +63,7 @@ export const signUp = async (req : Request, res : Response,next) => {
 
   res.status(201).json({
     success: 1,
-    data: user,
+    // data: user,
     message: "Your Account successfully created."
   })
 }
