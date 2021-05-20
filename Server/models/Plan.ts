@@ -1,4 +1,5 @@
 import * as mongoose from "mongoose"
+import {PlanTypes,Progress} from "../types/plan"
 const Schema = mongoose.Schema
 
 export interface PlanSchema {
@@ -23,12 +24,32 @@ const schema = new Schema({
     required: [true, 'Description is required.']
   },
   startDate: {
-    type: Date,
-    required: [true, 'StartDate is required.']
+    date: {
+      type: Number,
+      required: [true, 'Date for startDate is required.']
+    },
+    month: {
+      type: Number,
+      required: [true, 'Month for startDate is required.']
+    },
+    year: {
+      type: Number,
+      required: [true, 'Year for startDate is required.']
+    }
   },
   endDate: {
-    type: Date,
-    required: [true, 'FisnishDate is required.']
+    date: {
+      type: Number,
+      required: [true, 'Date for startDate is required.']
+    },
+    month: {
+      type: Number,
+      required: [true, 'Month for startDate is required.']
+    },
+    year: {
+      type: Number,
+      required: [true, 'Year for startDate is required.']
+    }
   },
   category: {
     type: String,
@@ -36,13 +57,19 @@ const schema = new Schema({
   },
   type: {
     type: String,
+    enum: [
+      PlanTypes.DAILY, 
+      PlanTypes.MONTHLY, 
+      PlanTypes.YEARLY
+    ] as string[],
     required: true
   },
   status: {
     type: String,
     enum: [
-      'in-progress', 'finished'
-    ],
+      Progress.IN_PROGRESS,
+      Progress.FINISHED
+    ] as string[],
     required: [true, 'Status is required.']
   },
   image: {
