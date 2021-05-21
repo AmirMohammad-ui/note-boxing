@@ -19,13 +19,13 @@
               <div class="flex-col w-full space-y-7 half-on-md">
                 <base-input label="Cover Image" class="w-full" @get-file="getUploadedFiles" type="file" :z-index="58"/>
                 <div class="flex space-x-4">
-                <base-input label="Category" v-model="optionType" :z-index="60" type="options" :options="categories"/>
+                <base-input label="Category" v-model="category" :z-index="60" type="options" :options="categories"/>
                   <base-button bg-color="#00CEC9" class="w-1/5" color="#fff">
                     <span class="pb-1 mx-auto text-2xl">New</span>
                   </base-button>
                 </div>
               <div class="flex w-full space-x-4">
-                <base-input class="w-1/2" :z-index="59" v-model="category" type="options" :options="typeOptions" label="Type" />
+                <base-input class="w-1/2" :z-index="59" v-model="optionType" type="options" :options="typeOptions" label="Type" />
                 <base-input class="w-1/2" :z-index="57" v-model="priority" type="number" label="Priority" />
               </div>
               <div class="flex-col w-full text-2xl space-y-7">
@@ -71,8 +71,8 @@ export default defineComponent({
       image: '',
       planName: '',
       description: '',
-      typeOptions: ['Sport','Course','University','Life',"Long Term Goals"],
-      categories: ['Sport','Course','University','Life',"Long Term Goals"],
+      typeOptions: ['daily','monthly','yearly'],
+      categories: ['Courses','Certificates'],
     }
   },
   methods: {
@@ -87,15 +87,19 @@ export default defineComponent({
       data.append("title", this.planName)
       data.append("image", this.image)
       data.append("description", this.description)
-      data.append("startDate", this.startDate)
-      data.append("endDate", this.endDate)
+      data.append("startDate_date", this.startDate.split("-")[2])
+      data.append("startDate_month", this.startDate.split("-")[1])
+      data.append("startDate_year", this.startDate.split("-")[0])
+      data.append("endDate_date", this.endDate.split("-")[2])
+      data.append("endDate_month", this.endDate.split("-")[1])
+      data.append("endDate_year", this.endDate.split("-")[0])
       data.append("priority", this.priority)
       data.append("category", this.category)
-      data.append("option", this.optionType)
+      data.append("type", this.optionType)
       data.forEach(val => {
         console.log(val)
       })
-      this.$axios.post("/api/new-plan",data, {
+      this.$axios.post("/new-plan",data, {
         headers: {
           "Content-Type":"multipart/form-data"
         }

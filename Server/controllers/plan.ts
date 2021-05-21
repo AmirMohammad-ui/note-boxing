@@ -15,9 +15,9 @@ interface File {
 
 // POST /new-plan
 export const createPlan = async(req:Request,res:Response,next) => {
-  const data = req.body as PlanSchema
+  const data = req.body
   const isDef = isDefined(data)
-  if(!isDef.isValid) return next(new ErrorHandler(`${isDef.errors.join(", ")} are required.`))
+  if(!isDef.isValid) return next(new ErrorHandler(`${isDef.errors.join(", ")} are required.`,400))
   if(req.files.image) {
     const image = req.files.image as File
     const imageFileName = `image-${Date.now()}.${image.mimetype.split("/")[1]}`
@@ -28,6 +28,16 @@ export const createPlan = async(req:Request,res:Response,next) => {
   }
   const newPlan = await Plan.create({
     ...data,
+    startDate: {
+      date: data.startDate_date,
+      month: data.startDate_month,
+      year: data.startDate_year
+    },
+    endDate: {
+      date: data.endDate_date,
+      month: data.endDate_month,
+      year: data.endDate_year
+    },
     status: Progress.IN_PROGRESS,
     image: data.image || "default.png",
     dateCreated: new Date()
