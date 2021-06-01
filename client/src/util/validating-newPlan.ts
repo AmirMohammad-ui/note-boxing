@@ -1,3 +1,6 @@
+import isEmail from "validator/lib/isEmail"
+import isDate from "validator/lib/isDate"
+import isAlphaNumeric from "validator/lib/isAlphanumeric"
 interface File {
   mimetype: string
   size: number
@@ -22,142 +25,101 @@ enum ErrTypes {
   file = "File"
 }
 
-class Validate {
+export default class Validate {
   private errorMessages : ErrMsg[] = []
   private value : string | number | boolean | File = '';
   private field : string = '';
   static validate(value : string, field : string) {
     const validateObj = new Validate()
-    validateObj.value = value
-    validateObj.field = field
+    validateObj.value = value.trim()
+    validateObj.field = field.trim()
+  }
+  registerError(type: ErrTypes,message: string) {
+    const {errorMessages,field} = new Validate()
+    errorMessages.push({
+      type,
+      field,
+      message,
+    })
   }
   static required() {
-    const validateObj = new Validate()
-    const {value, errorMessages, field} = validateObj
+    const obj = new Validate()
+    const {value, field} = obj
     if (!value) {
-      errorMessages.push({
-        type: ErrTypes.required, 
-        field, 
-        message: `${field} is required, please enter the appropriate value.`
-      })
+      obj.registerError(ErrTypes.required,`${field} is required, please enter the appropriate value.`)
     }
     return this
   }
   static min(min : number) {
-    const {value, errorMessages, field} = new Validate()
+    const obj = new Validate()
+    const {value,field} = obj
     if (typeof value === 'number' && value < min) {
-      errorMessages.push({type: 'min-number', field, message: `Minimum valid value for ${field} is ${min}.`})
+      obj.registerError(ErrTypes.min,`Minimum valid value for ${field} is ${min}.`)
     } else if(typeof value === "string" && value.length<min) {
-      errorMessages.push({
-        type: ErrTypes.min, 
-        field, 
-        message: `Minimum number of charachtors for ${field} is ${min}.`
-      })
+      obj.registerError(ErrTypes.min,`Minimum number of charachtors for ${field} is ${min}.`)
     } 
   }
 
   static max(max:number) {
-    const {value, errorMessages, field} = new Validate()
+    const obj = new Validate()
+    const {value, field} = obj
     if(value instanceof File && value.size > max) {
-      errorMessages.push({
-        type: ErrTypes.max, 
-        field, 
-        message: `Maximum size for ${field} is ${max}.`
-      })
+      obj.registerError(ErrTypes.file,`Maximum size for ${field} is ${max}.`)
     } else if(typeof value === "string" && value.length>max) {
-      errorMessages.push({
-        type: ErrTypes.max, 
-        field, 
-        message: `Maximum number of charachtors for ${field} is ${max}.`
-      })
+      obj.registerError(ErrTypes.max,`Maximum number of charachtors for ${field} is ${max}.`)
     } 
   }
-  static email() {}
-  static alphanumeric() {}
+  static email() {
+    const obj = new Validate()
+    const { value } = obj
+    const isValid = isEmail(value as string)
+    if(!isValid) {
+      obj.registerError(ErrTypes.email,`${value} is not a valid email address.`)
+    }
+  }
+  static alphanumeric() {
+    const obj = new Validate()
+    const {value} = obj
+    const isValid = isAlphaNumeric(value as string)
+    if(!isValid) {
+      obj.registerError(ErrTypes.alphanumeric,`${value} must be string or number or a combination of both.`)
+    }
+  }
   static string() {
-    const {errorMessages,value,field} = new Validate()
+    const obj = new Validate()
+    const {value} = obj
     if(typeof value !== 'string') {
-      errorMessages.push({
-        type: "isString",
-        field,
-        message: `This field must be a string.`
-      })
+      obj.registerError(ErrTypes.isString,`${value} must be a string.`)
     }
   }
   static number() {
-    const {errorMessages,value,field} = new Validate()
+    const obj = new Validate()
+    const {value} = new Validate()
     if(typeof value !== "number") {
-      errorMessages.push({
-        type: "isNumber",
-        field,
-        message: `This field must be a number.`
-      })
+      obj.registerError(ErrTypes.isNumber,`${value} must be a number.`)
     }
   }
-  static date(options: {
-    "yyyy/mm/dd"?: boolean;
-    "yyyy-mm-dd"?: boolean;
-    "Mon dd yyyy"?: boolean;
-    "Month dd yyyy"?: boolean
-  }={"yyyy-mm-dd":true}) {
-    const { value,field,errorMessages } = new Validate()
-    if (options['Mon dd yyyy']) {
-      const datePattern = /(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s[\d\d]\s[\d\d\d\d]/
-      if(!value.toString().match(datePattern)) {
-        errorMessages.push({
-        type: ErrTypes.date,
-        field,
-        message: `${value} is not a valid Date.`
-        })
-      }
-    } else if (options['Month dd yyyy']) {
-      const datePattern = /(January|February|March|May|June|July|November|December|April|August|September|October)\s[\d\d]\s[\d\d\d\d]/
-      if(!value.toString().match(datePattern)) {
-        errorMessages.push({
-        type: ErrTypes.date,
-        field,
-        message: `${value} is not a valid Date.`
-        })
-      }
-    } else if (options["yyyy-mm-dd"]) { 
-      const datePattern = /\d\d\d\d-\d\d-\d\d/
-      if(!value.toString().match(datePattern)) {
-        errorMessages.push({
-        type: ErrTypes.date,
-        field,
-        message: `${value} is not a valid Date.`
-        })
-      }
-    } else if (options['yyyy/mm/dd']) {
-      const datePattern = /\d\d\d\d\/\d\d\/\d\d]/
-      if(!value.toString().match(datePattern)) {
-        errorMessages.push({
-        type: ErrTypes.date,
-        field,
-        message: `${value} is not a valid Date.`
-        })
-      }
+  static date() {
+    const obj = new Validate()
+    const {value} = obj
+    const isValid = isDate(value as string)
+    if(!isValid) {
+      obj.registerError(ErrTypes.date,`${value} is not a valid date.`)
     }
   }
   static boolean() {
+    const obj = new Validate()
     const bool = ['true','false',true,false,1,0]
-    const { value,field,errorMessages } = new Validate()
+    const { value } = obj
     if(!(value as any in bool)) {
-      errorMessages.push({
-        type: '',
-        field,
-        message: ``
-      })
+      obj.registerError(ErrTypes.isBool,`${value} is not a file.`)
     }
   }
   static file() {
-    const { value,field,errorMessages } = new Validate()
+    const obj = new Validate()
+    const { value } = obj
     if(!(value instanceof File)) {
-      errorMessages.push({
-        type: ErrTypes.file,
-        field,
-        message: `${value} is not a file.`
-      })
+      obj.registerError(ErrTypes.file, `${value} is not a file.`)
     }
   }
 
