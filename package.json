@@ -28,7 +28,7 @@
     "express-fileupload": "^1.2.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.0",
-    "validator": "^13.6.0"
+    "valivar": "^6.2.11"
   },
   "devDependencies": {
     "@types/cors": "^2.8.10",
