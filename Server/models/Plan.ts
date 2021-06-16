@@ -1,20 +1,15 @@
 import * as mongoose from "mongoose"
-import {PlanTypes,Progress} from "../types/plan"
-import { Schema as ValidateSchema } from "valivar"
+import {NewPlan, PlanTypes,Progress} from "../types/plan"
 const Schema = mongoose.Schema
+import * as Validator from "validatorjs"
 
-export interface PlanSchema {
-  title: string,
-  description: string,
-  startDate: Date,
-  endDate: Date,
-  category: string,
-  type: string,
-  status: string,
-  image: string,
-  dateCreated: Date
+interface PlanDocument extends PlanData , mongoose.Document {
+  createdAt: Date;
+  updatedAt: Date;
 }
-
+export interface PlanModel extends mongoose.Model<PlanDocument> {
+  validateData(data:NewPlan):ValidationResult;
+}
 const schema = new Schema({
   title: {
     type: String,
@@ -62,7 +57,7 @@ const schema = new Schema({
       PlanTypes.DAILY, 
       PlanTypes.MONTHLY, 
       PlanTypes.YEARLY
-    ] as string[],
+    ],
     required: true
   },
   status: {
@@ -70,114 +65,87 @@ const schema = new Schema({
     enum: [
       Progress.IN_PROGRESS,
       Progress.FINISHED
-    ] as string[],
+    ],
     required: [true, 'Status is required.']
   },
   image: {
     type: String,
     required: [true, 'Image is required.']
-  },
-  dateCreated: {
-    type: Date,
-    default: Date.now()
   }
+},{
+  timestamps: true,
+  storeSubdocValidationError: false
 })
-// schema.methods.validate = (data) => {
-//   const newPlan = new ValidateSchema({
-//     title: {
-//       type: String,
-//       required: true,
-//       message: {
-//         type: "Title must be of type string.",
-//         required: "Title is required."
-//       }
-//     },
-//     description: {
-//       type: String,
-//       required: true,
-//       message: {
-//         type: "Description must be of type string.",
-//         required: "Description is required."
-//       }
-//     },
-//     startDate_date: {
-//       type: Number,
-//       required: true,
-//       messgae: {
-//         tyep: "startDate_date must be of type number.",
-//         required: "startDate_date is required."
-//       }
-//     },
-//     startDate_month: {
-//       type: Number,
-//       required: true,
-//       messgae: {
-//         tyep: "startDate_month must be of type number.",
-//         required: "startDate_month is required."
-//       }
-//     },
-//     startDate_year: {
-//       type: Number,
-//       required: true,
-//       messgae: {
-//         tyep: "startDate_year must be of type number.",
-//         required: "startDate_year is required."
-//       }
-//     },
-//     endDate_date: {
-//       type: Number,
-//       required: true,
-//       messgae: {
-//         tyep: "endDate_date must be of type number.",
-//         required: "endDate_date is required."
-//       }
-//     },
-//     endDate_month: {
-//       type: Number,
-//       required: true,
-//       messgae: {
-//         tyep: "endDate_month must be of type number.",
-//         required: "endDate_month is required."
-//       }
-//     },
-//     endDate_year: {
-//       type: Number,
-//       required: true,
-//       messgae: {
-//         tyep: "endDate_year must be of type number.",
-//         required: "endDate_year is required."
-//       }
-//     },
-//     priority: {
-//       type: Number,
-//       required: true,
-//       messgae: {
-//         tyep: "Priority must be of type number.",
-//         required: "Priority is required."
-//       }
-//     },
-//     category: {
-//       type: String,
-//       required: true,
-//       messgae: {
-//         tyep: "Category must be of type string.",
-//         required: "Category is required."
-//       }
-//     },
-//     type: {
-//       type: String,
-//       required: true,
-//       messgae: {
-//         tyep: "Type must be of type string.",
-//         required: "Type is required."
-//       }
-//     }
-//   })
-//   const errors = newPlan.validate(data)
-//   return errors
-// }
 
-const Plan = mongoose.model("plan", schema)
+let date = new Date()
+const currYear = date.getFullYear();
+const currMonth = date.getMonth()+1;
+const currDate = date.getDate()
+
+interface ErrMsg {
+  type: string,
+  invalid_part?: string | number,
+  field: string,
+  message: string
+}
+
+export interface PlanData {
+  title: string;
+  description: string;
+  startDate: {
+    date: number;
+    month: number;
+    year: number;
+  },
+  endDate: {
+    date: number;
+    month: number;
+    year: number;
+  },
+  priority: number;
+  category: string;
+  type: string;
+  status: string;
+  image: string;
+}
+interface ValidationResult {
+  errors: any[];
+  isValid: boolean
+}
+
+const rules = {
+  title: "required|string",
+  description: "required|string",
+  startDate_date: `required|numeric|max:31|min:${currDate}`,
+  startDate_month:`required|numeric|max:12|min:${currMonth}`,
+  startDate_year:`required|numeric|min:${currYear}`,
+  endDate_date:"required|numeric|max:31|min:1",
+  endDate_month:"required|numeric|max:12|min:1",
+  endDate_year:`required|numeric|min:${currYear}`,
+  priority: "required|numeric|min:1",
+  category: "required|string",
+  type: `required|string|in:${PlanTypes.DAILY},${PlanTypes.MONTHLY},${PlanTypes.YEARLY}`
+}
+
+const customErrMsg = {
+  required: ":attribute is required.",
+  string: ":attribute must be a string.",
+  number: ":attibute must be a number.",
+  max: "Maximum value for :attribute is :max.",
+  min: "Minimum number for :attribute is :min.",
+  in: ":attribute must be one of the following list of values: :in."
+}
+
+export const validateData = (data: NewPlan):ValidationResult => {
+  const validation = new Validator(data,rules,customErrMsg)
+  const isValid = validation.passes()
+  return {
+    isValid,
+    errors: validation.errors.all()
+  }
+}
+
+export default mongoose.model("plan", schema)
 
 
-export default Plan
+

@@ -1,46 +1,53 @@
 import { Request, Response } from "express"
 import { PlanTypes, Progress ,NewPlan,File} from "../types/plan"
 import * as path from "path"
-import Plan from "../models/plan"
+import Plan , {validateData} from "../models/plan"
 import ErrorHandler from "../utilities/ErrorHandler"
 import isDefined from "../utilities/isDefined"
 
-interface ErrMsg {
-  type: string,
-  invalid_part?: string | number,
-  field: string,
-  message: string
-}
 
 // POST /new-plan
 export const createPlan = async(req:Request,res:Response,next) => {
-  const data: NewPlan = req.body
-  // const errors = Plan.validate(data)
-  // console.log(errors)
+  const {
+    title,
+    description,
+    startDate_date,
+    startDate_month,startDate_year,endDate_date,
+    endDate_month,endDate_year,priority,category,type
+  } = req.body as NewPlan
+  const validation = validateData(req.body)
+  const plan = await Plan.findOne()
+  console.log(req.body)
+  console.log(validation)
   // const isDef = isDefined(data)
   // if(!isDef.isValid) return next(new ErrorHandler(`${isDef.errors.join(", ")} are required.`,400))
+  let IMG;
   // if(req.files.image) {
   //   const image = req.files.image as File
   //   const imageFileName = `image-${Date.now()}.${image.mimetype.split("/")[1]}`
   //   console.log(image)
   //   console.log(imageFileName)
   //   await image.mv(path.join(__dirname,'../uploads/images/',imageFileName))
-  //   data.image = imageFileName
+  //   IMG = imageFileName
   // }
   const newPlan = await Plan.create({
-    ...data,
+    title,
+    description,
+    priority,
+    type,
+    category,
     startDate: {
-      date: data.startDate_date,
-      month: data.startDate_month,
-      year: data.startDate_year
+      date: startDate_date,
+      month: startDate_month,
+      year: startDate_year
     },
     endDate: {
-      date: data.endDate_date,
-      month: data.endDate_month,
-      year: data.endDate_year
+      date: endDate_date,
+      month: endDate_month,
+      year: endDate_year
     },
     status: Progress.IN_PROGRESS,
-    image: data.image || "default.png",
+    image: IMG || "default.png",
     dateCreated: new Date()
   })
   res.status(201).json({
@@ -114,4 +121,22 @@ export const monthlyPlans = async(req:Request,res:Response,next) => {
   })
 }
 // GET /yearly
+export const yearlyPlans = async(req:Request, res:Response,next) => {
+  const date = new Date()
+  const currentYear = date.getFullYear()
+  const plans = await Plan.find({"startDate.year": {$gte:currentYear,$lte: currentYear+10}})
+  res.status(200).json({
+    success: 1,
+    message: plans.length > 0 ? `Found ${plans.length} plans.`:"No plan found.",
+    data: plans
+  })
+}
 // GET /categories
+// DELETE /delete-plans
+export const deletePlans = async(req:Request,res:Response,next) => {
+  await Plan.deleteMany({})
+  res.status(200).json({
+    success: 1,
+    message: "Deleted all plans successfully."
+  })
+}
