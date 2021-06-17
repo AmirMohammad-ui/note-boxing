@@ -185,11 +185,11 @@
         </ul>
       </div>
     </header>
-    <new-plan
-      @close-modal="closeModal_newPlan"
-      :is-backdrop-open="isBackdropOpen_newPlan"
-      :is-dialog-open="isDialogOpen_newPlan"
-    />
+      <new-plan
+        @close-modal="closeModal_newPlan"
+        :is-backdrop-open="isBackdropOpen_newPlan"
+        :is-dialog-open="isDialogOpen_newPlan"
+      />
     <auth-modal
       @close-modal="closeModal_auth"
       :is-backdrop-open="isBackdropOpen_auth"
@@ -238,6 +238,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+
 .profile-container-ondesktop {
   @apply relative flex items-center mr-2 space-x-2 lg:hidden;
   &:hover .auth-menu {

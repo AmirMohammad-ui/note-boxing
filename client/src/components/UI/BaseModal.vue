@@ -26,13 +26,30 @@ export default defineComponent ({
 </script>
 
 <style lang="scss" scoped>
-// .backdrop-enter-active {}
-// .backdrop-enter-from,.backdrop-leave-to {}
-// .backdrop-leave-from,.backdrop-enter-to {}
-
-// .dialog-enter-active {}
-// .dialog-enter-from,.dialog-leave-to {}
-// .dialog-leave-from,.dialog-enter-to {}
+.backdrop-enter-from,
+.backdrop-leave-to {
+  opacity: 0;
+}
+.backdrop-enter-active,
+.backdrop-leave-active {
+  transition: all .2s ease-out;
+}
+.backdrop-enter-to,
+.backdrop-leave-from {
+  opacity: 1;
+}
+.dialog-enter-from,
+.dialog-leave-to {
+  opacity: 0;
+}
+.dialog-enter-active,
+.dialog-leave-active {
+  transition: all .3s ease-out;
+}
+.dialog-enter-to,
+.dialog-leave-from {
+  opacity: 1;
+}
 .base-modal {
   z-index: 20;
 }
