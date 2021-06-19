@@ -30,6 +30,7 @@
     }"
   >
     <input
+      ref="theInput"
       class="box readonly-input"
       :class="inputClasses"
       :type="type ? type : 'text'"
@@ -134,6 +135,7 @@
     <input
       class="box input"
       :class="inputClasses"
+      ref="theInput"
       :type="type ? type : 'text'"
       @input="getValue"
       v-model.trim="theValue"
@@ -148,6 +150,7 @@
 import {defineComponent} from "vue"
 export default defineComponent({
   props: {
+    focusOn: { type: Boolean, default: false},
     readonly: { type: Boolean, default: false },
     modelValue: { type: String },
     label: { type: String },
@@ -176,6 +179,7 @@ export default defineComponent({
       theFile: null,
       selectedValue: this.options.length > 1 ? this.options[0]:'',
       fileName: "",
+      isFocused: this.focusOn
     };
   },
   methods: {
@@ -209,6 +213,10 @@ export default defineComponent({
   mounted() {
     if(this.selectedValue) {
       this.$emit("update:modelValue", this.selectedValue);
+    }
+    if(this.isFocused) {
+      const inputEl = this.$refs.theInput as HTMLInputElement;
+      inputEl.focus();
     }
   }
 });

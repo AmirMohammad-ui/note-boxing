@@ -8,44 +8,27 @@ import isDefined from "../utilities/isDefined"
 
 // POST /new-plan
 export const createPlan = async(req:Request,res:Response,next) => {
-  const {
-    title,
-    description,
-    startDate_date,
-    startDate_month,startDate_year,endDate_date,
-    endDate_month,endDate_year,priority,category,type
-  } = req.body as NewPlan
+  const data = req.body as NewPlan
+  console.log(data)
   const validation = validateData(req.body)
-  const plan = await Plan.findOne()
-  console.log(req.body)
-  console.log(validation)
-  // const isDef = isDefined(data)
-  // if(!isDef.isValid) return next(new ErrorHandler(`${isDef.errors.join(", ")} are required.`,400))
+  const {errors,isValid} = validation
+  if(!isValid){
+    res.status(400).json({
+      success: 0,
+      message: "Input validation failed.",
+      errors
+    })
+    return
+  }
   let IMG;
-  // if(req.files.image) {
-  //   const image = req.files.image as File
-  //   const imageFileName = `image-${Date.now()}.${image.mimetype.split("/")[1]}`
-  //   console.log(image)
-  //   console.log(imageFileName)
-  //   await image.mv(path.join(__dirname,'../uploads/images/',imageFileName))
-  //   IMG = imageFileName
-  // }
+  if(req.files.image) {
+    const image = req.files.image as File
+    const imageFileName = `image-${Date.now()}.${image.mimetype.split("/")[1]}`
+    await image.mv(path.join(__dirname,'../uploads/images/',imageFileName))
+    IMG = imageFileName
+  }
   const newPlan = await Plan.create({
-    title,
-    description,
-    priority,
-    type,
-    category,
-    startDate: {
-      date: startDate_date,
-      month: startDate_month,
-      year: startDate_year
-    },
-    endDate: {
-      date: endDate_date,
-      month: endDate_month,
-      year: endDate_year
-    },
+    ...data,
     status: Progress.IN_PROGRESS,
     image: IMG || "default.png",
     dateCreated: new Date()
@@ -138,5 +121,13 @@ export const deletePlans = async(req:Request,res:Response,next) => {
   res.status(200).json({
     success: 1,
     message: "Deleted all plans successfully."
+  })
+}
+// POST /new-category
+export const newCategory = async(req:Request,res:Response,next) => {
+  
+  res.status(201).json({
+    success: 1,
+    message: "New category created successfully."
   })
 }

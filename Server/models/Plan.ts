@@ -3,13 +3,6 @@ import {NewPlan, PlanTypes,Progress} from "../types/plan"
 const Schema = mongoose.Schema
 import * as Validator from "validatorjs"
 
-interface PlanDocument extends PlanData , mongoose.Document {
-  createdAt: Date;
-  updatedAt: Date;
-}
-export interface PlanModel extends mongoose.Model<PlanDocument> {
-  validateData(data:NewPlan):ValidationResult;
-}
 const schema = new Schema({
   title: {
     type: String,
@@ -20,32 +13,13 @@ const schema = new Schema({
     required: [true, 'Description is required.']
   },
   startDate: {
-    date: {
-      type: Number,
-      required: [true, 'Date for startDate is required.']
-    },
-    month: {
-      type: Number,
-      required: [true, 'Month for startDate is required.']
-    },
-    year: {
-      type: Number,
-      required: [true, 'Year for startDate is required.']
-    }
+    type: Date,
+    required: true,
+
   },
   endDate: {
-    date: {
-      type: Number,
-      required: [true, 'Date for startDate is required.']
-    },
-    month: {
-      type: Number,
-      required: [true, 'Month for startDate is required.']
-    },
-    year: {
-      type: Number,
-      required: [true, 'Year for startDate is required.']
-    }
+    type: Date,
+    required: true
   },
   category: {
     type: String,
@@ -77,11 +51,6 @@ const schema = new Schema({
   storeSubdocValidationError: false
 })
 
-let date = new Date()
-const currYear = date.getFullYear();
-const currMonth = date.getMonth()+1;
-const currDate = date.getDate()
-
 interface ErrMsg {
   type: string,
   invalid_part?: string | number,
@@ -89,25 +58,6 @@ interface ErrMsg {
   message: string
 }
 
-export interface PlanData {
-  title: string;
-  description: string;
-  startDate: {
-    date: number;
-    month: number;
-    year: number;
-  },
-  endDate: {
-    date: number;
-    month: number;
-    year: number;
-  },
-  priority: number;
-  category: string;
-  type: string;
-  status: string;
-  image: string;
-}
 interface ValidationResult {
   errors: any[];
   isValid: boolean
@@ -116,12 +66,8 @@ interface ValidationResult {
 const rules = {
   title: "required|string",
   description: "required|string",
-  startDate_date: `required|numeric|max:31|min:${currDate}`,
-  startDate_month:`required|numeric|max:12|min:${currMonth}`,
-  startDate_year:`required|numeric|min:${currYear}`,
-  endDate_date:"required|numeric|max:31|min:1",
-  endDate_month:"required|numeric|max:12|min:1",
-  endDate_year:`required|numeric|min:${currYear}`,
+  startDate: `required|date|startDate`,
+  endDate: `required|date|endDate`,
   priority: "required|numeric|min:1",
   category: "required|string",
   type: `required|string|in:${PlanTypes.DAILY},${PlanTypes.MONTHLY},${PlanTypes.YEARLY}`
@@ -130,14 +76,29 @@ const rules = {
 const customErrMsg = {
   required: ":attribute is required.",
   string: ":attribute must be a string.",
-  number: ":attibute must be a number.",
+  numeric: ":attibute must be a number.",
   max: "Maximum value for :attribute is :max.",
   min: "Minimum number for :attribute is :min.",
   in: ":attribute must be one of the following list of values: :in."
 }
 
 export const validateData = (data: NewPlan):ValidationResult => {
-  const validation = new Validator(data,rules,customErrMsg)
+  if(data.startDate && data.endDate) {
+    const the_entered_startDate: Date = new Date(data.startDate);
+    const the_entered_endDate: Date = new Date(data.endDate);
+    const fullDate: Date = new Date(new Date().toLocaleDateString("en-US"))
+    // After or Equal endDate
+    Validator.register("endDate", ()=> {
+      return the_entered_endDate >= fullDate && the_entered_endDate >= the_entered_startDate  
+    },`Your chosen date for 'end Date' must be after ${fullDate.toLocaleDateString("en-US")} and ${the_entered_startDate.toLocaleDateString("en-US")}.`)
+    // After or Equal startDate
+    Validator.register("startDate", ()=> {
+      return the_entered_startDate >= fullDate && the_entered_startDate <= the_entered_endDate
+    },`Your chosen date for 'start Date' must be after ${fullDate.toLocaleDateString("en-US")} and before ${the_entered_endDate.toLocaleDateString("en-US")}.`)
+  }
+  const validation = new Validator({
+    ...data,
+  },rules,customErrMsg)
   const isValid = validation.passes()
   return {
     isValid,

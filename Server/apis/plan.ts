@@ -1,5 +1,5 @@
 import * as express from "express"
-import {createPlan,currentMonthPlans,deletePlans,todayPlan, yearlyPlans} from "../controllers/plan"
+import {createPlan,currentMonthPlans,deletePlans,newCategory,todayPlan, yearlyPlans} from "../controllers/plan"
 import asyncHandler from "../middlewares/asyncErrorHandler"
 
 const router = express.Router()
@@ -14,5 +14,6 @@ router.route("/yearly")
   .get(asyncHandler(yearlyPlans))
 router.route("/delete-plans")
   .delete(asyncHandler(deletePlans))
-
+router.route("/new-category")
+  .post(asyncHandler(newCategory))
 export default router

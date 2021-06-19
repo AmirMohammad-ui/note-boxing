@@ -1,7 +1,6 @@
 <template>
   <div class="mx-auto max-w-screen-2xl body-bg">
     <the-header/>
-    
     <router-view v-slot="{Component}">
       <transition name="fade">
         <component :is="Component" />

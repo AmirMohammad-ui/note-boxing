@@ -11,12 +11,8 @@ export interface NewPlan {
   title:string;
   image:string;
   description:string;
-  startDate_date:number;
-  startDate_month:number;
-  startDate_year:number;
-  endDate_date:number;
-  endDate_month:number;
-  endDate_year:number;
+  startDate:Date;
+  endDate:Date;
   priority:number;
   category:string;
   type:string
