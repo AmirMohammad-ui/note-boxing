@@ -3,6 +3,13 @@ import {NewPlan, PlanTypes,Progress} from "../types/plan"
 const Schema = mongoose.Schema
 import * as Validator from "validatorjs"
 
+// id: "p1",
+// startDate: "2020/04/05",
+// finishDate: "2021/04/25",
+// isFinished: false,
+// img: "img-1",
+// title: "Finishing the Vue.js course and master it.",
+// description:
 const schema = new Schema({
   title: {
     type: String,
@@ -105,6 +112,21 @@ export const validateData = (data: NewPlan):ValidationResult => {
     errors: validation.errors.all()
   }
 }
+const categorySchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  plans: [{
+    type: Schema.Types.ObjectId,
+    ref: "plan"
+  }]
+},{
+  timestamps: true
+})
+
+export const Category = mongoose.model("category",categorySchema)
+
 
 export default mongoose.model("plan", schema)
 

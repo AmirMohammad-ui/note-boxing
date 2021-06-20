@@ -7,8 +7,7 @@
     >
       <div class="relative h-screen">
         <div
-          class="absolute w-full transform -translate-y-1/2 bg-white box top-1/2 scroll"
-        >
+          class="absolute w-full transform -translate-y-1/2 bg-white box top-1/2 scroll">
           <header class="px-5 py-4">
             <p class="text-3xl">Register A New Plan</p>
           </header>
@@ -35,7 +34,6 @@
                       type="options"
                       :options="categories"
                     />
-
                     <base-button
                       @click="newCategory"
                       bg-color="#00CEC9"
@@ -146,7 +144,7 @@ export default defineComponent({
       planName: "",
       description: "",
       typeOptions: ["daily", "monthly", "yearly"],
-      categories: ["Courses", "Certificates"],
+      categories: [],
     };
   },
   methods: {
@@ -154,6 +152,7 @@ export default defineComponent({
       this.$axios.post("/new-category", {category: newCategory})
         .then(data => {
           console.log(data)
+          this.getCategories()
         })
         .catch(err=> {
           console.log(err.response)
@@ -161,6 +160,16 @@ export default defineComponent({
     },
     newCategory() {
       this.newCategoryField = !this.newCategoryField;
+    },
+    getCategories() {
+      this.$axios.get("/categories")
+      .then(res=> {
+        this.categories = res.data.categories.map((cat:{name:string;_id:string}) => cat.name)
+        
+      }) 
+      .catch(err=> {
+        console.log(err.response)
+      })
     },
     logValues() {
       console.log(
@@ -187,9 +196,6 @@ export default defineComponent({
       data.append("priority", this.priority);
       data.append("category", this.category);
       data.append("type", this.optionType);
-      // data.forEach((val) => {
-      //   console.log(val);
-      // });
       this.$axios
         .post("/new-plan", data, {
           headers: {
@@ -204,6 +210,9 @@ export default defineComponent({
         });
     },
   },
+  mounted() {
+    this.getCategories()
+  }
 });
 </script>
 

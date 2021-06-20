@@ -19,7 +19,8 @@ const DB_OPTION = {
   useFindAndModify: false,
   useUnifiedTopology: true,
   useCreateIndex: true,
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  autoIndex: process.env.NODE_ENV === "production"
 }
 
 mongoose

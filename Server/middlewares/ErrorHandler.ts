@@ -8,7 +8,7 @@ export default function(err,_,res,next) {
   console.log(chalk.cyan(err.name))
   console.log(chalk.grey(err.stack))
   
-  res.status(res.statusCode || 500).json({
+  res.status(err.statusCode || res.statusCode || 500).json({
     success: 0,
     status: err.status,
     statusCode: err.statusCode,

@@ -91,7 +91,7 @@
       zIndex: zIndex ? zIndex : 10,
     }"
   >
-    <div class="w-full h-full" @click="showOptions">
+    <div v-if="options.length > 0" class="w-full h-full" @click="showOptions">
       <svg
         class="float-right mt-3"
         width="13"
@@ -103,7 +103,7 @@
     </div>
     <div v-if="isOptionsVisible" class="options box">
       <div
-        class="option"
+        class="capitalize option"
         v-for="option in options"
         :value="option"
         :key="option"
@@ -112,10 +112,10 @@
         {{ option }}
       </div>
     </div>
-    <label class="label multichoice-label">{{
+    <label class="capitalize label multichoice-label">{{
       label
     }}</label>
-    <span class="label">{{selectedValue}}</span>
+    <span class="capitalize label">{{options.length > 0 ? selectedValue:"No category created."}}</span>
     <div
       v-if="isOptionsBackdropActive"
       @click="deactivateBackdrop"
@@ -177,7 +177,7 @@ export default defineComponent({
       isOptionsVisible: false,
       isOptionsBackdropActive: false,
       theFile: null,
-      selectedValue: this.options.length > 1 ? this.options[0]:'',
+      selectedValue: this.options.length > 0 ? this.options[0]:'',
       fileName: "",
       isFocused: this.focusOn
     };

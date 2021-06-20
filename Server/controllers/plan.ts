@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { PlanTypes, Progress ,NewPlan,File} from "../types/plan"
 import * as path from "path"
-import Plan , {validateData} from "../models/plan"
+import Plan , {validateData,Category} from "../models/plan"
 import ErrorHandler from "../utilities/ErrorHandler"
 import isDefined from "../utilities/isDefined"
 
@@ -9,13 +9,12 @@ import isDefined from "../utilities/isDefined"
 // POST /new-plan
 export const createPlan = async(req:Request,res:Response,next) => {
   const data = req.body as NewPlan
-  console.log(data)
   const validation = validateData(req.body)
   const {errors,isValid} = validation
   if(!isValid){
     res.status(400).json({
       success: 0,
-      message: "Input validation failed.",
+      message: "Input validation failed.", 
       errors
     })
     return
@@ -33,6 +32,12 @@ export const createPlan = async(req:Request,res:Response,next) => {
     image: IMG || "default.png",
     dateCreated: new Date()
   })
+  await Category.findOne({ name: data.category }, async(err,category)=> {
+    if(err || !category) return next(new ErrorHandler("Category selected does not exist, You need to create it first.",400))
+    category.plans.push(newPlan._id)
+    await category.save()
+  })
+  console.log(newPlan)
   res.status(201).json({
     succuss: 1,
     message: "Plan successfully created.",
@@ -125,9 +130,28 @@ export const deletePlans = async(req:Request,res:Response,next) => {
 }
 // POST /new-category
 export const newCategory = async(req:Request,res:Response,next) => {
-  
+  const {category} = req.body
+  const trimmedCategory = category.trim().toLowerCase()
+  if(!trimmedCategory) return next(new ErrorHandler("'New Category' field is required.",400)) 
+  if(trimmedCategory.length < 3) return next(new ErrorHandler("'New Category' field must be at least 3 characters long.",400))
+  if(trimmedCategory.length > 50) return next(new ErrorHandler("'New Category' field cannot exceed 50 characters long.",400))
+  if(await Category.findOne({name: trimmedCategory})) return next(new ErrorHandler("This category already exists.",400))
+  const createdCategory = await Category.create({
+    name: trimmedCategory,
+  })
+  console.log(createdCategory)
   res.status(201).json({
     success: 1,
     message: "New category created successfully."
+  })
+}
+
+export const getCategories = async(req:Request,res:Response,next) => {
+  const categories = await Category.find().select("name _id").sort("1")
+  if(!categories || categories.length === 0) return next(new ErrorHandler("No Categories have been created yet.",404))
+  res.status(200).json({
+    succuss: 1,
+    message: "Categories fetched successfully",
+    categories
   })
 }

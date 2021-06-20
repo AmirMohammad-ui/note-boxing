@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="bg-white box">
     <header>
-      
+      Error
     </header>
     <div>
-      
+      Hello
     </div>
   </div>
 </template>
