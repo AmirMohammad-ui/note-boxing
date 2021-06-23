@@ -138,7 +138,7 @@ export default defineComponent({
   }),
   props: ["leftSeperatorText", "rightSeperatorText", "data","classes",'no-border',"container-style"],
   computed: {
-    imgSrc() {
+    imgSrc():any {
       return require(`../../assets/${this.data.img}.jpg`)
     }
   },

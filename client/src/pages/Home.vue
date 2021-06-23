@@ -1,7 +1,14 @@
 <template>
   <div class="m-4 -zind-1">
     <div>
-      <base-alert />
+      <base-alert error>
+        <template #header>
+          ERROR
+        </template>
+        <template #default>
+          Something failed during the compilation.
+        </template>
+      </base-alert>
     </div>
     <div class="mt-10">
       <the-plan
