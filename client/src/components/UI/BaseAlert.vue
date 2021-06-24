@@ -1,8 +1,8 @@
 <template>
-  <div v-if="!isAlertHidden" class="alert-container box">
+  <div v-if="isAlertShown" class="alert-container box">
     <header :style="bgColor" class="flex items-center justify-between">
       <slot name="header"></slot>
-      <base-button @click="hideAlert" bgColor="white" 
+      <base-button v-if="closeButton" @click="hideAlert" bgColor="white" 
         icon w="27px">
         <svg width="20" height="20" viewBox="0 0 22 22">
           <path
@@ -21,15 +21,19 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 export default defineComponent({
-  data: () => ({
-    isAlertHidden: false
-  }),
   props: {
     error: { type: Boolean, default: false },
     info: { type: Boolean, default: false },
     message: { type: Boolean, default: false },
     warning: { type: Boolean, default: false },
     duration: { type: Number, default: 5 },
+    autoRemove: { type: Boolean, default: false},
+    closeButton: { type: Boolean,default: false}
+  },
+  data(){
+    return {
+      isAlertShown: true
+    }
   },
   computed: {
     bgColor(): object {
@@ -46,15 +50,12 @@ export default defineComponent({
       };
     },
   },
-  methods: {
-    hideAlert() {
-      this.isAlertHidden = true
-    }
-  },
   mounted() {
-    setTimeout(() => {
-      this.isAlertHidden = true;
-    },this.duration * 1000)
+    if(this.autoRemove) {
+      setTimeout(()=>{
+        this.isAlertShown = false;
+      },this.duration*1000);
+    }
   }
 });
 </script>

@@ -162,7 +162,11 @@ export default defineComponent({
       this.newCategoryField = !this.newCategoryField;
     },
     getCategories() {
-      this.$axios.get("/categories")
+      this.$axios.get("/categories",{
+        params: {
+          q: 'Hello'
+        }
+      })
       .then(res=> {
         this.categories = res.data.categories.map((cat:{name:string;_id:string}) => cat.name)
         

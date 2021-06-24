@@ -5,9 +5,6 @@
         <template #left>
           <span class="font-extrabold">{{leftSeperatorText}}</span>
         </template>
-        <template #center>
-          <span class="hidden sm:block">{{centerSeperatorText}}</span>
-        </template>
         <template #right>
           <div class="items-center hidden space-x-2 sm:flex">
             <base-button @click="scrollLeft" bg-color="#777777" color="#fff">
@@ -37,7 +34,7 @@
       <div ref="category-plan-items-container" class="plan-items">
         <category-plan-item 
           v-for="category in planCategoriesData" 
-          :key="category.id"
+          :key="category._id"
           :plan-item-data="category" />
       </div>
     </container>
@@ -52,11 +49,11 @@ export default defineComponent({
   data(){
     return {
       planCategoriesData: [
-        {id: 'p1',startDate: '2020/04/05',finishDate: '2021/04/25',isFinished: false,img: 'img-1',title: 'Finishing the Vue.js course and master it.',description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quisdolorem labore, repellendus necessitatibus ut perspiciatis alias. Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quis dolor sit amet consectetur adipisicing elit. Est nesciunt quis dolor sit amet consectetur adipisicing elit. Est nesciunt quis"},
-        {id: 'p2',startDate: '2020/04/05',finishDate: '2021/04/25', isFinished: false,img: 'img-2',title: 'Finishing the JS course and master it.',description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quisdolorem labore, repellendus necessitatibus ut perspiciatis alias. Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quis"},
-        {id: 'p3',startDate: '2020/04/05',finishDate: '2021/04/25', isFinished: true,img: 'img-3',title: 'Finishing the React.js course and master it.',description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quisdolorem labore, repellendus necessitatibus ut perspiciatis alias. Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quis"},
-        {id: 'p4',startDate: '2020/04/05',finishDate: '2021/04/25', isFinished: false,img: 'img-4',title: 'Finishing the React.js course and master it.',description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quisdolorem labore, repellendus necessitatibus ut perspiciatis alias. Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quis"},
-        {id: 'p5',startDate: '2020/04/05',finishDate: '2021/04/25', isFinished: true,img: 'img-5',title: 'Finishing the React.js course and master it.',description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quisdolorem labore, repellendus necessitatibus ut perspiciatis alias. Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quis"},
+        {_id: 'p1',startDate: '2020/04/05',endDate: '2021/04/25', status: false,image: 'img-1',title: 'Finishing the Vue.js course and master it.',description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quisdolorem labore, repellendus necessitatibus ut perspiciatis alias. Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quis dolor sit amet consectetur adipisicing elit. Est nesciunt quis dolor sit amet consectetur adipisicing elit. Est nesciunt quis"},
+        {_id: 'p2',startDate: '2020/04/05',endDate: '2021/04/25', status: false,image: 'img-2',title: 'Finishing the JS course and master it.',description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quisdolorem labore, repellendus necessitatibus ut perspiciatis alias. Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quis"},
+        {_id: 'p3',startDate: '2020/04/05',endDate: '2021/04/25', status: true,image: 'img-3',title: 'Finishing the React.js course and master it.',description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quisdolorem labore, repellendus necessitatibus ut perspiciatis alias. Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quis"},
+        {_id: 'p4',startDate: '2020/04/05',endDate: '2021/04/25', status: false,image: 'img-4',title: 'Finishing the React.js course and master it.',description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quisdolorem labore, repellendus necessitatibus ut perspiciatis alias. Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quis"},
+        {_id: 'p5',startDate: '2020/04/05',endDate: '2021/04/25', status: true,image: 'img-5',title: 'Finishing the React.js course and master it.',description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quisdolorem labore, repellendus necessitatibus ut perspiciatis alias. Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt quis"},
       ]
     }
   },

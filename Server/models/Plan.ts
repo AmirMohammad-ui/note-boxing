@@ -3,13 +3,6 @@ import {NewPlan, PlanTypes,Progress} from "../types/plan"
 const Schema = mongoose.Schema
 import * as Validator from "validatorjs"
 
-// id: "p1",
-// startDate: "2020/04/05",
-// finishDate: "2021/04/25",
-// isFinished: false,
-// img: "img-1",
-// title: "Finishing the Vue.js course and master it.",
-// description:
 const schema = new Schema({
   title: {
     type: String,
@@ -57,7 +50,7 @@ const schema = new Schema({
   timestamps: true,
   storeSubdocValidationError: false
 })
-
+schema.get("startDate")
 interface ErrMsg {
   type: string,
   invalid_part?: string | number,

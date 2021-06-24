@@ -1,10 +1,9 @@
-import { Request, Response } from "express"
+import { query, Request, Response } from "express"
 import { PlanTypes, Progress ,NewPlan,File} from "../types/plan"
 import * as path from "path"
 import Plan , {validateData,Category} from "../models/plan"
 import ErrorHandler from "../utilities/ErrorHandler"
-import isDefined from "../utilities/isDefined"
-
+import {endOfYesterday,startOfTomorrow,startOfMonth,endOfMonth,endOfYear,startOfYear} from "date-fns"
 
 // POST /new-plan
 export const createPlan = async(req:Request,res:Response,next) => {
@@ -46,42 +45,60 @@ export const createPlan = async(req:Request,res:Response,next) => {
 }
 // GET /today
 export const todayPlan = async(req:Request,res:Response,next) => {
-  const date = new Date()
-  const todaysPlan = await Plan.findOne().and([
-    {"startDate.date":date.getDate()},
-    {"startDate.month":date.getMonth()+1},
-    {"startDate.year":date.getFullYear()}
-  ])
-  if(!todaysPlan) return next (new ErrorHandler("There is no plan for today.",404))
+  const yesterday = endOfYesterday()
+  const tomorrow = startOfTomorrow()
+  const todaysPlan = await Plan.find({
+    type: PlanTypes.DAILY,
+    startDate: {
+      $gte: yesterday,
+      $lte: tomorrow
+    }
+  })
+  if(todaysPlan.length === 0) return next (new ErrorHandler("There is no plan for today.",404))
   res.status(200).json({
     success: 1,
-    message: "Data successfully fetched.",
-    data:todaysPlan
+    length: todaysPlan.length,
+    message: `${todaysPlan.length} data found.`,
+    plans: todaysPlan
   })
 }
 
 // GET /current-month
 export const currentMonthPlans = async(req:Request,res:Response,next) => {
-  const date = new Date()
-  const currentMonth = date.getMonth() + 1
-  const plans = await Plan.find({"startDate.month":currentMonth})
-  console.log(plans)
+  const startCurrentOfMonth = startOfMonth(new Date())
+  const endCurrentOfMonth = endOfMonth(new Date())
+  const plans = await Plan.find({
+    type: PlanTypes.MONTHLY,
+    startDate: {
+      $gte: startCurrentOfMonth,
+      $lte: endCurrentOfMonth
+    }
+  })
+  if(plans.length === 0) return next (new ErrorHandler("There is no plan for this month.",404))
   res.status(200).json({
     success: 1,
-    message: "",
-    data: plans
+    length: plans.length,
+    message: `${plans.length} data found.`,
+    plans
   })
 }
 // GET /current-year
 export const currentYearPlans = async(req:Request,res:Response,next) => {
-  const date = new Date()
-  const currentYear = date.getFullYear()
-  const plans = await Plan.find({"startDate.year":currentYear})
-  console.log(plans)
+  const startCurrentOfYear = startOfYear(new Date())
+  const endCurrentOfYear = endOfYear(new Date())
+  const plans = await Plan.find({
+    type: PlanTypes.YEARLY,
+    startDate: {
+      $gte: startCurrentOfYear,
+      $lte: endCurrentOfYear
+    }
+  })
+  if(plans.length === 0) return next (new ErrorHandler("There is no plan for this year.",404))
   res.status(200).json({
     success: 1,
-    message: "",
-    data: plans
+    length: plans.length,
+    message: `${plans.length} data found.`,
+    plans
   })
 }
 // GET /daily
@@ -119,7 +136,6 @@ export const yearlyPlans = async(req:Request, res:Response,next) => {
     data: plans
   })
 }
-// GET /categories
 // DELETE /delete-plans
 export const deletePlans = async(req:Request,res:Response,next) => {
   await Plan.deleteMany({})
@@ -146,12 +162,37 @@ export const newCategory = async(req:Request,res:Response,next) => {
   })
 }
 
+// GET /categories/:p
 export const getCategories = async(req:Request,res:Response,next) => {
-  const categories = await Category.find().select("name _id").sort("1")
-  if(!categories || categories.length === 0) return next(new ErrorHandler("No Categories have been created yet.",404))
+  let PAGE = 1;
+  let LIMIT = 5
+  let categoriesPlans;
+  const queries = req.query
+  if(queries.select === "name") {
+    const categories = await Category.find().select("name _id").sort("1")
+    if(!categories || categories.length === 0) return next(new ErrorHandler("No Categories have been created yet.",404))
+    res.status(200).json({
+      succuss: 1,
+      message: "Categories fetched successfully",
+      categories
+    })
+    return
+  }
+  if(typeof +queries.page === 'number'){
+    PAGE = +queries.page
+  }
+  if(typeof +queries.limit === 'number'){
+    LIMIT = +queries.limit
+  }
+  categoriesPlans = await Category.find().sort("startDate").skip((PAGE-1)*LIMIT).limit(LIMIT)
+  if(queries.select) {
+    const selectedFields = (queries.select as string).split(",").join(" ")
+    categoriesPlans = await Category.find().sort("startDate").skip((PAGE-1)*LIMIT).limit(LIMIT).select(selectedFields)
+  }
   res.status(200).json({
-    succuss: 1,
-    message: "Categories fetched successfully",
-    categories
+    success: 1,
+    length: categoriesPlans.length,
+    message: `${categoriesPlans.length} categories found`,
+    categories: categoriesPlans
   })
 }
