@@ -50,7 +50,6 @@ const schema = new Schema({
   timestamps: true,
   storeSubdocValidationError: false
 })
-schema.get("startDate")
 interface ErrMsg {
   type: string,
   invalid_part?: string | number,

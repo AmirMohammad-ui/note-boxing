@@ -8,28 +8,40 @@
         :info="alertType === 'info'"
         :message="alertType === 'message'"
       >
-        <template #header> ERROR </template>
-        <template #default> Something failed during the compilation. </template>
+        <template #header><span class="uppercase">{{ alertType }}</span></template>
+        <template #default>{{ alertMessage }}</template>
       </base-alert>
     </div>
     <div class="mt-10">
-      <the-plan
-        left-seperator-text="Today's Plan"
-        :right-seperator-text="new Date().toLocaleDateString('en-US')"
-        :data="todaysPlan"
-      />
-      <the-plan
-        left-seperator-text="Current Month Plan"
-        :right-seperator-text="new Date().toLocaleString('en-US', { month: 'long' })"
-        :data="currentMonthPlan"
-        class="mb-10"
-      />
-      <the-plan
-        left-seperator-text="Current Year Plan"
-        :right-seperator-text="new Date().getFullYear()"
-        :data="currentYearPlan"
-        class="mb-10"
-      />
+      <ul v-if="todaysPlan.length > 0">
+        <li>
+          <the-plan
+            left-seperator-text="Today's Plan"
+            :right-seperator-text="new Date().toLocaleDateString('en-US')"
+            :data="todaysPlan"
+          />
+        </li>
+      </ul>  
+      <ul v-if="currentMonthPlan.length > 0" class="mt-10">
+        <li>
+          <the-plan
+            left-seperator-text="Current Month Plan"
+            :right-seperator-text="new Date().toLocaleString('en-US', { month: 'long' })"
+            :data="currentMonthPlan"
+            class="mb-10"
+          />
+        </li>
+      </ul>  
+      <ul v-if="currentYearPlan.length > 0" class="mt-10">
+        <li>
+          <the-plan
+            left-seperator-text="Current Year Plan"
+            :right-seperator-text="new Date().getFullYear()"
+            :data="currentYearPlan"
+            class="mb-10"
+          />
+        </li>
+      </ul>  
     </div>
     <container>
       <div class="relative banner">
@@ -82,26 +94,8 @@ export default defineComponent({
     return {
       activeTable: "daily",
       todaysPlan: [],
-      currentMonthPlan: {
-        _id: "p2",
-        startDate: "2020/04/05",
-        endDate: "2021/04/25",
-        status: "finished",
-        image: "img-2.jpg",
-        title: "Finishing the Vue.js course and master it.",
-        description:
-          "Finishing the Vue.js and reading the whole documentaion in vue.js official website and in that way I'll master it.",
-      },
-      currentYearPlan: {
-        _id: "p3",
-        startDate: "2020/04/05",
-        endDate: "2021/04/25",
-        status: "in-progress",
-        image: "img-3.jpg",
-        title: "Finishing the Vue.js course and master it.",
-        description:
-          "Finishing the Vue.js and reading the whole documentaion in vue.js official website and in that way I'll master it.",
-      },
+      currentMonthPlan: [],
+      currentYearPlan: [],
     };
   },
   methods: {
@@ -109,12 +103,14 @@ export default defineComponent({
       this.$axios
         .get("/today")
         .then((res) => {
-          console.log(res);
           if(res.data.success === 1) {
-            this.todaysPlan = res.data.plans[0]
+            this.todaysPlan = res.data.plans
+          } else {
+            this.showAlert(res.data.message,"error")
           }
         })
         .catch((err) => {
+          this.showAlert(err.response.message, "error");
           console.error(err.response);
         });
     },
@@ -122,12 +118,14 @@ export default defineComponent({
       this.$axios
         .get("/current-month")
         .then((res) => {
-          console.log(res);
           if (res.data.success === 0) {
             this.showAlert(res.data.message, "error");
+            return
           }
+          this.currentMonthPlan = res.data.plans
         })
         .catch((err) => {
+          this.showAlert(err.response.message, "error");
           console.error(err.response);
         });
     },
@@ -135,9 +133,14 @@ export default defineComponent({
       this.$axios
         .get("/current-year")
         .then((res) => {
-          console.log(res);
+          if(res.data.success === 0) {
+            this.showAlert(res.data.message, "error")
+            return
+          }
+          this.currentYearPlan = res.data.plans
         })
         .catch((err) => {
+          this.showAlert(err.response.message, "error")
           console.error(err.response);
         });
     },

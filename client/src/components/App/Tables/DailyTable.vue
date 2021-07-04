@@ -54,8 +54,12 @@
       </tr>
     </table>
     <div class="w-full date-controller">
-      <div class="flex flex-col items-center space-x-0 space-y-6 sm:space-x-6 sm:justify-end sm:space-y-0 sm:flex-row">
-        <div class="flex flex-col items-center justify-center space-x-0 space-y-6 sm:space-x-10 sm:flex-row sm:space-y-0 sm:justify-end">
+      <div
+        class="flex flex-col items-center space-x-0 space-y-6 sm:space-x-6 sm:justify-end sm:space-y-0 sm:flex-row"
+      >
+        <div
+          class="flex flex-col items-center justify-center space-x-0 space-y-6 sm:space-x-10 sm:flex-row sm:space-y-0 sm:justify-end"
+        >
           <div class="flex items-center space-x-4">
             <base-button @click="fetchNewMonthPlan('prev')" bg-color="#fff">
               <svg class="my-2" width="15" height="17" viewBox="0 0 15 17">
@@ -117,15 +121,15 @@
 </template>
 <script lang="ts">
 interface DailyPlan {
-  _id: string; 
+  _id: string;
   wd_name: string;
-  wd_date: number; 
-  wd_plan: string; 
+  wd_date: number;
+  wd_plan: string;
   wd_menu: boolean;
 }
 import planControls from "../../../mixins/planControls";
 
-import {defineComponent} from "vue"
+import { defineComponent } from "vue";
 export default defineComponent({
   mixins: [planControls],
   props: ["data"],
@@ -151,7 +155,7 @@ export default defineComponent({
     currentDate(): number {
       return new Date().getDate();
     },
-    thisMonthLength():number {
+    thisMonthLength(): number {
       return +new Date(this.date.setDate(-1)).toLocaleString("en-US", { day: "numeric" });
     },
   },
@@ -172,7 +176,7 @@ export default defineComponent({
       this.currentYear = new Date().getFullYear();
       this.watchMonthAndYear();
     },
-    fetchNewYearPlans(nextOrPrev:string) {
+    fetchNewYearPlans(nextOrPrev: string) {
       /* Fetch current date data here and call this.getDaty() */
       console.log("Fetching...");
       if (nextOrPrev === "next") {
@@ -189,7 +193,7 @@ export default defineComponent({
         this.isGoToCurrentButton = true;
       }
     },
-    fetchNewMonthPlan(nextOrPrev:string) {
+    fetchNewMonthPlan(nextOrPrev: string) {
       /* Fetch current date data here and call this.getDaty() */
       console.log("Fetching...");
       if (nextOrPrev === "next") {
@@ -215,7 +219,7 @@ export default defineComponent({
       }
     },
     toggleMenu(date: number) {
-      this.MonthsDailyPlan.forEach((wd:DailyPlan, inx:number) => {
+      this.MonthsDailyPlan.forEach((wd: DailyPlan, inx: number) => {
         if (wd.wd_date === date) {
           this.MonthsDailyPlan.splice(inx, 1, {
             ...wd,
@@ -224,7 +228,7 @@ export default defineComponent({
         }
       });
     },
-    getWeekday(d:number):string {
+    getWeekday(d: number): string {
       const day = new Date(this.date.setDate(d)).toLocaleString("en-US", {
         weekday: "long",
       });
@@ -249,5 +253,5 @@ export default defineComponent({
   mounted() {
     this.getDays();
   },
-})
+});
 </script>
