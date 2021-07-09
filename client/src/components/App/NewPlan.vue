@@ -208,6 +208,18 @@ export default defineComponent({
         })
         .then((res) => {
           console.log(res.data.message);
+          switch(this.optionType) { 
+            case "daily": 
+              (this as any).$store.commit("fetchTodaysPlans")
+              break
+            case "monthly": 
+              (this as any).$store.commit("fetchCurrentMonthPlans")
+              break
+            case "yearly":
+              (this as any).$store.commit("fetchCurrentYearPlans")
+              break
+          } 
+          this.$emit('close-modal')
         })
         .catch(err => {
           console.log(err.response)

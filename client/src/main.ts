@@ -2,6 +2,7 @@ import { createApp } from "vue"
 import router from "./router/index"
 import axios from "axios"
 import App from "./App.vue"
+import store from "./store/index"
 import BaseInput from "./components/UI/BaseInput.vue"
 import BaseTextarea from "./components/UI/BaseTextarea.vue"
 import BaseButton from "./components/UI/BaseButton.vue"
@@ -26,4 +27,5 @@ app.component("seperator", Seperator)
 app.component("base-modal", BaseModal)
 app.component("base-alert", BaseAlert)
 app.use(router)
+app.use(store)
 app.mount("#app")

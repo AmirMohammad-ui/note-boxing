@@ -181,10 +181,14 @@ export default defineComponent({
       finishedStatus: "finished",
       inProgressStatus: "in-progress",
       editable: true,
-      plans_length: this.data.length,
       plans_currentIndex: 0,
       currentPlanId: ''
     };
+  },
+  computed: {
+    plans_length():number {
+      return this.data.length
+    }
   },
   props: [
     "leftSeperatorText",

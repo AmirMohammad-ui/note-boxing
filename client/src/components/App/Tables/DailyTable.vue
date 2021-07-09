@@ -128,7 +128,7 @@ interface DailyPlan {
   wd_menu: boolean;
 }
 import planControls from "../../../mixins/planControls";
-
+import { addDays,getDaysInMonth,startOfMonth } from "date-fns"
 import { defineComponent } from "vue";
 export default defineComponent({
   mixins: [planControls],
@@ -156,7 +156,7 @@ export default defineComponent({
       return new Date().getDate();
     },
     thisMonthLength(): number {
-      return +new Date(this.date.setDate(-1)).toLocaleString("en-US", { day: "numeric" });
+      return getDaysInMonth(new Date());
     },
   },
   methods: {
@@ -195,19 +195,35 @@ export default defineComponent({
     },
     fetchNewMonthPlan(nextOrPrev: string) {
       /* Fetch current date data here and call this.getDaty() */
-      console.log("Fetching...");
+      const currentYear = new Date().getFullYear()
       if (nextOrPrev === "next") {
-        if (this.currentMonthNumber > 11) {
-          this.currentMonthNumber = 0;
-        } else {
-          this.currentMonthNumber += 1;
-        }
+        this.currentMonthNumber++
+        this.currentYear = new Date(currentYear,this.currentMonthNumber,1).getFullYear()
+        this.$axios.get("/daily",{
+          params: {
+            date: new Date(currentYear,this.currentMonthNumber,1)
+          }
+        })
+          .then(res=> {
+            console.log(res.data)
+          })
+          .catch(err=> {
+            console.error(err.response.data)
+          })
       } else if (nextOrPrev === "prev") {
-        if (this.currentMonthNumber < 0) {
-          this.currentMonthNumber = 11;
-        } else {
-          this.currentMonthNumber -= 1;
-        }
+        this.currentMonthNumber--;
+        this.currentYear = new Date(currentYear,this.currentMonthNumber,1).getFullYear()
+        this.$axios.get("/daily",{ 
+          params: {
+            date: new Date(currentYear,this.currentMonthNumber,1)
+          }
+        })
+          .then(res=> {
+            console.log(res.data)
+          })
+          .catch(err=> {
+            console.error(err.response.data)
+          })
       }
       this.watchMonthAndYear();
       if (
@@ -229,9 +245,7 @@ export default defineComponent({
       });
     },
     getWeekday(d: number): string {
-      const day = new Date(this.date.setDate(d)).toLocaleString("en-US", {
-        weekday: "long",
-      });
+      const day = addDays(startOfMonth(new Date()),d-1).toLocaleDateString("en-US",{weekday: 'long'});
       return day;
     },
     getDays() {
@@ -252,6 +266,7 @@ export default defineComponent({
   },
   mounted() {
     this.getDays();
+    console.log(this.thisMonthLength)
   },
 });
 </script>

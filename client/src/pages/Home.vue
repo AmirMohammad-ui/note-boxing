@@ -87,71 +87,38 @@ import { defineComponent } from "vue";
 import TheTable from "../components/App/TheTable.vue";
 import showAlert from "../mixins/showAlert";
 import ThePlan from "../components/App/ThePlan.vue";
+import { mapGetters } from "vuex"
 export default defineComponent({
   mixins: [showAlert],
   components: { TheTable, ThePlan },
   data() {
     return {
       activeTable: "daily",
-      todaysPlan: [],
-      currentMonthPlan: [],
-      currentYearPlan: [],
     };
   },
+  computed: mapGetters([
+    "todaysPlan",
+    "currentMonthPlan",
+    "currentYearPlan"
+  ]),
   methods: {
     getTodaysPlan() {
-      this.$axios
-        .get("/today")
-        .then((res) => {
-          if(res.data.success === 1) {
-            this.todaysPlan = res.data.plans
-          } else {
-            this.showAlert(res.data.message,"error")
-          }
-        })
-        .catch((err) => {
-          this.showAlert(err.response.message, "error");
-          console.error(err.response);
-        });
+      (this.$store as any).commit("fetchTodaysPlans")
     },
     getCurrentMonthPlan() {
-      this.$axios
-        .get("/current-month")
-        .then((res) => {
-          if (res.data.success === 0) {
-            this.showAlert(res.data.message, "error");
-            return
-          }
-          this.currentMonthPlan = res.data.plans
-        })
-        .catch((err) => {
-          this.showAlert(err.response.message, "error");
-          console.error(err.response);
-        });
+      (this.$store as any).commit("fetchCurrentMonthPlans")
     },
     getCurrentYearPlan() {
-      this.$axios
-        .get("/current-year")
-        .then((res) => {
-          if(res.data.success === 0) {
-            this.showAlert(res.data.message, "error")
-            return
-          }
-          this.currentYearPlan = res.data.plans
-        })
-        .catch((err) => {
-          this.showAlert(err.response.message, "error")
-          console.error(err.response);
-        });
+      (this.$store as any).commit("fetchCurrentYearPlans")
     },
   },
   created() {
     this.getCurrentYearPlan();
     this.getCurrentMonthPlan();
     this.getTodaysPlan();
-  },
-  mounted() {
-    this.hideAlert(7);
+    this.$axios.get("/daily").then(res => console.log(res)).catch(err=> console.error(err))
+    this.$axios.get("/monthly").then(res => console.log(res)).catch(err=> console.error(err))
+    this.$axios.get("/yearly").then(res => console.log(res)).catch(err=> console.error(err))
   },
 });
 </script>
