@@ -5,20 +5,20 @@
         <th class="w-1/12">Years</th>
         <th>Plans</th>
       </tr>
-      <tr v-for="{ y_number, y_plan, y_menu, _id } in tenYearsAhead" :key="y_number">
+      <tr v-for="{ year, title, menu, _id } in renderedData" :key="year">
         <td class="relative">
-          <div :class="{ current: y_number === currentYear }"></div>
-          {{ y_number }}
+          <div :class="{ current: year === currentYear }"></div>
+          {{ year }}
         </td>
         <td class="relative">
-          {{ y_plan }}
-          <div v-if="y_plan" class="absolute top-0 right-0">
+          {{ title }}
+          <div v-if="title" class="absolute top-0 right-0">
             <div
-              @click="toggleMenu(y_number)"
+              @click="toggleMenu(year)"
               class="absolute"
-              :class="{ 'info-button': !y_menu, 'info-button-close': y_menu }"
+              :class="{ 'info-button': !menu, 'info-button-close': menu }"
             >
-              <svg v-if="!y_menu" class="" width="5" height="20" viewBox="0 0 5 20">
+              <svg v-if="!menu" class="" width="5" height="20" viewBox="0 0 5 20">
                 <rect y="0.826782" width="3" height="3" fill="#cdcdcd" />
                 <rect y="8.25244" width="3" height="3" fill="#cdcdcd" />
                 <rect y="15.678" width="3" height="3" fill="#cdcdcd" />
@@ -30,7 +30,7 @@
                 />
               </svg>
             </div>
-            <div v-if="y_menu" class="plan-info">
+            <div v-if="menu" class="plan-info">
               <div class="flex items-center space-x-2">
                 <base-button  @click="editPlan(_id)" bg-color="#777" color="#fff"
                   ><span class="pb-1 text-sm">Edit</span></base-button
@@ -52,21 +52,26 @@
 <script lang="ts">
 interface YearlyPlan {
   _id: string; 
-  y_number: number; 
-  y_plan: string; 
-  y_menu: boolean;
+  year: number; 
+  title: string; 
+  menu: boolean;
+  status: string;
+  startDate: Date;
 }
 import planControls from "../../../mixins/planControls"
 import {defineComponent} from "vue"
+import {mapGetters} from "vuex"
 export default defineComponent({
   mixins: [planControls],
-  props: ["data"],
   data(){
     return {
-      tenYearsAhead: [] as YearlyPlan[]
+      renderedData: [] as YearlyPlan[]
     }
   },
   computed: {
+    ...mapGetters({
+      data: "plans/yearlyPlans/getPlans" 
+    }),
     currentYear():number{
       const date = new Date()
       const currentYear = date.getFullYear() 
@@ -75,35 +80,51 @@ export default defineComponent({
   },
   methods: {
     toggleMenu(year:number) {
-      this.tenYearsAhead.forEach((y:YearlyPlan,inx:number) => {
-        if(y.y_number === year) {
-          this.tenYearsAhead.splice(inx,1,{
+      this.renderedData.forEach((y:YearlyPlan,inx:number) => {
+        if(y.year === year) {
+          this.renderedData.splice(inx,1,{
             ...y,
-            y_menu: !y.y_menu,
+            menu: !y.menu,
           })
         }
       })
     },
-    getTenYearsAhead() {
+    getData(year: number) {
+      (this.$store as any).dispatch("plans/yearlyPlans/fetchPlans",{year})
+        .then(()=>{
+          this.getYears()
+        })
+        .catch((err:any)=>{
+          if(err.statusCode === 404) {
+            this.getYears()
+          }
+        })
+    },
+    getYears() {
+      this. renderedData = []
       const date = new Date()
       for(let year = 0;year<10;year++){
         const y = +(new Date(date.setFullYear(date.getFullYear())).toLocaleString("en-US",{year:'numeric'})) + (year === 0?0:year)
-        const newYear = {
-          y_number: y,
-          y_menu: false,
+        const plan = {
+          year: y,
+          menu: false,
         } as YearlyPlan
-        this.data.forEach((p:YearlyPlan) => {
-          if(p.y_number === y){
-            newYear.y_plan = p.y_plan
-            newYear._id = p._id
-          }
-        })
-        this.tenYearsAhead.push(newYear)
+        if(this.data.length > 0) {
+          this.data.forEach((p:YearlyPlan) => {
+            const extractedYear = new Date(p.startDate).getFullYear()
+            if(extractedYear === y){
+              plan.title = p.title
+              plan.status = p.status
+              plan._id = p._id
+            }
+          })
+        }
+        this.renderedData.push(plan)
       }
     }
   },
   mounted() {
-    this.getTenYearsAhead()
+    this.getData(this.currentYear)
   }
 })
 </script>

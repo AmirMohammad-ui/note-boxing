@@ -210,15 +210,19 @@ export default defineComponent({
           console.log(res.data.message);
           switch(this.optionType) { 
             case "daily": 
-              (this as any).$store.commit("fetchTodaysPlans")
+              (this as any).$store.dispatch("plans/currentPlans/fetchTodaysPlans");
+              (this as any).$store.dispatch("plans/dailyPlans/fetchPlans");
               break
             case "monthly": 
-              (this as any).$store.commit("fetchCurrentMonthPlans")
+              (this as any).$store.dispatch("plans/currentPlans/fetchCurrentMonthPlans");
+              (this as any).$store.dispatch("plans/monthlyPlans/fetchPlans");
               break
             case "yearly":
-              (this as any).$store.commit("fetchCurrentYearPlans")
+              (this as any).$store.dispatch("plans/currentPlans/fetchCurrentYearPlans");
+              (this as any).$store.dispatch("plans/yearlyPlans/fetchPlans");
               break
           } 
+
           this.$emit('close-modal')
         })
         .catch(err => {

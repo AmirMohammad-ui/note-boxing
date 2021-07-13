@@ -1,9 +1,9 @@
-import { query, Request, Response } from "express"
+import {  Request, Response } from "express"
 import { PlanTypes, Progress ,NewPlan,File} from "../types/plan"
 import * as path from "path"
 import Plan , {validateData,Category} from "../models/plan"
 import ErrorHandler from "../utilities/ErrorHandler"
-import {endOfYesterday,startOfTomorrow,startOfMonth,endOfMonth,endOfYear,startOfYear} from "date-fns"
+import {endOfYesterday,startOfTomorrow,startOfMonth,addYears,endOfMonth,endOfYear,startOfYear} from "date-fns"
 
 // POST /new-plan
 export const createPlan = async(req:Request,res:Response,next) => {
@@ -36,7 +36,6 @@ export const createPlan = async(req:Request,res:Response,next) => {
     category.plans.push(newPlan._id)
     await category.save()
   })
-  console.log(newPlan)
   res.status(201).json({
     succuss: 1,
     message: "Plan successfully created.",
@@ -58,7 +57,7 @@ export const todayPlan = async(req:Request,res:Response,next) => {
   res.status(200).json({
     success: 1,
     length: todaysPlan.length,
-    message: `${todaysPlan.length} data found.`,
+    message: `Found ${todaysPlan.length} plans.`,
     plans: todaysPlan
   })
 }
@@ -78,7 +77,7 @@ export const currentMonthPlans = async(req:Request,res:Response,next) => {
   res.status(200).json({
     success: 1,
     length: plans.length,
-    message: `${plans.length} data found.`,
+    message: `Found ${plans.length} plans.`,
     plans
   })
 }
@@ -97,43 +96,75 @@ export const currentYearPlans = async(req:Request,res:Response,next) => {
   res.status(200).json({
     success: 1,
     length: plans.length,
-    message: `${plans.length} data found.`,
+    message: `Found ${plans.length} plans.`,
     plans
   })
 }
 // GET /daily
 export const dailyPlan = async(req:Request,res:Response,next) => {
-  const date = new Date()
-  const daily = date.getDate()
-  const plans = await Plan.find({"startDate.date":daily})
-  console.log(plans)
-  res.status(200).json({
+  let startCurrentOfMonth = startOfMonth(new Date())
+  let endCurrentOfMonth = endOfMonth(new Date())
+  if(req.query.date){
+    startCurrentOfMonth = startOfMonth(new Date(req.query.date as string))
+    endCurrentOfMonth = endOfMonth(new Date(req.query.date as string))
+  }
+  const plans = await Plan.find({
+    type:PlanTypes.DAILY,
+    startDate: {
+      $gte: startCurrentOfMonth,
+      $lte: endCurrentOfMonth
+    }
+  })
+  if(plans.length === 0) return next (new ErrorHandler("No plan for current month.",404))
+  res.status(200).json({ 
     success: 1,
-    message: "",
-    data: plans
+    message: `Found ${plans.length} plans.`,
+    plans
   })
 }
 // GET /monthly
 export const monthlyPlans = async(req:Request,res:Response,next) => {
-  const date = new Date()
-  const monthly = date.getMonth()
-  const plans = await Plan.find({"startDate.month":monthly})
-  console.log(plans)
+  let startCurrentOfYear = startOfYear(new Date())
+  let endCurrentOfYear = endOfYear(new Date())
+  if(req.query.date){
+    startCurrentOfYear = startOfYear(new Date(req.query.date as string))
+    endCurrentOfYear = endOfYear(new Date(req.query.date as string))
+  }
+  const plans = await Plan.find({
+    type: PlanTypes.MONTHLY,
+    startDate: {
+      $gte: startCurrentOfYear,
+      $lte: endCurrentOfYear
+    }
+  })
+  if(plans.length === 0) return next (new ErrorHandler("No plan for current year.",404))
   res.status(200).json({
     success: 1,
-    message: "",
-    data: plans
+    message: `Found ${plans.length} plans.`,
+    plans
   })
 }
 // GET /yearly
 export const yearlyPlans = async(req:Request, res:Response,next) => {
-  const date = new Date()
-  const currentYear = date.getFullYear()
-  const plans = await Plan.find({"startDate.year": {$gte:currentYear,$lte: currentYear+10}})
+  let startCurrentOfYear = startOfYear(new Date())
+  let endCurrentOfYear = addYears(startOfYear(new Date()),10)
+  if(req.query.date) {
+    startCurrentOfYear = startOfYear(new Date(req.query.date as string))
+    endCurrentOfYear = addYears(startOfYear(new Date(req.query.date as string)),10)
+  }
+  const plans = await Plan.find({
+    type: PlanTypes.YEARLY,
+    startDate: {
+      $gte: startCurrentOfYear,
+      $lte: endCurrentOfYear
+    }
+  })
+  if(plans.length === 0) return next (new ErrorHandler("No plan for 10 years ahead.",404))
+  console.log(plans)
   res.status(200).json({
     success: 1,
-    message: plans.length > 0 ? `Found ${plans.length} plans.`:"No plan found.",
-    data: plans
+    message: `Found ${plans.length} plans.`,
+    plans
   })
 }
 // DELETE /delete-plans

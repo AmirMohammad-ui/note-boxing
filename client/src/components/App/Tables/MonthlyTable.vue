@@ -5,20 +5,20 @@
         <th class="w-2/12">Months</th>
         <th>Note</th>
       </tr>
-      <tr v-for="{ m_name, m_plan, m_menu, _id } in everyMonthPlan" :key="m_name">
+      <tr v-for="{ month, title, month_number,menu, _id } in renderedData" :key="_id">
         <td class="relative">
-          <div :class="{ current: m_name === currentMonth }"></div>
-          {{ m_name }}
+          <div :class="{ current: month === currentMonth }"></div>
+          {{ month }}
         </td>
         <td class="relative">
-          {{ m_plan }}
-          <div v-if="m_plan" class="absolute top-0 right-0">
+          {{ title }}
+          <div v-if="title" class="absolute top-0 right-0">
             <div
-              @click="toggleMenu(m_name)"
+              @click="toggleMenu(month_number)"
               class="absolute"
-              :class="{ 'info-button': !m_menu, 'info-button-close': m_menu }"
+              :class="{ 'info-button': !menu, 'info-button-close': menu }"
             >
-              <svg v-if="!m_menu" class="" width="5" height="20" viewBox="0 0 5 20">
+              <svg v-if="!menu" class="" width="5" height="20" viewBox="0 0 5 20">
                 <rect y="0.826782" width="3" height="3" fill="#cdcdcd" />
                 <rect y="8.25244" width="3" height="3" fill="#cdcdcd" />
                 <rect y="15.678" width="3" height="3" fill="#cdcdcd" />
@@ -30,7 +30,7 @@
                 />
               </svg>
             </div>
-            <div v-if="m_menu" class="plan-info">
+            <div v-if="menu" class="plan-info">
               <div class="flex items-center space-x-2">
                 <base-button @click="editPlan(_id)" bg-color="#777" color="#fff"
                   ><span class="pb-1 text-sm">Edit</span></base-button
@@ -95,19 +95,21 @@
 <script lang="ts">
 interface MonthlyPlan {
   _id: string; 
-  m_number: number; 
-  m_name: string; 
-  m_plan: string; 
-  m_menu: boolean;
+  status: boolean;
+  month: string; 
+  month_number: number;
+  title: string; 
+  startDate: Date;
+  menu: boolean;
 }
 import planControls from "../../../mixins/planControls"
 import {defineComponent} from "vue"
+import {mapGetters} from "vuex"
 export default defineComponent({
   mixins: [planControls],
-  props: ["data"],
   data(){
     return {
-      everyMonthPlan: [] as MonthlyPlan[],
+      renderedData: [] as MonthlyPlan[],
       currentYear: new Date().getFullYear(),
       isGoToCurrentButton: false
     }
@@ -118,6 +120,9 @@ export default defineComponent({
     }
   },
   computed: {
+    ...mapGetters({
+      data: "plans/monthlyPlans/getPlans"
+    }),
     today():number {
       const date = new Date();
       return date.getDate();
@@ -128,9 +133,8 @@ export default defineComponent({
   },
   methods: {
     goToCurrentYear() {
-      /* Fetch current date data here and call this.getMonths() */
-      console.log('Fetching...')
       this.currentYear = new Date().getFullYear()
+      this.getData(this.currentYear)
       this.watchYear()
     },
     watchYear() {
@@ -141,12 +145,12 @@ export default defineComponent({
       }
     },
     fetchNewYearPlans(nextOrPrev:string) {
-      /* Fetch current date data here and call this.getMonths() */
-      console.log('Fetching...')
       if (nextOrPrev === "next") {
         this.currentYear += 1;
+        this.getData(this.currentYear)
       } else if (nextOrPrev === "prev") {
         this.currentYear -= 1;
+        this.getData(this.currentYear)
       }
       this.watchYear();
       if (
@@ -156,37 +160,53 @@ export default defineComponent({
         this.isGoToCurrentButton = true;
       }
     },
-    toggleMenu(month:string) {
-      this.everyMonthPlan.forEach((m:MonthlyPlan,inx:number) => {
-        if(m.m_name === month) {
-          this.everyMonthPlan.splice(inx,1,{
+    toggleMenu(monthNum:number) {
+      this.renderedData.forEach((m:MonthlyPlan,inx:number) => {
+        if(m.month_number === monthNum) {
+          this.renderedData.splice(inx,1,{
             ...m,
-            m_menu: !m.m_menu,
+            menu: !m.menu,
           })
         }
       })
     },
-    getMonths() {
-      const date = new Date();
-      for (let monthNumber = 0;monthNumber < 12;monthNumber++) {
-        const month = new Date(date.setMonth(monthNumber)).toLocaleString("en-US",{month: 'long'})
-        const monthObj = {
-          m_name: month,
-          m_number: monthNumber+1,
-          m_menu: false
-        } as MonthlyPlan
-        this.data.forEach((p:MonthlyPlan) => {
-          if(p.m_number===monthNumber+1) {
-            monthObj.m_plan = p.m_plan
-            monthObj._id = p._id
+    getData(year: number){
+      (this.$store as any).dispatch("plans/monthlyPlans/fetchPlans",{year})
+        .then(() => {
+          this.getMonths()
+        })
+        .catch((err:any)=> {
+          if(err.statusCode === 404) {
+            this.getMonths()
           }
         })
-        this.everyMonthPlan.push(monthObj)
+    },
+    getMonths() {
+      const date = new Date();
+      this.renderedData = []
+      for (let m = 0;m < 12;m++) {
+        const month = new Date(date.setMonth(m)).toLocaleString("en-US",{month: 'long'})
+        const plan = {
+          month,
+          month_number: m+1,
+          menu: false
+        } as MonthlyPlan
+        if(this.data.length > 0){
+          this.data.forEach((p:MonthlyPlan) => {
+            const month_number = new Date(p.startDate).getMonth() 
+            if(month_number===m+1) {
+              plan.title = p.title
+              plan._id = p._id
+              plan.status = p.status
+            }
+          })
+        }
+        this.renderedData.push(plan)
       }
     }
   },
   mounted() {
-    this.getMonths()
+    this.getData(this.currentYear)
   }
 })
 </script>

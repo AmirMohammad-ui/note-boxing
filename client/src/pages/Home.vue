@@ -96,29 +96,26 @@ export default defineComponent({
       activeTable: "daily",
     };
   },
-  computed: mapGetters([
-    "todaysPlan",
-    "currentMonthPlan",
-    "currentYearPlan"
-  ]),
+  computed: mapGetters({
+    todaysPlan:"plans/currentPlans/todaysPlan",
+    currentMonthPlan:"plans/currentPlans/currentMonthPlan",
+    currentYearPlan:"plans/currentPlans/currentYearPlan"
+  }),
   methods: {
     getTodaysPlan() {
-      (this.$store as any).commit("fetchTodaysPlans")
+      (this.$store as any).dispatch("plans/currentPlans/fetchTodaysPlans")
     },
     getCurrentMonthPlan() {
-      (this.$store as any).commit("fetchCurrentMonthPlans")
+      (this.$store as any).dispatch("plans/currentPlans/fetchCurrentMonthPlans")
     },
     getCurrentYearPlan() {
-      (this.$store as any).commit("fetchCurrentYearPlans")
+      (this.$store as any).dispatch("plans/currentPlans/fetchCurrentYearPlans")
     },
   },
   created() {
     this.getCurrentYearPlan();
     this.getCurrentMonthPlan();
     this.getTodaysPlan();
-    this.$axios.get("/daily").then(res => console.log(res)).catch(err=> console.error(err))
-    this.$axios.get("/monthly").then(res => console.log(res)).catch(err=> console.error(err))
-    this.$axios.get("/yearly").then(res => console.log(res)).catch(err=> console.error(err))
   },
 });
 </script>

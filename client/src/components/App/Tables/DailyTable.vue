@@ -7,24 +7,24 @@
         <th class="w-4/5">Plan</th>
       </tr>
       <tr
-        v-for="{ wd_name, wd_date, wd_plan, wd_menu, _id } in MonthsDailyPlan"
-        :key="wd_date"
-        :style="{ backgroundColor: wd_name === 'Sunday' ? '#e2e2e2' : '' }"
+        v-for="{ date, menu, title,day, _id } in renderedData"
+        :key="date"
+        :style="{ backgroundColor: day === 'Sunday' ? '#e2e2e2' : '' }"
       >
         <td class="relative">
-          <div :class="{ current: wd_date === currentDate }"></div>
-          {{ wd_name }}
+          <div :class="{ current: date === currentDate }"></div>
+          {{ day }}
         </td>
-        <td>{{ wd_date }}</td>
+        <td>{{ date }}</td>
         <td class="relative">
-          {{ wd_plan }}
-          <div v-if="wd_plan" class="absolute top-0 right-0">
+          {{ title }}
+          <div v-if="title" class="absolute top-0 right-0">
             <div
-              @click="toggleMenu(wd_date)"
+              @click="toggleMenu(_id)"
               class="absolute"
-              :class="{ 'info-button': !wd_menu, 'info-button-close': wd_menu }"
+              :class="{ 'info-button': !menu, 'info-button-close': menu }"
             >
-              <svg v-if="!wd_menu" class="" width="5" height="20" viewBox="0 0 5 20">
+              <svg v-if="!menu" class="" width="5" height="20" viewBox="0 0 5 20">
                 <rect y="0.826782" width="3" height="3" fill="#cdcdcd" />
                 <rect y="8.25244" width="3" height="3" fill="#cdcdcd" />
                 <rect y="15.678" width="3" height="3" fill="#cdcdcd" />
@@ -36,7 +36,7 @@
                 />
               </svg>
             </div>
-            <div v-if="wd_menu" class="plan-info">
+            <div v-if="menu" class="plan-info">
               <div class="flex items-center space-x-2">
                 <base-button @click="editPlan(_id)" bg-color="#777" color="#fff"
                   ><span class="pb-1 text-sm">Edit</span></base-button
@@ -122,20 +122,22 @@
 <script lang="ts">
 interface DailyPlan {
   _id: string;
-  wd_name: string;
-  wd_date: number;
-  wd_plan: string;
-  wd_menu: boolean;
+  title: string;
+  startDate: Date;
+  day: string;
+  status: string;
+  date: number;
+  menu: boolean
 }
 import planControls from "../../../mixins/planControls";
 import { addDays,getDaysInMonth,startOfMonth } from "date-fns"
 import { defineComponent } from "vue";
+import { mapGetters} from "vuex"
 export default defineComponent({
   mixins: [planControls],
-  props: ["data"],
   data() {
     return {
-      MonthsDailyPlan: [] as DailyPlan[],
+      renderedData: [],
       date: new Date(),
       currentMonthNumber: new Date().getMonth(),
       isGoToCurrentButton: false,
@@ -143,14 +145,14 @@ export default defineComponent({
     };
   },
   computed: {
+    ...mapGetters({
+      data: "plans/dailyPlans/getPlans"
+    }),
     currentMonth(): string {
       return new Date(this.date.setMonth(this.currentMonthNumber)).toLocaleString(
         "en-US",
         { month: "long" }
       );
-    },
-    dailyPlans(): DailyPlan[] {
-      return this.data;
     },
     currentDate(): number {
       return new Date().getDate();
@@ -169,20 +171,18 @@ export default defineComponent({
       }
     },
     goToCurrentMonthAndYear() {
-      /* Fetch current date data here and call this.getDaty() */
-      console.log("Fetching...");
-      // Reseting month and year
       this.currentMonthNumber = new Date().getMonth();
       this.currentYear = new Date().getFullYear();
+      this.getData(this.currentYear,this.currentMonthNumber);
       this.watchMonthAndYear();
     },
     fetchNewYearPlans(nextOrPrev: string) {
-      /* Fetch current date data here and call this.getDaty() */
-      console.log("Fetching...");
       if (nextOrPrev === "next") {
         this.currentYear += 1;
+        this.getData(this.currentYear,this.currentMonthNumber);
       } else if (nextOrPrev === "prev") {
         this.currentYear -= 1;
+        this.getData(this.currentYear,this.currentMonthNumber);
       }
       this.watchMonthAndYear();
       if (
@@ -194,36 +194,14 @@ export default defineComponent({
       }
     },
     fetchNewMonthPlan(nextOrPrev: string) {
-      /* Fetch current date data here and call this.getDaty() */
-      const currentYear = new Date().getFullYear()
       if (nextOrPrev === "next") {
         this.currentMonthNumber++
-        this.currentYear = new Date(currentYear,this.currentMonthNumber,1).getFullYear()
-        this.$axios.get("/daily",{
-          params: {
-            date: new Date(currentYear,this.currentMonthNumber,1)
-          }
-        })
-          .then(res=> {
-            console.log(res.data)
-          })
-          .catch(err=> {
-            console.error(err.response.data)
-          })
+        this.currentYear = new Date(this.currentYear,this.currentMonthNumber,1).getFullYear()
+        this.getData(this.currentYear,this.currentMonthNumber);
       } else if (nextOrPrev === "prev") {
         this.currentMonthNumber--;
-        this.currentYear = new Date(currentYear,this.currentMonthNumber,1).getFullYear()
-        this.$axios.get("/daily",{ 
-          params: {
-            date: new Date(currentYear,this.currentMonthNumber,1)
-          }
-        })
-          .then(res=> {
-            console.log(res.data)
-          })
-          .catch(err=> {
-            console.error(err.response.data)
-          })
+        this.currentYear = new Date(this.currentYear,this.currentMonthNumber,1).getFullYear()
+        this.getData(this.currentYear,this.currentMonthNumber)
       }
       this.watchMonthAndYear();
       if (
@@ -234,12 +212,26 @@ export default defineComponent({
         this.isGoToCurrentButton = true;
       }
     },
-    toggleMenu(date: number) {
-      this.MonthsDailyPlan.forEach((wd: DailyPlan, inx: number) => {
-        if (wd.wd_date === date) {
-          this.MonthsDailyPlan.splice(inx, 1, {
-            ...wd,
-            wd_menu: !wd.wd_menu as boolean,
+    getData(year:number, month:number){
+      const that = this;
+      (this.$store as any).dispatch("plans/dailyPlans/fetchPlans",{
+        year,month
+      })
+        .then(()=> {
+          that.getDays()
+        })
+        .catch((err:any)=>{
+          if(err.statusCode === 404){
+            that.getDays()
+          }
+        })
+    },
+    toggleMenu(id: string) {
+      this.renderedData.forEach((plan: any, i: number) => {
+        if (plan._id === id) {
+          (this.renderedData as DailyPlan[]).splice(i, 1, {
+            ...plan,
+            menu: !plan.menu
           });
         }
       });
@@ -249,24 +241,28 @@ export default defineComponent({
       return day;
     },
     getDays() {
+      this.renderedData = [];
       for (let day = 1; day <= this.thisMonthLength; day++) {
-        const plan = { wd_menu: false } as DailyPlan;
-        plan.wd_name = this.getWeekday(day);
-        plan.wd_date = day;
-        plan.wd_menu = false;
-        this.data.forEach((p: DailyPlan) => {
-          if (+p.wd_date === day) {
-            plan.wd_plan = p.wd_date && +p.wd_date === day ? p.wd_plan : "";
-            plan._id = p._id;
-          }
-        });
-        this.MonthsDailyPlan.push(plan);
+        const plan = { menu: false } as DailyPlan;
+        plan.day = this.getWeekday(day);
+        plan.date = day;
+        plan.menu = false;
+        if(this.data.length > 0){
+          this.data.forEach((p: DailyPlan) => {
+            const extractedDate:number = new Date(p.startDate).getDate()
+            if (extractedDate === day) {
+              plan.title = p.title;
+              plan.status = p.status;
+              plan._id = p._id;
+            }
+          });
+        }
+        (this.renderedData as DailyPlan[]).push(plan);
       }
     },
   },
   mounted() {
-    this.getDays();
-    console.log(this.thisMonthLength)
+    this.getData(this.currentYear,this.currentMonthNumber)
   },
 });
 </script>
