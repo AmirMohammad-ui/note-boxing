@@ -7,17 +7,22 @@
         <th class="w-4/5">Plan</th>
       </tr>
       <tr
-        v-for="{ date, menu, title,day, _id } in renderedData"
-        :key="date"
-        :style="{ backgroundColor: day === 'Sunday' ? '#e2e2e2' : '' }"
-      >
+        v-for="(plan,i) in renderedData"
+        :key="i"
+        :style="{ backgroundColor: plan[0].day === 'Sunday' ? '#e2e2e2' : '' }"
+      >      
         <td class="relative">
-          <div :class="{ current: date === currentDate }"></div>
-          {{ day }}
+          <div :class="{ current: plan[0].date === currentDate }"></div>
+          {{ plan[0].day }}
         </td>
-        <td>{{ date }}</td>
-        <td class="relative">
-          {{ title }}
+        <td>{{ i+1 }}</td>
+        <td v-for="{title,_id,menu,image} in plan" :key="_id" class="relative flex">
+          <div class="flex space-x-2">
+            <img class="w-8" :src="image" :alt="title">
+            <span>
+              {{ title }}
+            </span>
+          </div>
           <div v-if="title" class="absolute top-0 right-0">
             <div
               @click="toggleMenu(_id)"
@@ -120,15 +125,6 @@
   </div>
 </template>
 <script lang="ts">
-interface DailyPlan {
-  _id: string;
-  title: string;
-  startDate: Date;
-  day: string;
-  status: string;
-  date: number;
-  menu: boolean
-}
 import planControls from "../../../mixins/planControls";
 import { addDays,getDaysInMonth,startOfMonth } from "date-fns"
 import { defineComponent } from "vue";
@@ -162,6 +158,9 @@ export default defineComponent({
     },
   },
   methods: {
+    img(img:string):any {
+      return require("../../../../../Server/uploads/images/"+img)
+    },
     watchMonthAndYear() {
       if (
         this.currentMonthNumber === new Date().getMonth() &&
@@ -229,7 +228,7 @@ export default defineComponent({
     toggleMenu(id: string) {
       this.renderedData.forEach((plan: any, i: number) => {
         if (plan._id === id) {
-          (this.renderedData as DailyPlan[]).splice(i, 1, {
+          (this.renderedData as any).splice(i, 1, {
             ...plan,
             menu: !plan.menu
           });
@@ -243,21 +242,28 @@ export default defineComponent({
     getDays() {
       this.renderedData = [];
       for (let day = 1; day <= this.thisMonthLength; day++) {
-        const plan = { menu: false } as DailyPlan;
+        const plan = { menu: false } as any;
         plan.day = this.getWeekday(day);
         plan.date = day;
         plan.menu = false;
-        if(this.data.length > 0){
-          this.data.forEach((p: DailyPlan) => {
-            const extractedDate:number = new Date(p.startDate).getDate()
-            if (extractedDate === day) {
-              plan.title = p.title;
-              plan.status = p.status;
-              plan._id = p._id;
-            }
+        if(this.data[day]) {
+          let plansWithSameDate:any = [];
+          this.data[day].forEach((p:any) => {
+            const pl = { menu: false } as any;
+            pl.day = this.getWeekday(day);
+            pl.date = day;
+            pl.menu = false;
+            pl.title = p.title;
+            pl.status = p.status;
+            pl._id = p._id;
+            pl.image = this.img(p.image);
+            plansWithSameDate.push(pl);
           });
+          (this.renderedData as any).push(plansWithSameDate);
+          plansWithSameDate = [];
+        } else {
+          (this.renderedData as any).push([plan]);
         }
-        (this.renderedData as DailyPlan[]).push(plan);
       }
     },
   },
@@ -266,3 +272,10 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="scss" scoped>
+  .seperator {
+    width: 100%;
+    height: 0.1px;
+    background: #777;
+  }
+</style>

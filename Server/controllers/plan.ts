@@ -4,7 +4,25 @@ import * as path from "path"
 import Plan , {validateData,Category} from "../models/plan"
 import ErrorHandler from "../utilities/ErrorHandler"
 import {endOfYesterday,startOfTomorrow,startOfMonth,addYears,endOfMonth,endOfYear,startOfYear} from "date-fns"
-
+// Putting plans together with the same date
+enum ValidDateMethods {DATE="getDate",MONTH="getMonth",YEAR="getFullYear"}
+const putTogether = (plans,method:ValidDateMethods) => {
+  const organizedPlans = {};
+  if(plans.length > 1) {
+    const coppiedPlans = [...plans]
+    plans.forEach((p1:any) => {
+      const sameDayPlans = [p1];
+      coppiedPlans.forEach((p2:any,i) => {
+        if(new Date(p1.startDate)[method]() === new Date(p2.startDate)[method]() && p1._id !== p2._id) {
+          sameDayPlans.push(p2)
+          coppiedPlans.splice(i,1)
+        }
+      }) 
+      organizedPlans[new Date(p1.startDate)[method]()] = sameDayPlans;
+    })
+  }
+  return organizedPlans
+}
 // POST /new-plan
 export const createPlan = async(req:Request,res:Response,next) => {
   const data = req.body as NewPlan
@@ -115,11 +133,13 @@ export const dailyPlan = async(req:Request,res:Response,next) => {
       $lte: endCurrentOfMonth
     }
   })
-  if(plans.length === 0) return next (new ErrorHandler("No plan for current month.",404))
+  if(plans.length === 0) return next (new ErrorHandler("No plan for current month.",404));
+  const organizedPlans = putTogether(plans, ValidDateMethods.DATE)
+  console.log(organizedPlans)
   res.status(200).json({ 
     success: 1,
     message: `Found ${plans.length} plans.`,
-    plans
+    plans: organizedPlans
   })
 }
 // GET /monthly
@@ -138,10 +158,11 @@ export const monthlyPlans = async(req:Request,res:Response,next) => {
     }
   })
   if(plans.length === 0) return next (new ErrorHandler("No plan for current year.",404))
+  const organizedPlans = putTogether(plans, ValidDateMethods.MONTH)
   res.status(200).json({
     success: 1,
     message: `Found ${plans.length} plans.`,
-    plans
+    plans: organizedPlans
   })
 }
 // GET /yearly
@@ -160,11 +181,11 @@ export const yearlyPlans = async(req:Request, res:Response,next) => {
     }
   })
   if(plans.length === 0) return next (new ErrorHandler("No plan for 10 years ahead.",404))
-  console.log(plans)
+  const organizedPlans = putTogether(plans, ValidDateMethods.YEAR)
   res.status(200).json({
     success: 1,
     message: `Found ${plans.length} plans.`,
-    plans
+    plans: organizedPlans
   })
 }
 // DELETE /delete-plans
