@@ -5,16 +5,21 @@
         <th class="w-2/12">Months</th>
         <th>Note</th>
       </tr>
-      <tr v-for="{ month, title, month_number,menu, _id } in renderedData" :key="_id">
+      <tr v-for="(plans,i) in renderedData" :key="i">
         <td class="relative">
-          <div :class="{ current: month === currentMonth }"></div>
-          {{ month }}
+          <div :class="{ current: plans[0].month === currentMonth }"></div>
+          {{ plans[0].month }}
         </td>
-        <td class="relative">
-          {{ title }}
+        <td v-for="{title,_id,menu,image} in plans" :key="_id" class="relative flex">
+          <div class="flex space-x-2">
+            <img class="w-8" :src="image" :alt="title">
+            <span>
+              {{ title }}
+            </span>
+          </div>
           <div v-if="title" class="absolute top-0 right-0">
             <div
-              @click="toggleMenu(month_number)"
+              @click="toggleMenu(_id)"
               class="absolute"
               :class="{ 'info-button': !menu, 'info-button-close': menu }"
             >
@@ -114,14 +119,14 @@ export default defineComponent({
       isGoToCurrentButton: false
     }
   },
-  watch:{
-    today(value){
-        console.log(value)
+  watch: {
+    data() {
+      this.getMonths()
     }
   },
   computed: {
     ...mapGetters({
-      data: "plans/monthlyPlans/getPlans"
+      data: "plans/getMonthlyPlans"
     }),
     today():number {
       const date = new Date();
@@ -132,6 +137,9 @@ export default defineComponent({
     },
   },
   methods: {
+    img(img:string):any {
+      return require("../../../../../Server/uploads/images/"+img)
+    },
     goToCurrentYear() {
       this.currentYear = new Date().getFullYear()
       this.getData(this.currentYear)
@@ -160,15 +168,18 @@ export default defineComponent({
         this.isGoToCurrentButton = true;
       }
     },
-    toggleMenu(monthNum:number) {
-      this.renderedData.forEach((m:MonthlyPlan,inx:number) => {
-        if(m.month_number === monthNum) {
-          this.renderedData.splice(inx,1,{
-            ...m,
-            menu: !m.menu,
-          })
-        }
-      })
+    toggleMenu(id:string) {
+      this.renderedData.forEach((plan: any) => {
+        plan.forEach((pl:any,j:number) => {
+          if (pl._id === id) {
+            (plan as any).splice(j, 1, {
+              ...pl,
+              menu: !pl.menu
+            });
+            return
+          }
+        })
+      });
     },
     getData(year: number){
       (this.$store as any).dispatch("plans/monthlyPlans/fetchPlans",{year})
@@ -182,26 +193,29 @@ export default defineComponent({
         })
     },
     getMonths() {
-      const date = new Date();
-      this.renderedData = []
-      for (let m = 0;m < 12;m++) {
-        const month = new Date(date.setMonth(m)).toLocaleString("en-US",{month: 'long'})
-        const plan = {
-          month,
-          month_number: m+1,
-          menu: false
-        } as MonthlyPlan
-        if(this.data.length > 0){
-          this.data.forEach((p:MonthlyPlan) => {
-            const month_number = new Date(p.startDate).getMonth() 
-            if(month_number===m+1) {
-              plan.title = p.title
-              plan._id = p._id
-              plan.status = p.status
-            }
-          })
+      this.renderedData = [];
+      for (let month = 1; month <= 12; month++) {
+        const d = new Date()
+        const plan = { menu: false } as any;
+        plan.month = new Date(d.getFullYear(),month,1).toLocaleDateString('en-US',{ month: 'long'});
+        plan.menu = false;
+        if(this.data[month]) {
+          let plansWithSameDate:any = [];
+          this.data[month].forEach((p:any) => {
+            const pl = { menu: false } as any;
+            pl.month = new Date(d.getFullYear(),month,1).toLocaleDateString('en-US',{ month: 'long'});
+            pl.menu = false;
+            pl.title = p.title;
+            pl.status = p.status;
+            pl._id = p._id;
+            pl.image = this.img(p.image);
+            plansWithSameDate.push(pl);
+          });
+          (this.renderedData as any).push(plansWithSameDate);
+          plansWithSameDate = [];
+        } else {
+          (this.renderedData as any).push([plan]);
         }
-        this.renderedData.push(plan)
       }
     }
   },

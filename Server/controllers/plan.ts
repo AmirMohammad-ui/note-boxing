@@ -8,7 +8,7 @@ import {endOfYesterday,startOfTomorrow,startOfMonth,addYears,endOfMonth,endOfYea
 enum ValidDateMethods {DATE="getDate",MONTH="getMonth",YEAR="getFullYear"}
 const putTogether = (plans,method:ValidDateMethods) => {
   const organizedPlans = {};
-  if(plans.length > 1) {
+  if(plans.length > 0) {
     const coppiedPlans = [...plans]
     plans.forEach((p1:any) => {
       const sameDayPlans = [p1];
@@ -133,9 +133,8 @@ export const dailyPlan = async(req:Request,res:Response,next) => {
       $lte: endCurrentOfMonth
     }
   })
-  if(plans.length === 0) return next (new ErrorHandler("No plan for current month.",404));
+  if(plans.length === 0) return next (new ErrorHandler("No plan for today.",404));
   const organizedPlans = putTogether(plans, ValidDateMethods.DATE)
-  console.log(organizedPlans)
   res.status(200).json({ 
     success: 1,
     message: `Found ${plans.length} plans.`,
@@ -157,7 +156,7 @@ export const monthlyPlans = async(req:Request,res:Response,next) => {
       $lte: endCurrentOfYear
     }
   })
-  if(plans.length === 0) return next (new ErrorHandler("No plan for current year.",404))
+  if(plans.length === 0) return next (new ErrorHandler("No monthly plan.",404))
   const organizedPlans = putTogether(plans, ValidDateMethods.MONTH)
   res.status(200).json({
     success: 1,
@@ -207,7 +206,6 @@ export const newCategory = async(req:Request,res:Response,next) => {
   const createdCategory = await Category.create({
     name: trimmedCategory,
   })
-  console.log(createdCategory)
   res.status(201).json({
     success: 1,
     message: "New category created successfully."
@@ -246,5 +244,15 @@ export const getCategories = async(req:Request,res:Response,next) => {
     length: categoriesPlans.length,
     message: `${categoriesPlans.length} categories found`,
     categories: categoriesPlans
+  })
+}
+
+// DELETE plan
+export const deletePlan = async(req: Request, res: Response, next) => {
+  const plan = await Plan.findByIdAndDelete(req.query.id);
+  res.status(200).json({
+    success: 1,
+    message: "Plan succussfully deleted.",
+    type: (plan as any).type
   })
 }

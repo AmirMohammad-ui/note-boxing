@@ -5,16 +5,21 @@
         <th class="w-1/12">Years</th>
         <th>Plans</th>
       </tr>
-      <tr v-for="{ year, title, menu, _id } in renderedData" :key="year">
+      <tr v-for="(plans,i) in renderedData" :key="i">
         <td class="relative">
-          <div :class="{ current: year === currentYear }"></div>
-          {{ year }}
+          <div :class="{ current: plans[0].year === currentYear }"></div>
+          {{ plans[0].year }}
         </td>
-        <td class="relative">
-          {{ title }}
+        <td v-for="{title,_id,menu,image} in plans" :key="_id" class="relative flex">
+          <div class="flex space-x-2">
+            <img class="w-8" :src="image" :alt="title">
+            <span>
+              {{ title }}
+            </span>
+          </div>
           <div v-if="title" class="absolute top-0 right-0">
             <div
-              @click="toggleMenu(year)"
+              @click="toggleMenu(_id)"
               class="absolute"
               :class="{ 'info-button': !menu, 'info-button-close': menu }"
             >
@@ -32,7 +37,7 @@
             </div>
             <div v-if="menu" class="plan-info">
               <div class="flex items-center space-x-2">
-                <base-button  @click="editPlan(_id)" bg-color="#777" color="#fff"
+                <base-button @click="editPlan(_id)" bg-color="#777" color="#fff"
                   ><span class="pb-1 text-sm">Edit</span></base-button
                 >
                 <base-button @click="finishedPlan(_id)" bg-color="#00745D" color="#fff"
@@ -68,9 +73,14 @@ export default defineComponent({
       renderedData: [] as YearlyPlan[]
     }
   },
+  watch: {
+    data() {
+      this.getYears()
+    }
+  },
   computed: {
     ...mapGetters({
-      data: "plans/yearlyPlans/getPlans" 
+      data: "plans/getYearlyPlans" 
     }),
     currentYear():number{
       const date = new Date()
@@ -79,15 +89,21 @@ export default defineComponent({
     }
   },
   methods: {
-    toggleMenu(year:number) {
-      this.renderedData.forEach((y:YearlyPlan,inx:number) => {
-        if(y.year === year) {
-          this.renderedData.splice(inx,1,{
-            ...y,
-            menu: !y.menu,
-          })
-        }
-      })
+    toggleMenu(id:string) {
+      this.renderedData.forEach((plan: any) => {
+        plan.forEach((pl:any,j:number) => {
+          if (pl._id === id) {
+            (plan as any).splice(j, 1, {
+              ...pl,
+              menu: !pl.menu
+            });
+            return
+          }
+        })
+      });
+    },
+    img(img:string):any {
+      return require("../../../../../Server/uploads/images/"+img)
     },
     getData(year: number) {
       (this.$store as any).dispatch("plans/yearlyPlans/fetchPlans",{year})
@@ -101,25 +117,30 @@ export default defineComponent({
         })
     },
     getYears() {
-      this. renderedData = []
-      const date = new Date()
-      for(let year = 0;year<10;year++){
-        const y = +(new Date(date.setFullYear(date.getFullYear())).toLocaleString("en-US",{year:'numeric'})) + (year === 0?0:year)
-        const plan = {
-          year: y,
-          menu: false,
-        } as YearlyPlan
-        if(this.data.length > 0) {
-          this.data.forEach((p:YearlyPlan) => {
-            const extractedYear = new Date(p.startDate).getFullYear()
-            if(extractedYear === y){
-              plan.title = p.title
-              plan.status = p.status
-              plan._id = p._id
-            }
-          })
+      this.renderedData = [];
+      for (let year = 1; year <= 10; year++) {
+        const d = new Date()
+        const y = d.getFullYear() + (year!==1?year: 0);
+        const plan = { menu: false } as any;
+        plan.year = y;
+        plan.menu = false;
+        if(this.data[y]) {
+          let plansWithSameDate:any = [];
+          this.data[y].forEach((p:any) => {
+            const pl = { menu: false } as any;
+            pl.year = y;
+            pl.menu = false;
+            pl.title = p.title;
+            pl.status = p.status;
+            pl._id = p._id;
+            pl.image = this.img(p.image);
+            plansWithSameDate.push(pl);
+          });
+          (this.renderedData as any).push(plansWithSameDate);
+          plansWithSameDate = [];
+        } else {
+          (this.renderedData as any).push([plan]);
         }
-        this.renderedData.push(plan)
       }
     }
   },

@@ -140,9 +140,14 @@ export default defineComponent({
       currentYear: new Date().getFullYear(),
     };
   },
+  watch: {
+    data() {
+      this.getDays()
+    }
+  },
   computed: {
     ...mapGetters({
-      data: "plans/dailyPlans/getPlans"
+      data: "plans/getDailyPlans"
     }),
     currentMonth(): string {
       return new Date(this.date.setMonth(this.currentMonthNumber)).toLocaleString(
@@ -226,13 +231,16 @@ export default defineComponent({
         })
     },
     toggleMenu(id: string) {
-      this.renderedData.forEach((plan: any, i: number) => {
-        if (plan._id === id) {
-          (this.renderedData as any).splice(i, 1, {
-            ...plan,
-            menu: !plan.menu
-          });
-        }
+      this.renderedData.forEach((plan: any) => {
+        plan.forEach((pl:any,j:number) => {
+          if (pl._id === id) {
+            (plan as any).splice(j, 1, {
+              ...pl,
+              menu: !pl.menu
+            });
+            return
+          }
+        })
       });
     },
     getWeekday(d: number): string {

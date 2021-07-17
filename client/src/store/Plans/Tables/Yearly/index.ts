@@ -1,32 +1,26 @@
 import axios from "axios"
 axios.defaults.baseURL = "http://localhost:3400/api"
-interface State {
-  plans: any[]
-}
+
 export default {
   namespaced: true,
-  state: () => (
-    {plans: []}
-  ),
-  getters: {
-    getPlans(state : State) {
-      return state.plans
-    },
-  },
   actions: {
-    fetchPlans(context:any,payload: {year:number}) {
-      let date = new Date(payload.year, 1, 1);
+    fetchPlans({commit}:any,payload: {year:number}) {
+      let d = new Date()
+      let date = new Date(d.getFullYear(),d.getMonth()+1,1)
+      if(payload) {
+        date = new Date(payload.year, 1, 1)
+      }
       return new Promise((resolve, reject) => {
         axios.get("/yearly", {
           params: {
-            date: date? date:null
+            date
           }
         }).then(res => {
-          context.state.plans = res.data.plans;
+          commit("plans/setYearly",res.data.plans,{ root: true})
           resolve(res.data.message);
         }).catch(err => {
           reject(err.response.data)
-          context.state.plans = []
+          commit("plans/setYearly",[],{ root: true})
         })
       })
     }

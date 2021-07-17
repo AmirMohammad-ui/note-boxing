@@ -97,9 +97,9 @@ export default defineComponent({
     };
   },
   computed: mapGetters({
-    todaysPlan:"plans/currentPlans/todaysPlan",
-    currentMonthPlan:"plans/currentPlans/currentMonthPlan",
-    currentYearPlan:"plans/currentPlans/currentYearPlan"
+    todaysPlan:"plans/getTodayPlans",
+    currentMonthPlan:"plans/getCurrentMonthPlans",
+    currentYearPlan:"plans/getCurrentYearPlans"
   }),
   methods: {
     getTodaysPlan() {
