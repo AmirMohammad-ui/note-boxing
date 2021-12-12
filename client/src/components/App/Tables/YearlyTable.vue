@@ -158,7 +158,7 @@ export default defineComponent({
             pl.title = p.title;
             pl.status = p.status;
             pl._id = p._id;
-            pl.image = this.img(p.image);
+            pl.image = p.image;
             plansWithSameDate.push(pl);
           });
           (this.renderedData as any).push(plansWithSameDate);
