@@ -5,14 +5,18 @@
         <th class="w-2/12">Months</th>
         <th>Note</th>
       </tr>
-      <tr v-for="(plans,i) in renderedData" :key="i">
+      <tr v-for="(plans, i) in renderedData" :key="i">
         <td class="relative">
           <div :class="{ current: plans[0].month === currentMonth }"></div>
           {{ plans[0].month }}
         </td>
-        <td v-for="{title,_id,menu,image} in plans" :key="_id" class="relative flex">
+        <td
+          v-for="{ title, _id, menu, image } in plans"
+          :key="_id"
+          class="relative flex"
+        >
           <div class="flex space-x-2">
-            <img class="w-8" :src="image" :alt="title">
+            <img class="w-8" :src="getImage(image)" :alt="title" />
             <span>
               {{ title }}
             </span>
@@ -23,7 +27,13 @@
               class="absolute"
               :class="{ 'info-button': !menu, 'info-button-close': menu }"
             >
-              <svg v-if="!menu" class="" width="5" height="20" viewBox="0 0 5 20">
+              <svg
+                v-if="!menu"
+                class=""
+                width="5"
+                height="20"
+                viewBox="0 0 5 20"
+              >
                 <rect y="0.826782" width="3" height="3" fill="#cdcdcd" />
                 <rect y="8.25244" width="3" height="3" fill="#cdcdcd" />
                 <rect y="15.678" width="3" height="3" fill="#cdcdcd" />
@@ -40,10 +50,16 @@
                 <base-button @click="editPlan(_id)" bg-color="#777" color="#fff"
                   ><span class="pb-1 text-sm">Edit</span></base-button
                 >
-                <base-button @click="finishedPlan(_id)" bg-color="#00745D" color="#fff"
+                <base-button
+                  @click="finishedPlan(_id)"
+                  bg-color="#00745D"
+                  color="#fff"
                   ><span class="pb-1 text-sm">Done</span></base-button
                 >
-                <base-button @click="deletePlan(_id)" bg-color="#D63031" color="#fff"
+                <base-button
+                  @click="deletePlan(_id)"
+                  bg-color="#D63031"
+                  color="#fff"
                   ><span class="pb-1 text-sm">Delete</span></base-button
                 >
               </div>
@@ -54,12 +70,7 @@
     </table>
     <div class="month-controller">
       <base-button @click="fetchNewYearPlans('prev')" bg-color="#fff">
-        <svg
-          class="my-2"
-          width="15"
-          height="17"
-          viewBox="0 0 15 17"
-        >
+        <svg class="my-2" width="15" height="17" viewBox="0 0 15 17">
           <path
             d="M-4.15258e-07 8.5L14.25 0.272758L14.25 16.7272L-4.15258e-07 8.5Z"
             fill="#0984E3"
@@ -68,16 +79,14 @@
       </base-button>
       <div class="px-5 py-3 box text-blue">
         <span class="font-light">Year: </span>
-        <span class="font-bold">{{currentYear}}</span>
+        <span class="font-bold">{{ currentYear }}</span>
       </div>
       <base-button @click="fetchNewYearPlans('next')" bg-color="#fff">
-        <svg
-          class="my-2"
-          width="15"
-          height="17"
-          viewBox="0 0 15 17"
-        >
-          <path d="M15 8.5L0.749999 16.7272L0.75 0.272758L15 8.5Z" fill="#0984E3" />
+        <svg class="my-2" width="15" height="17" viewBox="0 0 15 17">
+          <path
+            d="M15 8.5L0.749999 16.7272L0.75 0.272758L15 8.5Z"
+            fill="#0984E3"
+          />
         </svg>
       </base-button>
       <base-button
@@ -97,68 +106,67 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
+import planControls from "../../../mixins/planControls";
+import { defineComponent } from "vue";
+import { mapGetters } from "vuex";
+import getImage from "../../../util/getImage";
 interface MonthlyPlan {
-  _id: string; 
+  _id: string;
   status: boolean;
-  month: string; 
+  month: string;
   month_number: number;
-  title: string; 
+  title: string;
   startDate: Date;
   menu: boolean;
 }
-import planControls from "../../../mixins/planControls"
-import {defineComponent} from "vue"
-import {mapGetters} from "vuex"
+
 export default defineComponent({
   mixins: [planControls],
-  data(){
+  data() {
     return {
       renderedData: [] as MonthlyPlan[],
       currentYear: new Date().getFullYear(),
-      isGoToCurrentButton: false
-    }
+      isGoToCurrentButton: false,
+    };
   },
   watch: {
     data() {
-      this.getMonths()
-    }
+      this.getMonths();
+    },
   },
   computed: {
     ...mapGetters({
-      data: "plans/getMonthlyPlans"
+      data: "plans/getMonthlyPlans",
     }),
-    today():number {
+    today(): number {
       const date = new Date();
       return date.getDate();
     },
-    currentMonth():string {
-      return new Date().toLocaleString("en-US",{month:'long'})
+    currentMonth(): string {
+      return new Date().toLocaleString("en-US", { month: "long" });
     },
   },
   methods: {
-    img(img:string):any {
-      return require("../../../../../server/uploads/images/"+img)
-    },
+    getImage,
     goToCurrentYear() {
-      this.currentYear = new Date().getFullYear()
-      this.getData(this.currentYear)
-      this.watchYear()
+      this.currentYear = new Date().getFullYear();
+      this.getData(this.currentYear);
+      this.watchYear();
     },
     watchYear() {
-      if (
-        this.currentYear === new Date().getFullYear()
-      ) {
+      if (this.currentYear === new Date().getFullYear()) {
         this.isGoToCurrentButton = false;
       }
     },
-    fetchNewYearPlans(nextOrPrev:string) {
+    fetchNewYearPlans(nextOrPrev: string) {
       if (nextOrPrev === "next") {
         this.currentYear += 1;
-        this.getData(this.currentYear)
+        this.getData(this.currentYear);
       } else if (nextOrPrev === "prev") {
         this.currentYear -= 1;
-        this.getData(this.currentYear)
+        this.getData(this.currentYear);
       }
       this.watchYear();
       if (
@@ -168,42 +176,49 @@ export default defineComponent({
         this.isGoToCurrentButton = true;
       }
     },
-    toggleMenu(id:string) {
+    toggleMenu(id: string) {
       this.renderedData.forEach((plan: any) => {
-        plan.forEach((pl:any,j:number) => {
+        plan.forEach((pl: any, j: number) => {
           if (pl._id === id) {
             (plan as any).splice(j, 1, {
               ...pl,
-              menu: !pl.menu
+              menu: !pl.menu,
             });
-            return
+            return;
           }
-        })
+        });
       });
     },
-    getData(year: number){
-      (this.$store as any).dispatch("plans/monthlyPlans/fetchPlans",{year})
+    getData(year: number) {
+      (this.$store as any)
+        .dispatch("plans/monthlyPlans/fetchPlans", { year })
         .then(() => {
-          this.getMonths()
+          this.getMonths();
         })
-        .catch((err:any)=> {
-          if(err.statusCode === 404) {
-            this.getMonths()
+        .catch((err: any) => {
+          if (err.statusCode === 404) {
+            this.getMonths();
           }
-        })
+        });
     },
     getMonths() {
       this.renderedData = [];
       for (let month = 1; month <= 12; month++) {
-        const d = new Date()
+        const d = new Date();
         const plan = { menu: false } as any;
-        plan.month = new Date(d.getFullYear(),month,1).toLocaleDateString('en-US',{ month: 'long'});
+        plan.month = new Date(d.getFullYear(), month, 1).toLocaleDateString(
+          "en-US",
+          { month: "long" }
+        );
         plan.menu = false;
-        if(this.data[month]) {
-          let plansWithSameDate:any = [];
-          this.data[month].forEach((p:any) => {
+        if (this.data[month]) {
+          let plansWithSameDate: any = [];
+          this.data[month].forEach((p: any) => {
             const pl = { menu: false } as any;
-            pl.month = new Date(d.getFullYear(),month,1).toLocaleDateString('en-US',{ month: 'long'});
+            pl.month = new Date(d.getFullYear(), month, 1).toLocaleDateString(
+              "en-US",
+              { month: "long" }
+            );
             pl.menu = false;
             pl.title = p.title;
             pl.status = p.status;
@@ -217,10 +232,10 @@ export default defineComponent({
           (this.renderedData as any).push([plan]);
         }
       }
-    }
+    },
   },
   mounted() {
-    this.getData(this.currentYear)
-  }
-})
+    this.getData(this.currentYear);
+  },
+});
 </script>

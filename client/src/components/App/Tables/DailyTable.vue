@@ -7,18 +7,22 @@
         <th class="w-4/5">Plan</th>
       </tr>
       <tr
-        v-for="(plan,i) in renderedData"
+        v-for="(plan, i) in renderedData"
         :key="i"
         :style="{ backgroundColor: plan[0].day === 'Sunday' ? '#e2e2e2' : '' }"
-      >      
+      >
         <td class="relative">
           <div :class="{ current: plan[0].date === currentDate }"></div>
           {{ plan[0].day }}
         </td>
-        <td>{{ i+1 }}</td>
-        <td v-for="{title,_id,menu,image} in plan" :key="_id" class="relative flex">
+        <td>{{ i + 1 }}</td>
+        <td
+          v-for="{ title, _id, menu, image } in plan"
+          :key="_id"
+          class="relative flex"
+        >
           <div class="flex space-x-2">
-            <img class="w-8" :src="image" :alt="title">
+            <img class="w-8" :src="getImage(image)" :alt="title" />
             <span>
               {{ title }}
             </span>
@@ -29,7 +33,13 @@
               class="absolute"
               :class="{ 'info-button': !menu, 'info-button-close': menu }"
             >
-              <svg v-if="!menu" class="" width="5" height="20" viewBox="0 0 5 20">
+              <svg
+                v-if="!menu"
+                class=""
+                width="5"
+                height="20"
+                viewBox="0 0 5 20"
+              >
                 <rect y="0.826782" width="3" height="3" fill="#cdcdcd" />
                 <rect y="8.25244" width="3" height="3" fill="#cdcdcd" />
                 <rect y="15.678" width="3" height="3" fill="#cdcdcd" />
@@ -46,10 +56,16 @@
                 <base-button @click="editPlan(_id)" bg-color="#777" color="#fff"
                   ><span class="pb-1 text-sm">Edit</span></base-button
                 >
-                <base-button @click="finishedPlan(_id)" bg-color="#00745D" color="#fff"
+                <base-button
+                  @click="finishedPlan(_id)"
+                  bg-color="#00745D"
+                  color="#fff"
                   ><span class="pb-1 text-sm">Done</span></base-button
                 >
-                <base-button @click="deletePlan(_id)" bg-color="#D63031" color="#fff"
+                <base-button
+                  @click="deletePlan(_id)"
+                  bg-color="#D63031"
+                  color="#fff"
                   ><span class="pb-1 text-sm">Delete</span></base-button
                 >
               </div>
@@ -60,10 +76,21 @@
     </table>
     <div class="w-full date-controller">
       <div
-        class="flex flex-col items-center space-x-0 space-y-6 sm:space-x-6 sm:justify-end sm:space-y-0 sm:flex-row"
+        class="
+          flex flex-col
+          items-center
+          space-x-0 space-y-6
+          sm:space-x-6 sm:justify-end sm:space-y-0 sm:flex-row
+        "
       >
         <div
-          class="flex flex-col items-center justify-center space-x-0 space-y-6 sm:space-x-10 sm:flex-row sm:space-y-0 sm:justify-end"
+          class="
+            flex flex-col
+            items-center
+            justify-center
+            space-x-0 space-y-6
+            sm:space-x-10 sm:flex-row sm:space-y-0 sm:justify-end
+          "
         >
           <div class="flex items-center space-x-4">
             <base-button @click="fetchNewMonthPlan('prev')" bg-color="#fff">
@@ -80,7 +107,10 @@
             </div>
             <base-button @click="fetchNewMonthPlan('next')" bg-color="#fff">
               <svg class="my-2" width="15" height="17" viewBox="0 0 15 17">
-                <path d="M15 8.5L0.749999 16.7272L0.75 0.272758L15 8.5Z" fill="#0984E3" />
+                <path
+                  d="M15 8.5L0.749999 16.7272L0.75 0.272758L15 8.5Z"
+                  fill="#0984E3"
+                />
               </svg>
             </base-button>
           </div>
@@ -99,7 +129,10 @@
             </div>
             <base-button @click="fetchNewYearPlans('next')" bg-color="#fff">
               <svg class="my-2" width="15" height="17" viewBox="0 0 15 17">
-                <path d="M15 8.5L0.749999 16.7272L0.75 0.272758L15 8.5Z" fill="#0984E3" />
+                <path
+                  d="M15 8.5L0.749999 16.7272L0.75 0.272758L15 8.5Z"
+                  fill="#0984E3"
+                />
               </svg>
             </base-button>
           </div>
@@ -124,11 +157,13 @@
     </div>
   </div>
 </template>
+o
 <script lang="ts">
+import getImage from "../../../util/getImage";
 import planControls from "../../../mixins/planControls";
-import { addDays,getDaysInMonth,startOfMonth } from "date-fns"
+import { addDays, getDaysInMonth, startOfMonth } from "date-fns";
 import { defineComponent } from "vue";
-import { mapGetters} from "vuex"
+import { mapGetters } from "vuex";
 export default defineComponent({
   mixins: [planControls],
   data() {
@@ -142,18 +177,17 @@ export default defineComponent({
   },
   watch: {
     data() {
-      this.getDays()
-    }
+      this.getDays();
+    },
   },
   computed: {
     ...mapGetters({
-      data: "plans/getDailyPlans"
+      data: "plans/getDailyPlans",
     }),
     currentMonth(): string {
-      return new Date(this.date.setMonth(this.currentMonthNumber)).toLocaleString(
-        "en-US",
-        { month: "long" }
-      );
+      return new Date(
+        this.date.setMonth(this.currentMonthNumber)
+      ).toLocaleString("en-US", { month: "long" });
     },
     currentDate(): number {
       return new Date().getDate();
@@ -163,9 +197,7 @@ export default defineComponent({
     },
   },
   methods: {
-    img(img:string):any {
-      return require("../../../../../server/uploads/images/"+img)
-    },
+    getImage,
     watchMonthAndYear() {
       if (
         this.currentMonthNumber === new Date().getMonth() &&
@@ -177,16 +209,16 @@ export default defineComponent({
     goToCurrentMonthAndYear() {
       this.currentMonthNumber = new Date().getMonth();
       this.currentYear = new Date().getFullYear();
-      this.getData(this.currentYear,this.currentMonthNumber);
+      this.getData(this.currentYear, this.currentMonthNumber);
       this.watchMonthAndYear();
     },
     fetchNewYearPlans(nextOrPrev: string) {
       if (nextOrPrev === "next") {
         this.currentYear += 1;
-        this.getData(this.currentYear,this.currentMonthNumber);
+        this.getData(this.currentYear, this.currentMonthNumber);
       } else if (nextOrPrev === "prev") {
         this.currentYear -= 1;
-        this.getData(this.currentYear,this.currentMonthNumber);
+        this.getData(this.currentYear, this.currentMonthNumber);
       }
       this.watchMonthAndYear();
       if (
@@ -199,13 +231,21 @@ export default defineComponent({
     },
     fetchNewMonthPlan(nextOrPrev: string) {
       if (nextOrPrev === "next") {
-        this.currentMonthNumber++
-        this.currentYear = new Date(this.currentYear,this.currentMonthNumber,1).getFullYear()
-        this.getData(this.currentYear,this.currentMonthNumber);
+        this.currentMonthNumber++;
+        this.currentYear = new Date(
+          this.currentYear,
+          this.currentMonthNumber,
+          1
+        ).getFullYear();
+        this.getData(this.currentYear, this.currentMonthNumber);
       } else if (nextOrPrev === "prev") {
         this.currentMonthNumber--;
-        this.currentYear = new Date(this.currentYear,this.currentMonthNumber,1).getFullYear()
-        this.getData(this.currentYear,this.currentMonthNumber)
+        this.currentYear = new Date(
+          this.currentYear,
+          this.currentMonthNumber,
+          1
+        ).getFullYear();
+        this.getData(this.currentYear, this.currentMonthNumber);
       }
       this.watchMonthAndYear();
       if (
@@ -216,35 +256,40 @@ export default defineComponent({
         this.isGoToCurrentButton = true;
       }
     },
-    getData(year:number, month:number){
+    getData(year: number, month: number) {
       const that = this;
-      (this.$store as any).dispatch("plans/dailyPlans/fetchPlans",{
-        year,month
-      })
-        .then(()=> {
-          that.getDays()
+      (this.$store as any)
+        .dispatch("plans/dailyPlans/fetchPlans", {
+          year,
+          month,
         })
-        .catch((err:any)=>{
-          if(err.statusCode === 404){
-            that.getDays()
+        .then(() => {
+          that.getDays();
+        })
+        .catch((err: any) => {
+          if (err.statusCode === 404) {
+            that.getDays();
           }
-        })
+        });
     },
     toggleMenu(id: string) {
       this.renderedData.forEach((plan: any) => {
-        plan.forEach((pl:any,j:number) => {
+        plan.forEach((pl: any, j: number) => {
           if (pl._id === id) {
             (plan as any).splice(j, 1, {
               ...pl,
-              menu: !pl.menu
+              menu: !pl.menu,
             });
-            return
+            return;
           }
-        })
+        });
       });
     },
     getWeekday(d: number): string {
-      const day = addDays(startOfMonth(new Date()),d-1).toLocaleDateString("en-US",{weekday: 'long'});
+      const day = addDays(startOfMonth(new Date()), d - 1).toLocaleDateString(
+        "en-US",
+        { weekday: "long" }
+      );
       return day;
     },
     getDays() {
@@ -254,9 +299,9 @@ export default defineComponent({
         plan.day = this.getWeekday(day);
         plan.date = day;
         plan.menu = false;
-        if(this.data[day]) {
-          let plansWithSameDate:any = [];
-          this.data[day].forEach((p:any) => {
+        if (this.data[day]) {
+          let plansWithSameDate: any = [];
+          this.data[day].forEach((p: any) => {
             const pl = { menu: false } as any;
             pl.day = this.getWeekday(day);
             pl.date = day;
@@ -276,14 +321,15 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.getData(this.currentYear,this.currentMonthNumber)
+    this.getData(this.currentYear, this.currentMonthNumber);
   },
 });
 </script>
+
 <style lang="scss" scoped>
-  .seperator {
-    width: 100%;
-    height: 0.1px;
-    background: #777;
-  }
+.seperator {
+  width: 100%;
+  height: 0.1px;
+  background: #777;
+}
 </style>

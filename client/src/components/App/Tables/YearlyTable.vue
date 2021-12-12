@@ -5,14 +5,18 @@
         <th class="w-1/12">Years</th>
         <th>Plans</th>
       </tr>
-      <tr v-for="(plans,i) in renderedData" :key="i">
+      <tr v-for="(plans, i) in renderedData" :key="i">
         <td class="relative">
           <div :class="{ current: plans[0].year === currentYear }"></div>
           {{ plans[0].year }}
         </td>
-        <td v-for="{title,_id,menu,image} in plans" :key="_id" class="relative flex">
+        <td
+          v-for="{ title, _id, menu, image } in plans"
+          :key="_id"
+          class="relative flex"
+        >
           <div class="flex space-x-2">
-            <img class="w-8" :src="image" :alt="title">
+            <img class="w-8" :src="getImage(image)" :alt="title" />
             <span>
               {{ title }}
             </span>
@@ -23,7 +27,13 @@
               class="absolute"
               :class="{ 'info-button': !menu, 'info-button-close': menu }"
             >
-              <svg v-if="!menu" class="" width="5" height="20" viewBox="0 0 5 20">
+              <svg
+                v-if="!menu"
+                class=""
+                width="5"
+                height="20"
+                viewBox="0 0 5 20"
+              >
                 <rect y="0.826782" width="3" height="3" fill="#cdcdcd" />
                 <rect y="8.25244" width="3" height="3" fill="#cdcdcd" />
                 <rect y="15.678" width="3" height="3" fill="#cdcdcd" />
@@ -40,10 +50,16 @@
                 <base-button @click="editPlan(_id)" bg-color="#777" color="#fff"
                   ><span class="pb-1 text-sm">Edit</span></base-button
                 >
-                <base-button @click="finishedPlan(_id)" bg-color="#00745D" color="#fff"
+                <base-button
+                  @click="finishedPlan(_id)"
+                  bg-color="#00745D"
+                  color="#fff"
                   ><span class="pb-1 text-sm">Done</span></base-button
                 >
-                <base-button @click="deletePlan(_id)" bg-color="#D63031" color="#fff"
+                <base-button
+                  @click="deletePlan(_id)"
+                  bg-color="#D63031"
+                  color="#fff"
                   ><span class="pb-1 text-sm">Delete</span></base-button
                 >
               </div>
@@ -56,77 +72,86 @@
 </template>
 <script lang="ts">
 interface YearlyPlan {
-  _id: string; 
-  year: number; 
-  title: string; 
+  _id: string;
+  year: number;
+  title: string;
   menu: boolean;
   status: string;
   startDate: Date;
 }
-import planControls from "../../../mixins/planControls"
-import {defineComponent} from "vue"
-import {mapGetters} from "vuex"
+
+import planControls from "../../../mixins/planControls";
+import getImage from "../../../util/getImage";
+import { defineComponent } from "vue";
+import { mapGetters } from "vuex";
 export default defineComponent({
   mixins: [planControls],
-  data(){
+  data() {
     return {
-      renderedData: [] as YearlyPlan[]
-    }
+      renderedData: [] as YearlyPlan[],
+    };
   },
   watch: {
     data() {
-      this.getYears()
-    }
+      this.getYears();
+    },
   },
   computed: {
     ...mapGetters({
-      data: "plans/getYearlyPlans" 
+      data: "plans/getYearlyPlans",
     }),
-    currentYear():number{
-      const date = new Date()
-      const currentYear = date.getFullYear() 
-      return currentYear
-    }
+    currentYear(): number {
+      const date = new Date();
+      const currentYear = date.getFullYear();
+      return currentYear;
+    },
   },
   methods: {
-    toggleMenu(id:string) {
+    getImage,
+    toggleMenu(id: string) {
       this.renderedData.forEach((plan: any) => {
-        plan.forEach((pl:any,j:number) => {
+        plan.forEach((pl: any, j: number) => {
           if (pl._id === id) {
             (plan as any).splice(j, 1, {
               ...pl,
-              menu: !pl.menu
+              menu: !pl.menu,
             });
-            return
+            return;
           }
-        })
+        });
       });
     },
-    img(img:string):any {
-      return require("../../../../../server/uploads/images/"+img)
+    img(name: string): any {
+      const images = require.context(
+        "../../../../../server/uploads/images",
+        false,
+        /\.(png|jpe?g|webp|svg)$/
+      );
+      return images("./" + name);
     },
     getData(year: number) {
-      (this.$store as any).dispatch("plans/yearlyPlans/fetchPlans",{year})
-        .then(()=>{
-          this.getYears()
+      (this.$store as any)
+        .dispatch("plans/yearlyPlans/fetchPlans", { year })
+        .then(() => {
+          this.getYears();
         })
-        .catch((err:any)=>{
-          if(err.statusCode === 404) {
-            this.getYears()
+        .catch((err: any) => {
+          if (err.statusCode === 404) {
+            this.getYears();
           }
-        })
+        });
     },
     getYears() {
       this.renderedData = [];
       for (let year = 1; year <= 10; year++) {
-        const d = new Date()
-        const y = d.getFullYear() + (year!==1?year: 0);
+        const d = new Date();
+        const y = d.getFullYear() + (year !== 1 ? year : 0);
         const plan = { menu: false } as any;
         plan.year = y;
         plan.menu = false;
-        if(this.data[y]) {
-          let plansWithSameDate:any = [];
-          this.data[y].forEach((p:any) => {
+        if (this.data[y]) {
+          let plansWithSameDate: any = [];
+          this.data[y].forEach((p: any) => {
             const pl = { menu: false } as any;
             pl.year = y;
             pl.menu = false;
@@ -142,10 +167,10 @@ export default defineComponent({
           (this.renderedData as any).push([plan]);
         }
       }
-    }
+    },
   },
   mounted() {
-    this.getData(this.currentYear)
-  }
-})
+    this.getData(this.currentYear);
+  },
+});
 </script>
