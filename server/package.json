@@ -5,7 +5,7 @@
   "main": "Server/index.js",
   "scripts": {
     "start": "set NODE_ENV=production && tsc",
-    "dev": "set NODE_ENV=development && tsc && ts-node-dev ./Server/index.ts --watch"
+    "dev": "set NODE_ENV=development && ts-node-dev ./index.ts"
   },
   "repository": {
     "type": "git",
