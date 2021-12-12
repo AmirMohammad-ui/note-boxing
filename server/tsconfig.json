@@ -1,7 +1,6 @@
 {
-  "include": [
-    "./Server/*"
-  ],
+  "include": ["./**/*.ts"],
+  "exclude":["node_modules"],
   "compilerOptions": {
     "skipLibCheck": true,
     "sourceMap": true,
