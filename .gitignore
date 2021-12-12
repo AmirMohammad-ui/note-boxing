@@ -1,5 +1,7 @@
-Server/uploads/
+server/uploads/
 client/src/assets/
+server/temp
+temp
 # Logs
 logs
 *.log
