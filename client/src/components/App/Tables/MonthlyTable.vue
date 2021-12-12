@@ -138,7 +138,7 @@ export default defineComponent({
   },
   methods: {
     img(img:string):any {
-      return require("../../../../../Server/uploads/images/"+img)
+      return require("../../../../../server/uploads/images/"+img)
     },
     goToCurrentYear() {
       this.currentYear = new Date().getFullYear()

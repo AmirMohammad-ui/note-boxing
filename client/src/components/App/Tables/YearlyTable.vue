@@ -103,7 +103,7 @@ export default defineComponent({
       });
     },
     img(img:string):any {
-      return require("../../../../../Server/uploads/images/"+img)
+      return require("../../../../../server/uploads/images/"+img)
     },
     getData(year: number) {
       (this.$store as any).dispatch("plans/yearlyPlans/fetchPlans",{year})

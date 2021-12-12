@@ -90,9 +90,9 @@
               <img
                 class="todays-image box"
                 :src="
-                  require('../../../../Server/uploads/images/' + plan.image)
-                    ? require('../../../../Server/uploads/images/' + plan.image)
-                    : require('../../../../Server/uploads/images/default.png')
+                  require('../../../../server/uploads/images/' + plan.image)
+                    ? require('../../../../server/uploads/images/' + plan.image)
+                    : require('../../../../server/uploads/images/default.png')
                 "
                 :alt="plan.title"
               />

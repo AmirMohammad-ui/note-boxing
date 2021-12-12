@@ -112,7 +112,7 @@ export default defineComponent({
   },
   computed: {
     imgSrc():any {
-      return require("../../../../../Server/uploads/images/" + this.planItemData.image + ".jpg");
+      return require("../../../../../server/uploads/images/" + this.planItemData.image + ".jpg");
     },
   },
   methods: {
