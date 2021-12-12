@@ -1,5 +1,5 @@
 <template>
-  <button 
+  <button
     v-if="icon"
     :type="type"
     :style="{
@@ -7,12 +7,12 @@
       '--theColor': bgColor + 'b0',
       border: outlined ? '1px solid ' + color : 'none',
       color,
-      width: w?w:'3rem',
-      height: w?w:'3rem',
+      width: w ? w : '3rem',
+      height: w ? w : '3rem',
     }"
     class="relative pb-1 icon-button box"
-    :class="{'hover-effect':hover}"
-    >
+    :class="{ 'hover-effect': hover }"
+  >
     <slot class="icon-position"></slot>
   </button>
   <button
@@ -20,7 +20,7 @@
     :type="type"
     :style="{
       backgroundColor: outlined ? '#fff' : bgColor,
-      '--theColor': outlined?bgColor:bgColor + 'b0',
+      '--theColor': outlined ? bgColor : bgColor + 'b0',
       border: outlined ? '1px solid ' + color : 'none',
       color,
     }"
@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue"
+import { defineComponent } from "vue";
 export default defineComponent({
   props: {
     type: {
@@ -75,12 +75,12 @@ export default defineComponent({
       default: false,
     },
     icon: {
-      type:Boolean,
-      default: false
+      type: Boolean,
+      default: false,
     },
-    w:{
-      type:String,
-    }
+    w: {
+      type: String,
+    },
   },
 });
 </script>
@@ -93,19 +93,17 @@ button {
   padding: 5px 10px;
   color: white;
   border-radius: 3px;
-  font-weight: lighter;
   transition: all 0.2s;
 }
 .hover-effect:hover {
   background-color: var(--theColor) !important;
   color: white !important;
 }
-.icon-button{
+.icon-button {
   @apply flex items-center justify-center text-center relative focus:outline-none;
   border-radius: 1000px;
 }
 .icon-position {
   @apply absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2;
 }
-
 </style>
