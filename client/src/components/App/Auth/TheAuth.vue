@@ -3,28 +3,43 @@
     <base-modal
       @close="$emit('close-modal')"
       :show-backdrop="isBackdropOpen"
-      :show-dialog="isDialogOpen">
+      :show-dialog="isDialogOpen"
+    >
       <div class="bg-white auth-container box">
         <div class="w-full p-5 sm:w-1/2">
-          <img class="p-16" src="../../../assets/login.svg" alt="">
+          <img class="p-16" src="../../../assets/login.svg" alt="" />
         </div>
         <div class="w-full p-2 sm:w-1/2">
           <div class="tabs">
             <div class="tab_container">
-              <button @click="openTab('login')" class="px-4 tab" :class="{'current-opentab show-bar':currentOpenTab === 'login'? true:false}">
+              <button
+                @click="openTab('login')"
+                class="px-4 tab"
+                :class="{
+                  'current-opentab show-bar':
+                    currentOpenTab === 'login' ? true : false,
+                }"
+              >
                 Login
-              <span class="bar show-bar"></span>
+                <span class="bar show-bar"></span>
               </button>
             </div>
             <div class="tab_container">
-              <button @click="openTab('submit')" class="px-3 tab" :class="{'current-opentab show-bar':currentOpenTab === 'submit'? true:false}">
+              <button
+                @click="openTab('submit')"
+                class="px-3 tab"
+                :class="{
+                  'current-opentab show-bar':
+                    currentOpenTab === 'submit' ? true : false,
+                }"
+              >
                 Sign Up
-              <span class="bar show-bar"></span>
+                <span class="bar show-bar"></span>
               </button>
             </div>
           </div>
           <keep-alive>
-            <component :is="activeComponent"></component>
+            <component :open-tab="openTab" :is="activeComponent"></component>
           </keep-alive>
         </div>
       </div>
@@ -33,29 +48,29 @@
 </template>
 
 <script lang="ts">
-import TheLogin from "./TheLogin.vue"
-import TheSubmit from "./TheSubmit.vue"
-import {defineComponent} from "vue"
+import TheLogin from "./TheLogin.vue";
+import TheSubmit from "./TheSubmit.vue";
+import { defineComponent } from "vue";
 export default defineComponent({
-  components: {TheLogin,TheSubmit},
+  components: { TheLogin, TheSubmit },
   props: ["is-backdrop-open", "is-dialog-open"],
   emits: ["close-modal"],
   data() {
     return {
-      currentOpenTab: 'login'
-    }
+      currentOpenTab: "login",
+    };
   },
   computed: {
-    activeComponent():string {
-      return `the-${this.currentOpenTab}`
-    }
+    activeComponent(): string {
+      return `the-${this.currentOpenTab}`;
+    },
   },
   methods: {
-    openTab(tab:string):void {
-      this.currentOpenTab = tab
-    }
-  }
-})
+    openTab(tab: string): void {
+      this.currentOpenTab = tab;
+    },
+  },
+});
 </script>
 
 <style lang="scss" scoped>
@@ -104,7 +119,7 @@ header {
   @apply flex items-center font-light;
   background: #00cec9;
   color: #fff;
-    border-top-right-radius: 3px;
-    border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
 }
 </style>
