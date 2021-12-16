@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import * as Sharp from "sharp";
 import { PlanTypes, Progress, NewPlan, File } from "../types/plan";
 import * as path from "path";
 import Plan, { validateData, Category } from "../models/plan";
@@ -56,7 +57,27 @@ export const createPlan = async (req: Request, res: Response, next) => {
   if (req.files.image) {
     const image = req.files.image as File;
     const imageFileName = `image-${Date.now()}.${image.mimetype.split("/")[1]}`;
-    await image.mv(path.join(__dirname, "../uploads/images/", imageFileName));
+    try {
+      const optimizedImage = await Sharp(image.data, { failOnError: false })
+        .resize(500, 400)
+        .webp({
+          quality: 30,
+        })
+        .toBuffer();
+      fs.writeFileSync(
+        path.join(__dirname, "../uploads/images/", imageFileName),
+        optimizedImage
+      );
+    } catch (err) {
+      return next(
+        new ErrorHandler(
+          err.message ||
+            "Something went wrong with uploading the image, please try again later.",
+          500
+        )
+      );
+    }
+
     IMG = imageFileName;
   }
   const newPlan = await Plan.create({
