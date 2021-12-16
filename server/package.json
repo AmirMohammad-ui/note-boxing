@@ -2,10 +2,11 @@
   "name": "plan-boxing",
   "version": "1.0.0",
   "description": "",
-  "main": "Server/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "export NODE_ENV=production && tsc",
-    "dev": "export NODE_ENV=development && ts-node-dev ./index.ts"
+    "start": "export NODE_ENV=production && node dist/index.js",
+    "dev": "export NODE_ENV=development && ts-node-dev ./index.ts",
+    "build": "tsc -b"
   },
   "repository": {
     "type": "git",
@@ -38,6 +39,7 @@
     "passport-github2": "^0.1.12",
     "passport-google-oauth": "^2.0.0",
     "sharp": "^0.29.3",
+    "validator": "^13.7.0",
     "validatorjs": "^3.22.1"
   },
   "devDependencies": {
@@ -53,6 +55,8 @@
     "@types/passport-github2": "^1.2.5",
     "@types/passport-google-oauth": "^1.0.42",
     "@types/sharp": "^0.29.4",
+    "@types/validator": "^13.7.0",
+    "@types/validatorjs": "^3.15.0",
     "chalk": "^4.1.1",
     "morgan": "^1.10.0",
     "ts-node": "^9.1.1",
