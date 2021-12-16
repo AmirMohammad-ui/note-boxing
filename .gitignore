@@ -1,5 +1,6 @@
 server/uploads/**/*
-client/src/assets/
+server/dist
+# client/src/assets/
 server/temp
 temp
 # Logs
