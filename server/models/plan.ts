@@ -6,7 +6,7 @@ import * as Validator from "validatorjs";
 
 // --------------- Plan SCHEMA
 //
-interface PlanSchemaType extends Document {
+export interface PlanSchemaType extends Document {
   title: string;
   description: string;
   startDate: Date;
@@ -67,8 +67,10 @@ interface ErrMsg {
 }
 
 interface ValidationResult {
-  errors: any[];
-  isValid: boolean;
+  errors: {
+    [key: string]: Array<any>
+  };
+  isValid: boolean | void;
 }
 
 const rules = {
