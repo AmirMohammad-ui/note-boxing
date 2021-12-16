@@ -4,8 +4,8 @@
   "description": "",
   "main": "Server/index.js",
   "scripts": {
-    "start": "set NODE_ENV=production && tsc",
-    "dev": "set NODE_ENV=development && ts-node-dev ./index.ts"
+    "start": "export NODE_ENV=production && tsc",
+    "dev": "export NODE_ENV=development && ts-node-dev ./index.ts"
   },
   "repository": {
     "type": "git",
