@@ -41,6 +41,7 @@ const putTogether = (plans, method: ValidDateMethods) => {
   }
   return organizedPlans;
 };
+
 // POST /new-plan
 export const createPlan = async (req: Request, res: Response, next) => {
   const data = req.body as NewPlan;
@@ -104,6 +105,7 @@ export const createPlan = async (req: Request, res: Response, next) => {
     data: newPlan,
   });
 };
+
 // GET /today
 export const todayPlan = async (req: Request, res: Response, next) => {
   const yesterday = endOfYesterday();

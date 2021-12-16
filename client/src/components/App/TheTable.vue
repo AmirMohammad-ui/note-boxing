@@ -5,6 +5,7 @@
     </div>
     <div v-else-if="monthly">
       <monthly/>
+
     </div>
     <div v-else-if="yearly">
       <yearly/>
