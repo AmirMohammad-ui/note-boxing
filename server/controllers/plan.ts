@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import * as fs from "fs";
 import * as Sharp from "sharp";
 import { PlanTypes, Progress, NewPlan, File } from "../types/plan";
 import * as path from "path";
@@ -239,14 +240,28 @@ export const yearlyPlans = async (req: Request, res: Response, next) => {
     plans: organizedPlans,
   });
 };
+
 // DELETE /delete-plans
 export const deletePlans = async (req: Request, res: Response, next) => {
-  await Plan.deleteMany({});
-  res.status(200).json({
-    success: 1,
-    message: "Deleted all plans successfully.",
-  });
+  const plans = await Plan.find({});
+  const deletedPlans = await Plan.deleteMany({});
+  if (plans.length > 0) {
+    plans.forEach((plan: NewPlan) => {
+      fs.unlinkSync(path.join(__dirname, "../uploads/images/", plan.image));
+    });
+    res.status(200).json({
+      success: 1,
+      count: deletedPlans.cound,
+      message: "Deleted all plans successfully.",
+    });
+  } else {
+    res.status(404).json({
+      success: 0,
+      message: "Couldn't find any plan to delete.",
+    });
+  }
 };
+
 // POST /new-category
 export const newCategory = async (req: Request, res: Response, next) => {
   const { category } = req.body;
@@ -328,8 +343,19 @@ export const deletePlan = async (req: Request, res: Response, next) => {
   const plan = await Plan.findByIdAndDelete(req.query.id);
   res.status(200).json({
     success: 1,
-    message: "Plan succussfully deleted.",
+    message: "Plan successfully deleted.",
     type: (plan as any).type,
   });
 };
 
+// GET complete
+export const completePlan = async (res: Response, req: Request, next) => {
+  const plan = await Plan.findByIdAndUpdate(req.params.id, {
+    status: Progress.FINISHED,
+  });
+  res.status(200).json({
+    success: 1,
+    plan,
+    message: "Plan was successfully set to completed.",
+  });
+};
