@@ -1,4 +1,5 @@
 import axios from "axios";
-axios.defaults.baseURL = "http://localhost:3400/api";
+export const baseURL =  "https://note-boxing.amirmuha.com/api";
+axios.defaults.baseURL = baseURL;
 
 export default axios;
