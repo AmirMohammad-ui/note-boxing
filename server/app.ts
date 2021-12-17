@@ -89,7 +89,7 @@ app.all("*", (_, res) => {
   if (process.env.NODE_ENV === "production") {
     res
       .status(200)
-      .sendFile(path.join(__dirname, "../client/public/index.html"));
+      .sendFile(path.join(__dirname, "../../client/public/index.html"));
   } else if (process.env.NODE_ENV === "development") {
     res.end("Hi, looking for something ?");
   }
