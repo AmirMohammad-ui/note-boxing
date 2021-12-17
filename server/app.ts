@@ -81,9 +81,9 @@ app.use("/api", users);
 app.use("/api", plan);
 app.use("/api", auth);
 
-app.all("*", (req, _, next) => {
-  next(new ErrorHandler(`NOT FOUND: ${req.originalUrl}`, 404));
-});
+// app.all("*", (req, _, next) => {
+//   next(new ErrorHandler(`NOT FOUND: ${req.originalUrl}`, 404));
+// });
 app.use(errors);
 app.all("*", (_, res) => {
   if (process.env.NODE_ENV === "production") {
