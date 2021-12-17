@@ -1,5 +1,4 @@
-import axios from "axios"
-axios.defaults.baseURL = "http://localhost:3400/api"
+import axios from "../../../../util/axios"
 
 export default {
   namespaced: true,
