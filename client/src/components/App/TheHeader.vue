@@ -78,14 +78,12 @@
                   bgColor="#777"
                   color="#cdcdcd"
                 >
-                  <list-icon />
+                  <list-icon color="#cdcdcd" />
                   <span class="pb-1"> Take A Look At Your Plans </span>
                 </base-button>
               </router-link>
             </li>
           </transition>
-        </ul>
-        <ul class="flex-col items-center font-light space-y-4 lg:hidden">
           <transition name="fade-in">
             <li v-if="navIsOpen">
               <div class="relative">
