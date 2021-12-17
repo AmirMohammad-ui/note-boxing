@@ -16,7 +16,7 @@ import * as helmet from "helmet";
 import * as sanitize from "express-mongo-sanitize";
 import * as path from "path";
 import errors from "./middlewares/ErrorHandler";
-import ErrorHandler from "./utilities/ErrorHandler";
+// import ErrorHandler from "./utilities/ErrorHandler";
 const app = express();
 
 import users from "./apis/users";
@@ -29,13 +29,6 @@ app.use(
   "/static/images",
   express.static(path.join(__dirname, "./uploads/images/"))
 );
-// --------------- SENDING index.html to the client on production
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../../client/public/")))
-  app.use(history())
-  app.use(express.static(path.join(__dirname, "../../client/public/")))
-  app.set("trust proxy", true);
-}
 // --------------- SETTING UP SESSION
 const RedisStore = RedisConnect(session);
 app.use(
@@ -86,12 +79,12 @@ app.use("/api", plan);
 app.use("/api", auth);
 
 app.use(errors);
+// --------------- SENDING index.html to the client on production
 if (process.env.NODE_ENV === "production") {
-  app.use((_, res) => {
-    res
-      .status(200)
-      .sendFile(path.join(__dirname, "../../client/public/index.html"));
-  });
-} 
+  app.use(express.static(path.join(__dirname, "../../client/dist/")))
+  app.use(history())
+  app.use(express.static(path.join(__dirname, "../../client/dist/")))
+  app.set("trust proxy", true);
+}
 
 export default app;
