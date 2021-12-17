@@ -3,6 +3,7 @@ configEnv({
   path: ".env",
 });
 import * as express from "express";
+import * as history from "connect-history-api-fallback"
 import * as morgan from "morgan";
 import * as cors from "cors";
 import * as fileUpload from "express-fileupload";
@@ -28,7 +29,11 @@ app.use(
   "/static/images",
   express.static(path.join(__dirname, "./uploads/images/"))
 );
+// --------------- SENDING index.html to the client on production
 if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../../client/public/")))
+  app.use(history())
+  app.use(express.static(path.join(__dirname, "../../client/public/")))
   app.set("trust proxy", true);
 }
 // --------------- SETTING UP SESSION
