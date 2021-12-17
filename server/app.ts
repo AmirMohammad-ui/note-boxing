@@ -71,7 +71,6 @@ app.use(
       fileSize: 1 * 1024 * 1024,
     },
     useTempFiles: false,
-    // tempFileDir: "./temp/",
   })
 );
 app.use(morgan("dev"));
@@ -81,18 +80,13 @@ app.use("/api", users);
 app.use("/api", plan);
 app.use("/api", auth);
 
-// app.all("*", (req, _, next) => {
-//   next(new ErrorHandler(`NOT FOUND: ${req.originalUrl}`, 404));
-// });
 app.use(errors);
-app.all("*", (_, res) => {
-  if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production") {
+  app.use((_, res) => {
     res
       .status(200)
       .sendFile(path.join(__dirname, "../../client/public/index.html"));
-  } else if (process.env.NODE_ENV === "development") {
-    res.end("Hi, looking for something ?");
-  }
-});
+  });
+} 
 
 export default app;
