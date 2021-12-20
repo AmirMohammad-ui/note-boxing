@@ -55,8 +55,8 @@ app.use(
   cors({
     origin: [
       process.env.NODE_ENV === "development"
-        ? "http://localhost:8080"
-        : "https://demo.portfolio.amirmuha.com/note-boxing",
+        ? "http://localhost:3401"
+        : "https://note-boxing.portfolio.amirmuha.com",
     ],
     credentials: true,
   })
