@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import { Document } from "mongoose";
-import { NewPlan, PlanTypes, Progress } from "../types/plan";
+import { NewPlan, PlanTypes, Progress } from "../types/plan.type";
 const Schema = mongoose.Schema;
 import * as Validator from "validatorjs";
 

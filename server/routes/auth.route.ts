@@ -1,6 +1,6 @@
 import * as passport from "passport";
 import * as express from "express";
-import asyncHandler from "../middlewares/asyncErrorHandler";
+import asyncHandler from "../utils/errorHandler.util";
 
 const router = express.Router();
 

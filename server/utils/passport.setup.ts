@@ -3,7 +3,7 @@ import {
   Strategy as GithubStrategy,
   Profile as GithubProfile,
 } from "passport-github2";
-import User from "../models/users";
+import User from "../models/user.model";
 import { OAuth2Strategy } from "passport-google-oauth";
 
 export default (passport: PassportStatic) => {

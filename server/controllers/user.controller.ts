@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Users from "../models/users";
-import ErrorHandler from "../utilities/ErrorHandler";
-import isDefined from "../utilities/isDefined";
+import Users from "../models/user.model";
+import ERR from "../utils/ERR.util";
+import isDefined from "../utils/isDefined.util";
 interface UserData {
   fname: string;
   lname: string;
@@ -19,7 +19,7 @@ export const signUp = async (req: Request, res: Response, next) => {
   const hasError = isDefined(req.body);
   if (!hasError.isValid)
     return next(
-      new ErrorHandler(`${hasError.errors.join(", ")} are required.`, 400)
+      new ERR(`${hasError.errors.join(", ")} are required.`, 400)
     );
 
   const doesUserExist = await Users.findOne({
@@ -28,7 +28,7 @@ export const signUp = async (req: Request, res: Response, next) => {
 
   if (doesUserExist)
     return next(
-      new ErrorHandler(
+      new ERR(
         "This Email already signed up. Please log in or register with another Email.",
         400
       )

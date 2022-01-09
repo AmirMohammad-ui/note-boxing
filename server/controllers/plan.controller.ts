@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import * as fs from "fs";
 import * as Sharp from "sharp";
-import { PlanTypes, Progress, NewPlan, File } from "../types/plan";
+import { PlanTypes, Progress, NewPlan, File } from "../types/plan.type";
 import * as path from "path";
-import Plan, { validateData, Category } from "../models/plan";
-import ErrorHandler from "../utilities/ErrorHandler";
+import Plan, { validateData, Category } from "../models/plan.model";
+import ERR from "../utils/ERR.util";
 import {
   endOfYesterday,
   startOfTomorrow,
@@ -72,7 +72,7 @@ export const createPlan = async (req: Request, res: Response, next) => {
       );
     } catch (err) {
       return next(
-        new ErrorHandler(
+        new ERR(
           err.message ||
             "Something went wrong with uploading the image, please try again later.",
           500
@@ -91,7 +91,7 @@ export const createPlan = async (req: Request, res: Response, next) => {
   await Category.findOne({ name: data.category }, async (err, category) => {
     if (err || !category)
       return next(
-        new ErrorHandler(
+        new ERR(
           "Category selected does not exist, You need to create it first.",
           400
         )
@@ -118,7 +118,7 @@ export const todayPlan = async (req: Request, res: Response, next) => {
     },
   });
   if (todaysPlan.length === 0)
-    return next(new ErrorHandler("There is no plan for today.", 404));
+    return next(new ERR("There is no plan for today.", 404));
   res.status(200).json({
     success: 1,
     length: todaysPlan.length,
@@ -139,7 +139,7 @@ export const currentMonthPlans = async (req: Request, res: Response, next) => {
     },
   });
   if (plans.length === 0)
-    return next(new ErrorHandler("There is no plan for this month.", 404));
+    return next(new ERR("There is no plan for this month.", 404));
   res.status(200).json({
     success: 1,
     length: plans.length,
@@ -159,7 +159,7 @@ export const currentYearPlans = async (req: Request, res: Response, next) => {
     },
   });
   if (plans.length === 0)
-    return next(new ErrorHandler("There is no plan for this year.", 404));
+    return next(new ERR("There is no plan for this year.", 404));
   res.status(200).json({
     success: 1,
     length: plans.length,
@@ -183,7 +183,7 @@ export const dailyPlan = async (req: Request, res: Response, next) => {
     },
   });
   if (plans.length === 0)
-    return next(new ErrorHandler("No plan for today.", 404));
+    return next(new ERR("No plan for today.", 404));
   const organizedPlans = putTogether(plans, ValidDateMethods.DATE);
   res.status(200).json({
     success: 1,
@@ -207,7 +207,7 @@ export const monthlyPlans = async (req: Request, res: Response, next) => {
     },
   });
   if (plans.length === 0)
-    return next(new ErrorHandler("No monthly plan.", 404));
+    return next(new ERR("No monthly plan.", 404));
   const organizedPlans = putTogether(plans, ValidDateMethods.MONTH);
   res.status(200).json({
     success: 1,
@@ -234,7 +234,7 @@ export const yearlyPlans = async (req: Request, res: Response, next) => {
     },
   });
   if (plans.length === 0)
-    return next(new ErrorHandler("No plan for 10 years ahead.", 404));
+    return next(new ERR("No plan for 10 years ahead.", 404));
   const organizedPlans = putTogether(plans, ValidDateMethods.YEAR);
   res.status(200).json({
     success: 1,
@@ -269,23 +269,23 @@ export const newCategory = async (req: Request, res: Response, next) => {
   const { category } = req.body;
   const trimmedCategory = category.trim().toLowerCase();
   if (!trimmedCategory)
-    return next(new ErrorHandler("'New Category' field is required.", 400));
+    return next(new ERR("'New Category' field is required.", 400));
   if (trimmedCategory.length < 3)
     return next(
-      new ErrorHandler(
+      new ERR(
         "'New Category' field must be at least 3 characters long.",
         400
       )
     );
   if (trimmedCategory.length > 50)
     return next(
-      new ErrorHandler(
+      new ERR(
         "'New Category' field cannot exceed 50 characters long.",
         400
       )
     );
   if (await Category.findOne({ name: trimmedCategory }))
-    return next(new ErrorHandler("This category already exists.", 400));
+    return next(new ERR("This category already exists.", 400));
   const createdCategory = await Category.create({
     name: trimmedCategory,
   });
@@ -305,7 +305,7 @@ export const getCategories = async (req: Request, res: Response, next) => {
     const categories = await Category.find().select("name _id").sort("1");
     if (!categories || categories.length === 0)
       return next(
-        new ErrorHandler("No Categories have been created yet.", 404)
+        new ERR("No Categories have been created yet.", 404)
       );
     res.status(200).json({
       succuss: 1,

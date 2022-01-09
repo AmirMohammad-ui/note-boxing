@@ -10,18 +10,17 @@ import * as fileUpload from "express-fileupload";
 import * as RedisConnect from "connect-redis";
 import * as session from "express-session";
 import * as passport from "passport";
-import redis from "./utilities/redis-client";
-import setupPassport from "./utilities/passport";
+import redis from "./utils/redis.util";
+import setupPassport from "./utils/passport.setup";
 import * as helmet from "helmet";
 import * as sanitize from "express-mongo-sanitize";
 import * as path from "path";
-import errors from "./middlewares/ErrorHandler";
-// import ErrorHandler from "./utilities/ErrorHandler";
+import errors from "./middlewares/error.middleware";
 const app = express();
 
-import users from "./apis/users";
-import plan from "./apis/plan";
-import auth from "./apis/auth";
+import users from "./routes/user.route";
+import plan from "./routes/plan.route";
+import auth from "./routes/auth.route";
 
 // --------------- GENERAL MIDDLEWARES
 app.use(express.json());

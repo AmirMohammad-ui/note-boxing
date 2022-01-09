@@ -12,8 +12,8 @@ import {
   monthlyPlans,
   dailyPlan,
   deletePlan,
-} from "../controllers/plan";
-import asyncHandler from "../middlewares/asyncErrorHandler";
+} from "../controllers/plan.controller";
+import asyncHandler from "../utils/errorHandler.util";
 
 const router = express.Router();
 

@@ -1,4 +1,3 @@
-// import ErrorHandler from "../utilities/ErrorHandler"
 import * as chalk from "chalk";
 
 export default function (err, _, res, next) {
